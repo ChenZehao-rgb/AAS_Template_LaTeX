@@ -1,0 +1,134 @@
+0. BEMT 在这个模块里的定位
+整个 thrust_feedback_control 是一个推力闭环模块，BEMT 只负责其中的前馈通道，做的是一次“逆问题”求解：
+
+
+期望拉力 T_des [N]  +  来流速度 V∞  +  桨盘迎角 α
+        │
+        ├─ BEMT 逆查表 ──> 目标转速 rpm_ff
+        │
+        └─ 静态多项式映射 ──> 归一化油门 u_ff ∈ [0,1]
+拉力传感器的 PI 反馈是另一条并行通道，两者按 TFC_CTL_MODE 组合（见第 3 节）。BEMT 本身不参与闭环，它只提供一个物理上合理的工作点。
+
+1. 离线阶段：tools/generate_bet_tables.py 生成静态表
+固件里不做完整 BEMT 迭代求解（太慢），所有 BEMT 计算在 PC 上一次性跑完，固化成 C++ 常量数组。
+
+1.1 输入
+generate_bet_tables.py:482-494
+
+section_summary.csv：75 个叶素截面的 r_over_R / chord / beta_deg / dat_file
+cl_cd_database.csv：每个截面翼型的 Cl/Cd 查找表，网格为 61 个 α × 7 个 Re（XFOIL 类工具产出）
+1.2 几何预处理
+generate_bet_tables.py:58-80
+
+按实际桨半径 R_ACTUAL = 0.2286 m（9 英寸桨）等比缩放弦长
+桨距角转换：theta_rad = radians(90 - beta_deg)（CSV 里的 beta 是与旋转平面的夹角，代码要的是与桨盘平面的安装角）
+结果写进 bet_aero_data.cpp（742 KB，主要是 75×61×7 的 Cl/Cd 两张表）。
+
+1.3 正向 BEMT 求解 compute_lift_n
+generate_bet_tables.py:231-280
+
+给定 (rpm, V∞, α) 算拉力，核心是叶素理论 + 动量理论的入流迭代：
+
+① 转台运动学（关键：这是个旋臂/转台试验台，不是自由飞行）
+
+
+ω_a = V∞ / R_0          # R_0 = 1.5 m 转台臂长
+v_free(ψ, r) = ω_a · (R_0 − r·cos ψ)
+也就是说，每个叶素看到的来流速度随方位角 ψ 和展向位置 r 变化——桨在旋臂上转，靠近圆心的一侧线速度小、外侧大。方位角均匀离散 72 份（N_PSI = 72）。
+
+② 线性入流（Glauert 型斜流修正）
+
+
+λ_i(ψ, r) = λ_i0 · (1 + k_x · (r/R) · sin ψ),   k_x = 1.2
+只有存在切向进流分量（μ_t ≠ 0，即 α ≠ 0）时才启用 k_x，纯轴流时退化为均匀入流。
+
+③ 叶素受力
+
+
+v_a = v_free·cos α + λ_i·ω·R        # 轴向
+v_t = ω·r − v_free·sin α·cos ψ      # 切向
+φ   = atan2(v_a, v_t)               # 入流角
+α_b = θ − φ                         # 叶素攻角
+Re  = ρ·v_r·c / μ
+dT/dr = ½ρ·v_r²·(Cl·cos φ − Cd·sin φ)·c
+Cl/Cd 用 (α_b, Re) 双线性插值，并做后失速混合：超出翼型表 α 范围 ±5° 用 smoothstep 平滑过渡到平板模型 Cl = 2 sinα cosα、Cd = Cd0 cos²α + 2 sin²α（generate_bet_tables.py:167-193）。这一步很重要，大迎角/低转速时叶素攻角很容易跑出 XFOIL 表范围。
+
+④ 动量闭合迭代
+
+
+T = N_b · ∫ dT/dr dr          (梯形积分, 2 叶)
+C_T = T / (ρ·A·(ωR)²)
+λ_i0_new = C_T / (2·√(μ_t² + (μ_a+λ_i0)²))
+λ_i0 ← 0.5·λ_i0 + 0.5·λ_i0_new       # 阻尼 0.5
+最多 80 次，收敛判据 |Δλ_i0| < 1e-6。
+
+1.4 扫出三维升力表
+generate_bet_tables.py:283-313
+
+在网格上把 ①~④ 跑 7 × 11 × 61 = 4697 次：
+
+维度	网格	点数
+α (桨盘迎角)	0…90°，步长 15°	7
+V∞	0…10.17 m/s，等分	11
+rpm	0…6000，步长 100	61
+生成后跑一次单调性检查 check_monotonic_lift_table（沿 rpm 方向 lift 必须单调递增，否则逆查表会有多解），最终输出 bet_lift_lookup.cpp 里的 kBetLiftLookupN[]，索引顺序是 [α][V][rpm]。
+
+2. 固件侧：正向模型 + 两种逆解
+bet_inverse_solver.cpp 里其实有三套东西，运行时只用其中一套：
+
+函数	做什么	运行时是否调用
+compute_lift_n (:250)	完整 BEMT 正向迭代，Python 版的逐行 C++ 复刻	❌ 只在单元测试
+solve_rpm_for_lift_n (:323)	对 compute_lift_n 做二分法逆解（32 次迭代，每次一整轮 BEMT）	❌ 只在单元测试
+lookup_rpm_for_lift_n (:378)	查表逆解，实际用的就是它	✅
+compute_lift_n 保留在固件里的意义是：单元测试 bet_inverse_solver_test.cpp 用它来验证「查表结果 ≈ 真实 BEMT 结果」，等于把 Python 建表过程的正确性钉在 CI 里。它单次调用要跑 80×75×72 次翼型插值，几十毫秒量级，根本不能放进 200 Hz 控制回路。
+
+逆查表 lookup_rpm_for_lift_n 的算法
+bet_inverse_solver.cpp:378-441
+
+输入校验：lift_n 有限且 ≥0，V∞ 有限且 ≥0；否则 InvalidInput
+限幅：把 V∞、α 夹到表范围内；若原值越界，整个解的状态标为 OutOfTableRange（仍然给出结果，只是每秒告警一次）
+降维：先对 (α, V∞) 求出双线性权重，于是 61 个 rpm 节点各自插值出一条 lift(rpm) 一维曲线（interpolated_lift_profile_value，每次 4 点插值）
+沿 rpm 线性反插：从 rpm=0 往上扫，找到第一个满足 lift[k-1] ≤ T_des ≤ lift[k] 的区间，在区间内按升力线性内插出 rpm：
+
+w   = (T_des − lift[k-1]) / (lift[k] − lift[k-1])
+rpm = rpm[k-1] + w·(rpm[k] − rpm[k-1])
+边界情况：
+T_des ≤ lift(0 rpm) → 返回 rpm=0
+扫完 61 个点都不够 → AboveRpmLimit（返回 6000 rpm）
+扫描中发现某段 lift 下降超过 1e-4 → NonMonotonicTable
+复杂度是 O(61×4) 次浮点运算，微秒级，代码里还专门用 bet_lookup_time_us 记录了耗时并打进日志。
+
+3. 运行时：每个控制周期做了什么
+主循环在 thrust_feedback_control_bemt.cpp:363，px4_poll 同时等 pressure_force_sensor 和 actuator_motors，两者都更新过才走一次控制。
+
+3.1 组装 BEMT 的三个输入
+thrust_feedback_control_bemt.cpp:518-524
+
+
+bet_yaw_rate_rad_s  = _vehicle_angular_velocity.xyz[2];           // 机体 z 轴角速度
+bet_length_m        = clamp(TFC_BET_LEN_M, 0.5, 2.0);             // 转台臂长，默认 1.5 m
+bet_freestream_m_s  = |bet_yaw_rate_rad_s| · bet_length_m;        // 来流速度
+bet_alpha_deg       = TFC_BET_A_DEG;                              // 桨盘迎角，手动给定
+三点值得注意：
+
+来流速度是由偏航角速度推出来的，和第 1.3 节里 v_free = ω_a·(R_0 − r cos ψ) 的转台假设严格对应——这套模型是给旋臂试验台标定的
+α 是参数硬给的，不是估计出来的（默认 0°，即纯轴流）
+期望拉力当前被写死成参数：_thrust_desired(0) = TFC_DES_THRUST（:479，默认 15 N），走 RC 油门的那行被注释掉了
+3.2 逆查表拿到 rpm_ff
+thrust_feedback_control_bemt.cpp:568-608
+
+T_des ≤ 1e-5 时直接清零并复位所有积分器，否则调查表函数，然后按状态码分派：
+
+状态	处理
+Ok	直接用 solution.rpm
+OutOfTableRange / ResidualFallback	仍然用 solution.rpm，每秒告警一次
+AboveRpmLimit	强制 rpm_ff = 6000
+其他（InvalidInput/NonMonotonicTable）	rpm_ff = 0 + 告警
+3.3 rpm → 归一化油门
+thrust_feedback_control_bemt.cpp:111-115
+
+
+u = 2.6972e-8·rpm² + 1.829e-5·rpm − 0.03718
+这是台架实测的静态转速-油门标定曲线，与 BEMT 无关，是把「物理转速」翻译成「PWM 归一化量」的最后一环。
+
+一处小问题：函数注释里写的系数（0.00000003 / 0.00002263 / −0.03261596）和实际代码里的三个系数不一致，motor_index 参数也没被使用（4 个电机共用同一条曲线）。目前只有 1 号电机在跑（kMotorCount = 1），不影响结果，但注释建议更新。
