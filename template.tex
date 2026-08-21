@@ -18,7 +18,7 @@
 
 \begin{document}
 
-\cntitle{{\hei\qquad 模拟高机动飞行工况的旋翼建模与升力反馈控制方法}
+\cntitle{{\hei\qquad 面向高机动飞行工况的旋翼升力建模与反馈控制方法}
 
 % TODO: 以下脚注信息(收稿日期/基金/单位/责任编委/作者)请作者补充替换
 \thanks{收稿日期\
@@ -48,7 +48,7 @@ Month Date, Year}
 
 \cnabstract{多旋翼无人机在高机动飞行过程中,动态倾斜来流作用于桨盘平面,导致旋翼产生的升力出现偏差,本文搭建了能构造此种工况的测试平台,并提出了一种旋翼建模与升力反馈控制方法,旨在能够更快得消除执行器误差,提高升力控制精度.具体来说,采用叶素理论建立考虑桨盘攻角和非均匀来流的旋翼升力机理模型,并结合实验残差构造高保真旋翼模型;基于模型前馈和传感器升力反馈组成旋翼升力闭环控制架构。最后，搭建桨盘攻角与来流速度可调的旋翼测试平台，对单个旋翼构造敏捷机动相关的入流工况；并在旋翼测试台上对所述升力模型和闭环控制架构进行测试。实验结果表明，【待补充定量结果：模型MAE/MAPE、闭环RMSE与峰值误差降低幅度】，从而验证所提方法在高机动工况下提高轴向升力预测与控制精度的有效性。}
 
-\cnkeyword{高机动飞行,旋翼建模,升力反馈控制,高保真模型}
+\cnkeyword{多旋翼无人机,高机动飞行,升力反馈控制,高保真模型}
 
 \doi{10.16383/j.aas.20xx.cxxxxxx}
 
@@ -60,7 +60,7 @@ Month Date, Year}
 \enabstract{During high-maneuver flight of multirotor UAVs, dynamically tilted inflow acts on the rotor disk plane and causes deviations in the rotor lift. In this paper, a test platform capable of reproducing such operating conditions is constructed, and a rotor modeling and lift feedback control method is proposed to eliminate actuator errors more rapidly and improve lift control accuracy. Specifically, blade element theory is adopted to build a rotor lift mechanism model that considers the disk angle of attack and non-uniform inflow, and experimental residuals are combined to construct a high-fidelity rotor model; a closed-loop rotor lift control architecture is formed based on model feedforward and sensor lift feedback. Finally, a rotor test platform with adjustable disk angle of attack and inflow velocity is built to generate agile-maneuver-related inflow conditions for a single rotor, and the proposed lift model and closed-loop control architecture are tested on this platform. Experimental results show that [quantitative results to be added], which verifies the effectiveness of the proposed method in improving axial lift prediction and control accuracy under high-maneuver conditions.}
 
 \enkeyword{High-maneuver flight, rotor modeling, lift feedback control, high-fidelity model}
-
+    
 \cnaddress{【待填写作者与引用信息】}
 
 \enaddress{【待填写英文作者与引用信息】}
@@ -69,15 +69,15 @@ Month Date, Year}
 
 \pagestyle{aasheadings}
 
-\onecolumn\begin{multicols}{2}%这一行用于第一页末尾
-
 %这一章为引言,无需写标题.
 
 近年来，低空经济加速向规模化、常态化运行发展，多旋翼无人机凭借垂直起降、定点悬停与机动灵活等优势，已成为物流运输、应急救援、基础设施巡检和复杂环境作业的重要装备[1-3]。随着任务空间由开阔、低速场景拓展至城市近地与障碍物密集区域，无人机需在阵风、尾流、障碍物气动干扰及快速姿态变化等条件下保持稳定飞行。在此类高机动工况下，旋翼承受显著的斜向非均匀来流，使飞控控制指令对应的实际升力偏离标称值，进而影响机体姿态与位置控制的精度与稳定性。
 
 现有多旋翼飞控通常依据静态标定得到的升力-控制量映射，将控制分配器输出的期望升力转换为电机控制指令。该映射在近悬停与弱扰动条件下可近似表示为转速（或归一化控制量）的二次函数，但其参数隐含了特定来流、桨盘姿态与推进系统状态。当无人机快速前飞、转弯或翻转时，旋翼局部来流的速度与方向同时改变，桨盘内轴向与面内速度分量呈现显著非均匀性，从而改变叶素入流角、有效迎角及气动力分布。由此产生的升力偏差首先出现在执行器层，而传统控制架构通常需待机体姿态或位置误差形成后才能间接修正，作用链路较长，难以及时抑制旋翼层面的扰动。
 
-为提升机动飞行下执行器的控制精度，现有研究大致可分为基于模型与基于测量两类。基于模型的方法致力于建立旋翼高保真模型：Bauersfeld等[4]将叶素理论旋翼模型与神经网络相结合，以叶素理论刻画高速入流下的升力变化，以数据驱动神经网络学习剩余力与力矩残差；Liu等[5]通过全包线风洞试验辨识推进模型，并将局部雅可比矩阵用于INDI控制，在机动飞行中在线计算局部升力变化所需的控制量，以提高大机动条件下的控制分配精度。此类方法精度较高，但普遍依赖大量试验数据的训练或辨识。基于测量的方法则通过力传感器直接感知旋翼升力：Gonzalez-Morgado等[6]采用应变片式测力方式检测机臂形变，间接测量旋翼升力并结合PID控制抑制地面效应与天花板效应，但该间接测量会引入高频噪声、信噪比较低；蒋涵等[7-8]在机臂与旋翼连接处加装力传感器直接测量升力，并针对旋翼动力系统的非线性设计升力反馈线性化控制器，通过单自由度台架实验验证了其在风扰环境下提高姿态控制精度的能力。上述工作证明了升力闭环控制的有效性，但均针对悬停或近悬停工况，尚未覆盖高机动飞行下动态斜来流的作用。
+为提升机动飞行下执行器的控制精度，现有研究大致可分为基于模型与基于测量两类。基于模型的方法致力于建立旋翼高保真模型：Bauersfeld等[4]将叶素理论旋翼模型与神经网络相结合，以叶素理论刻画高速入流下的升力变化，以数据驱动神经网络学习剩余力与力矩残差；Liu等[5]通过全包线
+\onecolumn\begin{multicols}{2}%这一行用于第一页末尾
+风洞试验辨识推进模型，并将局部雅可比矩阵用于INDI控制，在机动飞行中在线计算局部升力变化所需的控制量，以提高大机动条件下的控制分配精度。此类方法精度较高，但普遍依赖大量试验数据的训练或辨识。基于测量的方法则通过力传感器直接感知旋翼升力：Gonzalez-Morgado等[6]采用应变片式测力方式检测机臂形变，间接测量旋翼升力并结合PID控制抑制地面效应与天花板效应，但该间接测量会引入高频噪声、信噪比较低；蒋涵等[7-8]在机臂与旋翼连接处加装力传感器直接测量升力，并针对旋翼动力系统的非线性设计升力反馈线性化控制器，通过单自由度台架实验验证了其在风扰环境下提高姿态控制精度的能力。上述工作证明了升力闭环控制的有效性，但均针对悬停或近悬停工况，尚未覆盖高机动飞行下动态斜来流的作用。
 
 在旋翼气动建模方面，叶素理论在高风速下能够较精确地刻画单个旋翼的升力特性，已形成较为成熟的建模方案。Theys等[9]针对0$^{\circ}$-90$^{\circ}$桨盘攻角开展风洞实验，比较了叶素动量理论与涡格法的预测能力；Serrano等[10]进一步评估了非零攻角条件下多种诱导入流模型的精度；Simmons等[11]利用全攻角风洞数据辨识了包含电机静、动态特性与螺旋桨气动特性的推进系统模型。上述工作为建立旋翼动态入流模型奠定了理论基础，但均处于风洞稳态来流条件，难以复现旋翼运动与加速过程中的动态入流特征。
 
@@ -100,6 +100,13 @@ Month Date, Year}
 % 说明：式号、图号、表号请按正文实际情况调整 \label / \ref
 % ============================================================
 
+本节建立从整机运动到旋翼升力的完整建模链条: 首先约定坐标系与符号
+(第~\ref{subsec:frame}~节); 进而由整机运动学导出桨毂的刚体运动状态及其相对来流的
+分解(第~\ref{subsec:hub_kinematics}~节); 在此基础上给出旋翼自身的转动状态与叶素处
+的局部速度场(第~\ref{subsec:rotation}~节); 引入诱导速度模型, 完成由叶素气动力到
+旋翼轴向升力的积分(第~\ref{subsec:induced}~节); 最后将上述结果归纳为旋翼运动状态
+的统一定义, 为旋转测试台的工况设计提供依据(第~\ref{subsec:state_def}~节).
+
 \subsection{坐标系与符号约定}
 \label{subsec:frame}
 
@@ -117,6 +124,15 @@ $\mathcal{B}=\{O_b;\bm{x}_b,\bm{y}_b,\bm{z}_b\}$ 为前--右--下坐标系, 原�
 \label{eq:body_kinematics}
 \end{equation}
 
+\begin{center}
+\vbox{
+\centerline{\includegraphics[width=8cm]{Image/图1-四旋翼无人机坐标系定义.png}}
+\vskip2mm
+{\small 图1\quad 四旋翼模型与机体/惯性坐标系定义
+\\
+Fig.\,1\quad Quadrotor model and definition of body/inertial frames}}
+\end{center}
+
 设第 $i$ 个旋翼($i=1,2,3,4$)的桨毂中心在机体系下的安装位置为常矢量
 $\bm{r}_i\in\mathbb{R}^3$, 桨盘法向单位矢量取为升力正方向, 对于共面等桨距布局有
 $\bm{n}_i=[0,\ 0,\ -1]^{\mathrm{T}}$; 若存在安装倾角, 则 $\bm{n}_i$ 为相应的常值单位矢量.
@@ -124,17 +140,7 @@ $\bm{n}_i=[0,\ 0,\ -1]^{\mathrm{T}}$; 若存在安装倾角, 则 $\bm{n}_i$ 为�
 以 $\Omega_i>0$ 表示旋翼转速, $\psi_i$ 表示桨叶方位角(在桨盘平面内自 $\bm{x}_b$ 轴量起).
 环境风速在惯性系下记为 $\bm{v}_w$.
 
-\begin{center}
-\vbox{
-% \centerline{\includegraphics[width=8cm]{Image/fig1.pdf}}
-\centerline{【图1：待插入图片】}
-\vskip2mm
-{\small 图1\quad 四旋翼模型与机体/惯性坐标系定义
-\\
-Fig.\,1\quad Quadrotor model and definition of body/inertial frames}}
-\end{center}
-
-\subsection{桨毂的刚体运动学}
+\subsection{桨毂运动学与相对来流分解}
 \label{subsec:hub_kinematics}
 
 由于旋翼与机体固连, 在机体系下有 $\dot{\bm{r}}_i\equiv\bm{0}$, 故第 $i$ 个旋翼桨毂
@@ -161,7 +167,8 @@ n_i=\frac{\left\|\bm{a}_i-\bm{g}\right\|}{g}
 与式~(\ref{eq:hub_a}) 中机动飞行产生的向心项在形式上一致,
 从而可在地面复现高机动工况下的等效过载.
 
-\subsection{桨毂处相对来流的分解}
+在明确桨毂自身的刚体运动之后, 进一步计入环境风的影响, 考察桨毂相对气流的运动状态,
+这是后续气动建模的直接输入.
 \label{subsec:inflow}
 
 计入环境风后, 桨毂中心相对于空气的速度在机体系下表示为
@@ -211,7 +218,7 @@ $T_i$ 由第~\ref{subsec:lift}~节式~(\ref{eq:thrust}) 的叶素积分给出。
 式~(\ref{eq:mu_lambda}) 与式~(\ref{eq:alpha_psiw}) 所定义的 $(\mu_i,\ \alpha_i)$
 即为旋翼所处的倾斜来流工况点, 也是后文旋转测试台工况编排的自变量.
 
-\subsection{旋翼的转动状态}
+\subsection{旋翼转动状态与叶素速度场}
 \label{subsec:rotation}
 
 第 $i$ 个旋翼相对惯性系的绝对角速度为机体角速度与自转角速度之和
@@ -245,7 +252,7 @@ $T_i$ 由第~\ref{subsec:lift}~节式~(\ref{eq:thrust}) 的叶素积分给出。
 \label{eq:psi_int}
 \end{equation}
 
-\subsection{叶素处的速度场}
+获得旋翼整体的转动状态后, 即可将其代入叶素层面, 建立叶素处的局部速度场.
 \label{subsec:blade_element}
 
 对位于展向位置 $\rho\in[\rho_0,\ R_p]$、方位角 $\psi$ 处的叶素, 综合
@@ -277,7 +284,7 @@ $\rho\left(\omega_y\cos\psi-\omega_x\sin\psi\right)$ 项由机体滚转与俯仰
 完整变化链条为``局部速度---入流角---有效迎角---翼型气动力---轴向推力'', 其升力
 贡献在第~\ref{subsec:lift}~节给出.
 
-\subsection{诱导速度模型}
+\subsection{诱导速度模型与叶素气动力建模}
 \label{subsec:induced}
 
 式~(\ref{eq:UP}) 中的诱导速度 $v_{\mathrm{ind}}$ 无法直接测量, 需要建模确定.
@@ -300,7 +307,6 @@ $k_x$ 为纵向入流梯度系数, 其大小随尾迹偏斜角 $\chi_i$ 增大�
 先给定 $C_T$ 初值求解 $\lambda_{\mathrm{ind},i}$ 与 $v_{\mathrm{ind}}$,
 再由叶素积分更新 $C_T$, 迭代至收敛.
 
-\subsection{叶素气动力与升力建模}
 \label{subsec:lift}
 
 在得到局部速度场与诱导速度后, 叶素气动力由二维翼型极线查表获得. 对展向位置
@@ -344,17 +350,18 @@ T_i=\frac{N_b}{2\pi}\int_{0}^{2\pi}\!\!\int_{\rho_0}^{R_p}
 $(\alpha_{\mathrm{eff}},Re)$ 的函数; 极线表统一整理至 $-10^{\circ}\le\alpha_{\mathrm{eff}}\le40^{\circ}$
 及离散 $Re$ 网格, 对未收敛点采用相邻工况插值, 超出查表范围时采用边界截断,
 以避免外推导致的非物理解(见第~\ref{subsec:geo}~节).
+\end{multicols}%开始通栏显示
 
 \begin{center}
 \vbox{
-% \centerline{\includegraphics[width=6cm]{Image/fig2.pdf}}
-\centerline{【图2：待插入图片】}
+\centerline{\includegraphics[width=9cm]{Image/图2-旋翼叶素分解.png}}
 \vskip2mm
 {\small 图2\quad 旋翼坐标、叶素离散及局部来流与气动力分解
 \\
 Fig.\,2\quad Rotor coordinates, blade element discretization and decomposition of local inflow and aerodynamic forces}}
 \end{center}
 
+\begin{multicols}{2}%开始双栏显示
 \subsection{旋翼运动状态的定义}
 \label{subsec:state_def}
 
@@ -387,10 +394,11 @@ $(\bm{p},\bm{v},\bm{q},\bm{\omega})$ 与安装参数 $(\bm{r}_i,\bm{n}_i,\sigma_
 % ============================================================
 % 符号表
 % ============================================================
-\begin{table}[htbp]
-\centering
-\caption{主要符号说明}
-\label{tab:nomenclature}
+\begin{center}
+\vbox{\centering{\small 表4\quad 主要符号说明
+\\
+Table\,4 \quad Nomenclature} \vskip2mm
+{\footnotesize\centering
 \begin{tabular}{ll}
 \toprule
 符号 & 含义 \\
@@ -420,8 +428,8 @@ $J_r,\ \bm{\tau}_{g,i}$ & 旋翼绕自转轴的转动惯量、陀螺力矩 \\
 $n_i$ & 等效载荷因数 \\
 $\Omega_a,\ R_0,\ \alpha_p$ & 转台角速度、旋翼中心到转台中心的距离、桨盘攻角 \\
 \bottomrule
-\end{tabular}
-\end{table}
+\end{tabular}}}
+\end{center}
 
 \section{控制架构}
 \label{sec:control}
@@ -439,34 +447,22 @@ T_{d,i}=c_a u_i^2+(1-c_a)u_i
 其中，$c_a\in[0,1]$ 为无人机悬停时标定的固定参数，用于描述旋翼升力与转速之间的近似平方关系。
 在近悬停和缓慢姿态变化条件下，式~(\ref{eq:static_map})能够满足常规控制需求；当局部来流发生显著变化时，相同控制量对应的实际升力将随工况改变，导致期望升力与实际升力之间产生系统性偏差。由于传统架构缺少旋翼升力反馈，该偏差只能通过外层姿态或位置误差间接修正，控制作用链路较长，并可能在强扰动或快速机动时引起超调和振荡。
 
-
+\end{multicols}%开始通栏显示
 \begin{center}
 \vbox{
-%\centerline{\includegraphics[width=6cm]{Image/fig3.pdf}}
-\centerline{【图3：待插入图片】}
+\centerline{\includegraphics[width=10cm]{Image/图3-控制架构.png}}
 \vskip2mm
 {\small 图3\quad 传统多旋翼控制架构及旋翼推力开环映射
 \\
 Fig.\,3\quad Conventional multirotor control architecture and open-loop rotor thrust mapping}}
 \end{center}
-
+\begin{multicols}{2}%开始双栏显示
 \subsection{升力闭环控制架构}
 \label{subsec:closed_loop}
 
 为使控制系统直接感知执行器层面的实际作用力，本文在控制分配器之后增设独立的旋翼升力内环，该内环由前馈控制器与反馈补偿器两部分组成。
 前馈控制器包含旋翼升力逆模型与转速-控制量映射器。给定期望推力 $T_{d,i}$ 后，旋翼升力逆模型依据当前工况量（转台角速度 $\Omega_a$ 与桨盘攻角 $\alpha_p$）求解所需的前馈转速 $\Omega_{\mathrm{ff}}$，再经静态标定的转速-控制量映射转换为前馈控制量 $u_{\mathrm{ff}}$。
 前馈量已涵盖高机动工况下的来流速度与桨盘姿态信息，但电池压降、旋翼间气动干扰等未建模误差仍会造成升力偏差，故引入反馈补偿器予以校正。反馈补偿器以期望推力 $T_{d,i}$ 与同轴力传感器实测推力 $T_m$ 之差为输入，生成控制修正量$u_{\mathrm{fb}}$，与前馈控制量叠加得到总输出 $u_c=u_{\mathrm{ff}}+u_{\mathrm{fb}}$。
-
-
-\begin{center}
-\vbox{
-%\centerline{\includegraphics[width=8cm]{Image/fig4.pdf}}
-\centerline{【图4：待插入图片】}
-\vskip2mm
-{\small 图4\quad 基于模型前馈与直接升力反馈的旋翼升力闭环控制架构
-\\
-Fig.\,4\quad Rotor lift closed-loop control architecture with model feedforward and direct lift feedback}}
-\end{center}
 
 \section{实施}
 \subsection{桨叶几何与翼型气动数据获取}
@@ -478,12 +474,14 @@ Fig.\,4\quad Rotor lift closed-loop control architecture with model feedforward 
 
 \begin{center}
 \vbox{
-%\centerline{\includegraphics[width=6cm]{Image/fig5.pdf}}
-\centerline{【图5：待插入图片】}
+\centerline{\includegraphics[width=6cm]{Image/图4a-桨叶气动参数提取步骤.png}}
+{\small (a)}
+\centerline{\includegraphics[width=6cm]{Image/图4b.png}}
+{\small (b)}
 \vskip2mm
-{\small 图5\quad 螺旋桨摄影测量、三维重建与截面提取过程
+{\small 图4\quad 螺旋桨摄影测量、三维重建与截面提取过程
 \\
-Fig.\,5\quad Photogrammetry, 3D reconstruction and cross-section extraction of the propeller}}
+Fig.\,4\quad Photogrammetry, 3D reconstruction and cross-section extraction of the propeller}}
 \end{center}
 
 沿$0.15R$-$0.95R$范围选取10个代表性截面，获得弦长、安装角和相对厚度的径向分布。为检验几何提取可靠性，将提取结果与公开的同尺度桨叶几何或手工测量结果进行对比，并统计弦长与安装角误差。
@@ -491,11 +489,11 @@ Fig.\,5\quad Photogrammetry, 3D reconstruction and cross-section extraction of t
 \begin{center}
 \vbox{
 %\centerline{\includegraphics[width=6cm]{Image/fig6.pdf}}
-\centerline{【图6：待插入图片】}
+\centerline{【图5：待插入图片】}
 \vskip2mm
-{\small 图6\quad 桨叶截面拟合及弦长、安装角的径向分布
+{\small 图5\quad 桨叶截面拟合及弦长、安装角的径向分布
 \\
-Fig.\,6\quad Blade section fitting and radial distribution of chord and pitch angle}}
+Fig.\,5\quad Blade section fitting and radial distribution of chord and pitch angle}}
 \end{center}
 
 针对提取的各径向截面，利用XFOIL计算不同有效迎角$\alpha_{\mathrm{eff}}$与雷诺数$Re$下的二维翼型气动系数[12]，建立供第~\ref{subsec:lift}~节叶素模型查取的极线表$C_l(\alpha_{\mathrm{eff}},Re)$、$C_d(\alpha_{\mathrm{eff}},Re)$。计算中将极线统一整理至$-10^{\circ}\le\alpha_{\mathrm{eff}}\le40^{\circ}$及离散$Re$网格。对个别截面在高迎角或低雷诺数下未收敛的点，先采用相邻工况插值；超出查表范围时采用边界截断，以避免外推导致的非物理解。该处理保证模型数值稳定，但大迎角失速区的二维极线误差仍需由实验校核。
@@ -506,12 +504,14 @@ Fig.\,6\quad Blade section fitting and radial distribution of chord and pitch an
 
 \begin{center}
 \vbox{
-%\centerline{\includegraphics[width=8cm]{Image/fig7.pdf}}
-\centerline{【图7：待插入图片】}
+\centerline{\includegraphics[width=8cm]{Image/图6a-旋转测试台.png}}
+{\small (a)}
+\centerline{\includegraphics[width=8cm]{Image/图6b-旋转测试台.png}}
+{\small (b)}
 \vskip2mm
-{\small 图7\quad 旋转测试台实物、旋翼安装方式与主要几何参数
+{\small 图6\quad 旋转测试台实物、旋翼安装方式与主要几何参数
 \\
-Fig.\,7\quad Rotating test bench, rotor mounting and main geometric parameters}}
+Fig.\,6\quad Rotating test bench, rotor mounting and main geometric parameters}}
 \end{center}
 
 与风洞试验将旋翼中心来流近似为均匀自由流不同，旋转测试台由悬臂回转生成相对来流。由于桨盘内不同叶素到转台中心的瞬时距离不同，局部来流速度随展向位置$\rho$和方位角$\psi$变化；当$\alpha_p\neq0$时，该来流同时具有垂直于桨盘的轴向分量和位于桨盘内的切向分量，形成方位非均匀入流。设转台角速度为$\Omega_a$、旋翼中心到转台中心的距离为$R_0$、旋翼角速度为$\Omega$，对位于$(\rho,\psi)$处的叶素，局部轴向速度$V_a$和盘内切向速度$V_t$表示为：
@@ -621,8 +621,6 @@ Table\,1 \quad Test settings of the rotor test bench} \vskip2mm
 
 前馈函数 $g(T_c,\Omega_a,\alpha_p)$ 在线实现为逆查表：先由转台角速度 $\Omega_a$ 与悬臂半径 $R_0$ 换算来流速度 $V_\infty=\Omega_a R_0$，再在离线查找表中对 $(\alpha_p,V_\infty)$ 降维插值，沿转速方向反插得到前馈转速 $\Omega_{\mathrm{ff}}$，如算法2~所示。查表仅涉及少量线性插值，计算耗时在微秒量级，满足控制回路高频更新需求。
 
-\end{multicols}%开始通栏显示
-
 \begin{center}
 \vbox{
 {\small 算法2\quad 在线前馈：升力逆映射查表
@@ -654,7 +652,6 @@ Algorithm\,2\quad Online feedforward: inverse lookup of the lift table}
 }
 \end{center}
 
-\begin{multicols}{2}%开始双栏显示
 \subsection{力传感器集成}
 直接推力反馈要求传感器能够在不改变主要传力路径的条件下测量旋翼轴向作用力。应变片机臂测力方案易受结构模态、温漂与装配差异影响，而专用力传感器能够提供更直接的载荷观测[6,13]。本文采用小型拉压力传感器，并使其测量轴与电机轴线重合，以减少弯矩和横向载荷对轴向推力测量的耦合。
 

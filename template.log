@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.23)  20 AUG 2026 23:49
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.23)  21 AUG 2026 22:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -701,24 +701,26 @@ Overfull \vbox (13.2832pt too high) has occurred while \output is active []
  [1
 
 
-
 ]
+File: Image/图1-四旋翼无人机坐标系定义.png Graphic file (type bmp)
+<Image/图1-四旋翼无人机坐标系定义.png>
+
 Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
  [2
 
 ]
-Overfull \hbox (28.8141pt too wide) detected at line 181
+Overfull \hbox (28.8141pt too wide) detected at line 188
 []\OML/cmm/m/it/10.53937 V[] \OT1/cmr/m/n/10.53937 = \OML/cmm/b/it/10.53937 u[]n[]\OML/cmm/m/it/10.53937 ;  \OML/cmm/b/it/10.53937 u[] \OT1/cmr/m/n/10.53937 = [] \OML/cmm/b/it/10.53937 u[]\OML/cmm/m/it/10.53937 ;  V[] \OT1/cmr/m/n/10.53937 = []
  []
 
 
-Overfull \hbox (41.16714pt too wide) detected at line 206
+Overfull \hbox (41.16714pt too wide) detected at line 213
 []\OML/cmm/m/it/10.53937 ^^U[] \OT1/cmr/m/n/10.53937 = []\OML/cmm/m/it/10.53937 ;  ^^_[] \OT1/cmr/m/n/10.53937 = [] []
  []
 
 
-Overfull \hbox (1.36546pt too wide) detected at line 259
+Overfull \hbox (1.36546pt too wide) detected at line 266
 []
  []
 
@@ -731,39 +733,44 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
  [3]
-Overfull \hbox (119.20251pt too wide) detected at line 293
+Overfull \hbox (119.20251pt too wide) detected at line 300
 []\OML/cmm/m/it/10.53937 v[]\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z;  \OT1/cmr/m/n/10.53937 ) = \OML/cmm/m/it/10.53937 ^^U[]\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z;  \OT1/cmr/m/n/10.53937 ) 
 []\OML/cmm/m/it/10.53937 R[];  ^^U[]\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z;  \OT1/cmr/m/n/10.53937 ) = \OML/cmm/m/it/10.53937 ^^U[] []
  []
 
 
-Overfull \hbox (3.61115pt too wide) detected at line 324
+Overfull \hbox (3.61115pt too wide) detected at line 330
 [][]\OML/cmm/m/it/10.53937 L \OT1/cmr/m/n/10.53937 = []\OML/cmm/m/it/10.53937 ^^Z[]V[]C[] c\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 ) []\OML/cmm/m/it/10.53937 ^^Z;  []D \OT1/cmr/m/n/10.53937 = []\OML/cmm/m/it/10.53937 ^^Z[]V[]C[] c\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 ) []\OML/cmm/m/it/10.53937 ^^Z
  []
 
 
-Overfull \hbox (56.88367pt too wide) detected at line 341
+Overfull \hbox (56.88367pt too wide) detected at line 347
 []\OML/cmm/m/it/10.53937 T[] \OT1/cmr/m/n/10.53937 = [] [][]   [][] []\OML/cmm/m/it/10.53937 ^^Z[]c\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 ) [] [] []\OML/cmm/m/it/10.53937 ^^Z [] 
  []
 
+File: Image/图2-旋翼叶素分解.png Graphic file (type bmp)
+<Image/图2-旋翼叶素分解.png>
 
-Overfull \hbox (66.17009pt too wide) detected at line 378
-[]\OML/cmm/b/it/10.53937 s[] \OT1/cmr/m/n/10.53937 = []  \OMS/cmsy/m/n/10.53937 ([])  []
- []
 
 
 Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
  [4]
-Overfull \hbox (109.3614pt too wide) in paragraph at lines 394--424
- [][] 
+Overfull \hbox (66.17009pt too wide) detected at line 385
+[]\OML/cmm/b/it/10.53937 s[] \OT1/cmr/m/n/10.53937 = []  \OMS/cmsy/m/n/10.53937 ([])  []
  []
 
 
-Package multicol Warning: Floats and marginpars not allowed inside `multicols' environment!.
+Overfull \hbox (27.8001pt too wide) in paragraph at lines 402--431
+ [][] 
+ []
+
+File: Image/图3-控制架构.png Graphic file (type bmp)
+<Image/图3-控制架构.png>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-Package multicol Warning: Floats and marginpars not allowed inside `multicols' environment!.
 
 
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
@@ -774,17 +781,22 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
  [5]
-Underfull \hbox (badness 7273) in paragraph at lines 544--545
-[]\TU/SimSun(0)/m/n/10.53937 桨 叶 几 何 $\OML/cmm/m/it/10.53937 c\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 )$\TU/SimSun(0)/m/n/10.53937 、| $\OML/cmm/m/it/10.53937 ^^R\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 )$ \TU/SimSun(0)/m/n/10.53937 与 翼 型 极 线
- []
-
+File: Image/图4a-桨叶气动参数提取步骤.png Graphic file (type bmp)
+<Image/图4a-桨叶气动参数提取步骤.png>
+File: Image/图4b.png Graphic file (type bmp)
+<Image/图4b.png>
 
 Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
  [6]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+File: Image/图6a-旋转测试台.png Graphic file (type bmp)
+<Image/图6a-旋转测试台.png>
+File: Image/图6b-旋转测试台.png Graphic file (type bmp)
+<Image/图6b-旋转测试台.png>
 
-
+Underfull \hbox (badness 7273) in paragraph at lines 544--545
+[]\TU/SimSun(0)/m/n/10.53937 桨 叶 几 何 $\OML/cmm/m/it/10.53937 c\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 )$\TU/SimSun(0)/m/n/10.53937 、| $\OML/cmm/m/it/10.53937 ^^R\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 )$ \TU/SimSun(0)/m/n/10.53937 与 翼 型 极 线
+ []
 
 
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
@@ -806,27 +818,31 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
  [9]
+Overfull \vbox (30.62729pt too high) has occurred while \output is active []
+
+ [10]
 
 
-Overfull \vbox (12.24226pt too high) has occurred while \output is active []
+Overfull \hbox (2.33975pt too wide) has occurred while \output is active
+[] 
+ []
 
- [10] (./template.aux)
+
+Overfull \vbox (12.31282pt too high) has occurred while \output is active []
+
+ [11] (./template.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/07/14>
  ***********
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 9879 strings out of 473832
- 257546 string characters out of 5733158
- 681519 words of memory out of 5000000
- 32737 multiletter control sequences out of 15000+600000
+ 9952 strings out of 473832
+ 259777 string characters out of 5733158
+ 698509 words of memory out of 5000000
+ 32801 multiletter control sequences out of 15000+600000
  578812 words of font info for 152 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 108i,11n,125p,1259b,603s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,11n,125p,1259b,524s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on template.pdf (10 pages).
+Output written on template.pdf (11 pages).
