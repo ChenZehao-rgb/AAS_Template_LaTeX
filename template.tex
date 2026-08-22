@@ -681,12 +681,52 @@ C_T=\frac{T}{\rho n^2 D^4}
 \end{equation}
 其中，$T$为旋翼产生的轴向升力，$\rho$为空气密度。
 
-【待补充图8及定量结果：不同转速、攻角与来流速度下机理模型预测的$C_T$与实测值的对比，报告模型MAE/MAPE及误差随$\mu$、$\alpha_p$的分布，说明机理模型在斜来流工况下的精度及其残差来源。】
+实验升力首先采用标定关系$y=0.915708x+28.7687$进行修正，再根据式~(\ref{eq:CT})计算$C_T$。试验共完成两次完整重复，每次试验中的前进比均先上升后下降，因此将两次重复的上升段和下降段视为四组数据。对相同名义前进比工况，取四组$J$和$C_T$的平均值作为唯一实验点，误差棒表示四组$C_T$的标准差；换向处的最大前进比测点由上升段和下降段共享。理论值则在相同转速和实际桨盘攻角下分别线性插值至升、降段的实验$J$处后取平均。理论表中的攻角变量按$\alpha_{p,\mathrm{theory}}=90^{\circ}-\alpha_{p,\mathrm{exp}}$映射，超出理论$J$范围的数据不进行外推。231个候选名义工况中，共得到222个有效的理论--实验匹配点；另有4个工况因四组数据不完整、5个工况因超出理论$J$范围而未纳入精度统计。
+
+定义第$i$个有效点的残差为$e_i=C_{T,\mathrm{exp},i}-C_{T,\mathrm{theory},i}$，并采用偏差(Bias)、平均绝对误差(MAE)、均方根误差(RMSE)和平均绝对相对误差(MARE)评价模型精度：
+\begin{equation}
+\begin{split}
+\mathrm{Bias}&=\frac{1}{N}\sum_{i=1}^{N}e_i,\quad
+\mathrm{MAE}=\frac{1}{N}\sum_{i=1}^{N}|e_i|,\\
+\mathrm{RMSE}&=\sqrt{\frac{1}{N}\sum_{i=1}^{N}e_i^2},\\
+\mathrm{MARE}&=\frac{1}{N}\sum_{i=1}^{N}
+\left|\frac{e_i}{C_{T,\mathrm{theory},i}}\right|.
+\end{split}
+\label{eq:model_metrics}
+\end{equation}
+
+图8给出了不同转速和桨盘攻角下的理论$C_T$与四组实验均值，每个名义工况仅保留一个实验标记，右列为相应残差。模型能够再现$C_T$随$J$和桨盘攻角变化的主要趋势，但在低攻角下存在较明显的负残差。
+
+\end{multicols}
+\begin{center}
+\vbox{\centering
+\includegraphics[width=15cm]{Image/fig8_rotor_model_comparison.pdf}\\[1mm]
+{\small 图8\quad 不同转速与桨盘攻角下旋翼模型理论结果、实验结果及残差分布
+\\ Fig.\,8 \quad Theoretical and experimental rotor-model results and residual distributions at different rotational speeds and disk angles of attack}}
+\end{center}
+\begin{multicols}{2}
+
+各转速及全部有效点的统计结果见表4。全部工况下，模型Bias、MAE和RMSE分别为$-0.00515$、$0.00580$和$0.00729$，MARE为$7.67\%$。其中3000\,r/min下的RMSE和MARE分别为$0.00858$和$9.66\%$，误差高于4000\,r/min和5000\,r/min工况。四组数据的工况内$C_T$标准差均值为$0.00097$，平均相对标准差为$1.61\%$，均小于模型的总体MAE，说明理论--实验差异不能完全归因于升降过程差异或重复试验的随机波动。
+
+\input{data_process/model_validation_table.tex}
+
+图9(a)进一步给出了理论值与实验值的一致性。全部有效点的Pearson相关系数为$0.964$，说明模型能够较好描述不同工况间的总体变化趋势；一致性回归为$C_{T,\mathrm{exp}}=0.782C_{T,\mathrm{theory}}+0.0107$，决定系数$R^2=0.714$，一致性相关系数CCC为$0.893$。回归斜率小于1，且$86.9\%$的有效点具有负残差，表明机理模型整体上倾向于高估实验升力系数，特别是在理论$C_T$较高的工况下，实验结果的变化幅度小于理论预测。
+
+图9(b)表明误差具有明显的攻角依赖性。合并三个转速后，$0^{\circ}$和$15^{\circ}$攻角下的RMSE分别为$0.01432$和$0.00905$，而$45^{\circ}$攻角下的RMSE降至$0.00281$。低攻角对应较强的盘内来流，模型偏差可能与二维翼型极线、诱导速度近似、桨叶几何测量误差以及旋转台非均匀来流和结构振动有关；现有数据尚不能分离各误差源的独立贡献，因此上述因素仅作为可能的残差来源。总体而言，模型可用于描述所测试转速与攻角范围内的主要升力变化规律，但低攻角区域仍是后续模型修正和独立验证的重点。
+
+\end{multicols}
+\begin{center}
+\vbox{\centering
+\includegraphics[width=17cm]{Image/fig9_rotor_model_diagnostics.pdf}\\[1mm]
+{\small 图9\quad 旋翼升力模型一致性与攻角相关误差：(a)理论值与实验值一致性；(b)不同转速下RMSE随桨盘攻角的变化
+\\ Fig.\,9 \quad Rotor lift model agreement and angle-dependent error: (a) theoretical--experimental agreement; (b) RMSE versus disk angle of attack}}
+\end{center}
+\begin{multicols}{2}
 
 \subsection{升力闭环控制效果验证}
 \label{subsec:control_verif}
 
-控制实验设置如表2所示的5组对比方案，覆盖静态二次映射、斜来流逆模型前馈与直接推力反馈的不同组合。
+控制实验设置如表2所示的3组对比方案，覆盖静态二次映射、斜来流逆模型前馈与直接推力反馈的不同组合。
 
 \begin{center}
 \vbox{\centering{\small 表2\quad 控制方法验证方案
@@ -698,17 +738,15 @@ Table\,2 \quad Verification schemes of the control method} \vskip2mm
 方案 & 前馈 & 反馈 \\
 \midrule
 1 & 静态二次模型 & 关闭 \\
-2 & 旋翼模型前馈 & 关闭 \\
-3 & 关闭 & 开启 \\
-4 & 静态二次模型 & 开启 \\
-5 & 旋翼模型前馈 & 开启 \\
+2 & 关闭 & 开启 \\
+3 & 旋翼模型前馈 & 开启 \\
 \bottomrule
 \end{tabular}}}
 \end{center}
 
 通过阶跃目标推力、转台加速/减速和桨盘攻角切换构造目标变化与外部扰动，评价上升时间、调节时间、稳态误差、峰值误差和RMSE。所有方案保持相同的外层控制指令、限幅和数据处理流程。
 
-【待补充图9-图10及定量结果：各方案的$T_c$、$T_m$、$\Omega_c$和$e_T$时序；报告闭环相对开环的RMSE与峰值误差降低幅度，并给出统计显著性或重复试验离散性。】
+【待补充图10-图11及定量结果：各方案的$T_c$、$T_m$、$\Omega_c$和$e_T$时序；报告闭环相对开环的RMSE与峰值误差降低幅度，并给出统计显著性或重复试验离散性。】
 
 \section{结论}
 

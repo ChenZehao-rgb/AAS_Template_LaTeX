@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.23)  21 AUG 2026 22:24
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.23)  22 AUG 2026 17:34
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -818,9 +818,28 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
  [9]
-Overfull \vbox (30.62729pt too high) has occurred while \output is active []
+File: Image/fig8_rotor_model_comparison.pdf Graphic file (type pdf)
+<use Image/fig8_rotor_model_comparison.pdf>
 
- [10]
+
+
+Overfull \vbox (12.24226pt too high) has occurred while \output is active []
+
+ [10] (./data_process/model_validation_table.tex)
+File: Image/fig9_rotor_model_diagnostics.pdf Graphic file (type pdf)
+<use Image/fig9_rotor_model_diagnostics.pdf>
+
+Overfull \hbox (2.33975pt too wide) has occurred while \output is active
+[] 
+ []
+
+
+Overfull \vbox (12.31282pt too high) has occurred while \output is active []
+
+ [11]
+Overfull \vbox (16.68915pt too high) has occurred while \output is active []
+
+ [12]
 
 
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
@@ -830,19 +849,19 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
- [11] (./template.aux)
+ [13] (./template.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/07/14>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 9952 strings out of 473832
- 259777 string characters out of 5733158
- 698509 words of memory out of 5000000
- 32801 multiletter control sequences out of 15000+600000
- 578812 words of font info for 152 fonts, out of 8000000 for 9000
+ 9994 strings out of 473832
+ 261211 string characters out of 5733158
+ 697537 words of memory out of 5000000
+ 32835 multiletter control sequences out of 15000+600000
+ 581307 words of font info for 163 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 108i,11n,125p,1259b,524s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,18n,125p,1259b,524s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on template.pdf (11 pages).
+Output written on template.pdf (13 pages).

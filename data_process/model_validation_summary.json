@@ -1,0 +1,40 @@
+{
+  "source_workbook": "data\\旋转测试数据汇总表_升力标定实验残差.xlsx",
+  "status_counts": {
+    "有效": 432,
+    "缺少配对": 49,
+    "超出理论J范围": 5
+  },
+  "four_branch_aggregation": {
+    "candidate_nominal_conditions": 231,
+    "valid_four_branch_conditions": 222,
+    "missing_four_branch_conditions": 4,
+    "outside_theory_range_conditions": 5,
+    "shared_turnaround_conditions": 17
+  },
+  "aggregation_definition": "Two repeated tests multiplied by rising/falling branches; one mean per nominal condition. The turn-around point is shared by the rising and falling branches.",
+  "negative_residual_fraction": 0.8693693693693694,
+  "absolute_residual_within_0_005_fraction": 0.5585585585585585,
+  "absolute_residual_within_0_01_fraction": 0.8603603603603603,
+  "repeatability": {
+    "n_conditions": 222,
+    "mean_within_condition_sd": 0.0009677933002822585,
+    "root_mean_square_within_condition_sd": 0.0014229891474069334,
+    "mean_relative_within_condition_sd": 0.016069768931759088,
+    "p95_within_condition_sd": 0.0034242332223859613
+  },
+  "overall": {
+    "n": 222,
+    "bias": -0.005149558466668543,
+    "mae": 0.005795159288963594,
+    "rmse": 0.0072864343678747875,
+    "mean_relative_residual": -0.06175068606147574,
+    "mare": 0.07671955498338726,
+    "max_abs_residual": 0.022551619912256987,
+    "r_squared": 0.7144263674877072,
+    "pearson_r": 0.9641098504197755,
+    "slope": 0.7817524402848877,
+    "intercept": 0.010725041221211906,
+    "ccc": 0.8927859586386916
+  }
+}
