@@ -71,7 +71,7 @@ Month Date, Year}
 
 %这一章为引言,无需写标题.
 
-近年来，低空经济加速向规模化、常态化运行发展，多旋翼无人机凭借垂直起降、定点悬停与机动灵活等优势，已成为物流运输、应急救援、基础设施巡检和复杂环境作业的重要装备[1-3]。随着任务空间由开阔、低速场景拓展至城市近地与障碍物密集区域，无人机需在阵风、尾流、障碍物气动干扰及快速姿态变化等条件下保持稳定飞行。在此类高机动工况下，旋翼承受显著的斜向非均匀来流，使飞控控制指令对应的实际升力偏离标称值，进而影响机体姿态与位置控制的精度与稳定性。
+近年来，低空经济加速向规模化、常态化运行发展，多旋翼无人机凭借垂直起降、定点悬停与机动灵活等优势，已成为物流运输、应急救援、基础设施巡检和复杂环境作业的重要装备[1-3]。随着任务空间由开阔、低速场景拓展至城市近地与障碍物密集区域，无人机需要在其中敏捷穿梭,即在快速姿态变化等条件下保持稳定飞行。在此类高机动工况下，旋翼承受显著的斜向非均匀来流，使飞控控制指令对应的实际升力偏离标称值，进而影响机体姿态与位置控制的精度与稳定性。
 
 现有多旋翼飞控通常依据静态标定得到的升力-控制量映射，将控制分配器输出的期望升力转换为电机控制指令。该映射在近悬停与弱扰动条件下可近似表示为转速（或归一化控制量）的二次函数，但其参数隐含了特定来流、桨盘姿态与推进系统状态。当无人机快速前飞、转弯或翻转时，旋翼局部来流的速度与方向同时改变，桨盘内轴向与面内速度分量呈现显著非均匀性，从而改变叶素入流角、有效迎角及气动力分布。由此产生的升力偏差首先出现在执行器层，而传统控制架构通常需待机体姿态或位置误差形成后才能间接修正，作用链路较长，难以及时抑制旋翼层面的扰动。
 
@@ -662,7 +662,7 @@ Algorithm\,2\quad Online feedforward: inverse lookup of the lift table}
 \section{结果}
 \label{sec:experiment}
 
-为验证所提出的旋翼升力模型与升力闭环控制器，本文在旋转测试台上开展两类实验：其一，执行如表1所示的全包线工况测试，将第1节机理模型的预测升力与实测升力对比，验证模型精度；其二，在气动效应最显著、来流垂直于桨盘平面的90$^{\circ}$攻角工况下，模拟两个场景——场景1缓慢加速，模拟稳态来流作用下的影响；场景2以最大加速度运行，模拟机动飞行时的动态来流影响，并分别按表2所示的5组方案验证闭环控制效果。
+为验证所提出的旋翼升力模型与升力闭环控制器，本文在旋转测试台上开展两类实验：其一，执行如表1所示的全包线工况测试，将第1节机理模型的预测升力与实测升力对比，验证模型精度；其二，在气动效应最显著、来流垂直于桨盘平面的90$^{\circ}$攻角工况下，按表2所示的固定控制量、纯反馈、模型前馈与反馈复合控制三级对照方案，覆盖15、20、25 N三个期望升力和1、5、10 s三种来流加速时间（分别模拟缓慢稳态来流和快速机动来流），共构成9个匹配工况，验证闭环控制效果。
 
 \subsection{旋翼升力模型精度验证}
 \label{subsec:model_verif}
@@ -726,7 +726,7 @@ C_T=\frac{T}{\rho n^2 D^4}
 \subsection{升力闭环控制效果验证}
 \label{subsec:control_verif}
 
-控制实验设置如表2所示的3组对比方案，覆盖静态二次映射、斜来流逆模型前馈与直接推力反馈的不同组合。
+本节以90$^{\circ}$纯轴向来流作为控制验证工况：该工况下来流方向垂直于桨盘平面、轴向分量最大，对旋翼推力的扰动最直接，因此适合用于检验控制器对显著气动扰动的抑制能力。三种控制方法构成“固定控制量—纯反馈—模型前馈与反馈复合控制”的三级对照，如表2所示。固定控制量方案按式~(\ref{eq:static_map})根据零来流静态标定关系给定与期望升力对应的执行器输出，来流变化期间不作调整；纯反馈方案关闭第3.2节所述的旋翼升力逆模型前馈，仅由升力误差生成反馈修正量$u_{\mathrm{fb}}$；模型前馈与反馈复合控制依据转台角速度$\Omega_a$与桨盘攻角$\alpha_p$估计的来流状态，由旋翼升力逆模型给出前馈转速$\Omega_{\mathrm{ff}}$与前馈控制量$u_{\mathrm{ff}}$，反馈环仅补偿模型误差与未建模扰动。日志核验表明，9组固定控制量试验中执行器输出在来流低速基线段与高速平台段之间的中位绝对变化为0\%，确认该组构成真实的固定执行器输入对照；静态映射下飞控内部仍会变化的$\mathrm{thrust\_feedback\_out}$与$\mathrm{thrust\_control\_out}$只是内部计算信号，并非实际施加的控制量，本文不作为固定控制量的判据。
 
 \begin{center}
 \vbox{\centering{\small 表2\quad 控制方法验证方案
@@ -744,9 +744,50 @@ Table\,2 \quad Verification schemes of the control method} \vskip2mm
 \end{tabular}}}
 \end{center}
 
-通过阶跃目标推力、转台加速/减速和桨盘攻角切换构造目标变化与外部扰动，评价上升时间、调节时间、稳态误差、峰值误差和RMSE。所有方案保持相同的外层控制指令、限幅和数据处理流程。
+试验覆盖期望升力15、20、25 N与来流加速时间1、5、10 s，共构成9个匹配工况，三种方法在同一工况下共享相同的目标推力阶跃指令、限幅与数据处理流程。各试验依据中值滤波后的来流速度$V_\infty$进行时间对齐，以来流由低、高平台差值的10\%处作为扰动起点、90\%处作为加速结束时刻；主要评价窗口取该10\%--90\%加速段及其后3 s，兼顾瞬态误差与加速结束后的恢复过程。归一化均方根误差作为主指标：
+\begin{equation}
+E_{\mathrm{RMSE}}=\frac{100\%}{T_c}
+\sqrt{\frac{1}{N}\sum_{k=1}^{N}\left[T_c(k)-T_m(k)\right]^2}
+\label{eq:closed_loop_rmse}
+\end{equation}
+其中，$T_c$为期望升力，$T_m$为第3.3节所述滤波后的传感器升力测量值；归一化峰值绝对误差$\max_k|T_c(k)-T_m(k)|/T_c$作为次要指标。为排除不同试验零来流初始配平偏差的影响，本文同时报告扣除各试验扰动前平均误差后的增量RMSE，作为原始RMSE比较的敏感性分析。
 
-【待补充图10-图11及定量结果：各方案的$T_c$、$T_m$、$\Omega_c$和$e_T$时序；报告闭环相对开环的RMSE与峰值误差降低幅度，并给出统计显著性或重复试验离散性。】
+图10给出20 N期望升力、1 s来流加速工况下三种方法的代表性动态响应，该工况来流变化最快，最能体现瞬态控制差异。固定控制量下，升力随轴向来流增加而大幅下降，且加速结束后仍存在稳态偏差；纯反馈能够逐步恢复升力，但存在明显的瞬态跌落；模型前馈与反馈复合控制在来流加速阶段即同步提高控制量，将跟踪误差限制在更小范围内。
+
+\end{multicols}
+\begin{center}
+\vbox{\centering
+\includegraphics[width=9cm]{Image/fig10_representative_response.pdf}\\[1mm]
+{\small 图10\quad 20 N期望升力和1 s来流加速工况下三种控制方法的动态响应。竖虚线表示来流速度达到变化幅值10\%的时刻，灰色区域表示期望升力的$\pm5\%$误差带
+\\ Fig.\,10 \quad Dynamic response of the three control methods at a 20 N desired thrust and a 1 s freestream ramp. The vertical dotted line marks the 10\% freestream-speed crossing; the shaded band denotes the $\pm5\%$ error tolerance of the desired thrust}}
+\end{center}
+\begin{multicols}{2}
+
+图11给出全部9个匹配工况的综合比较，是证明三种方法性能层级关系的核心结果：图11(a)为纯反馈相对固定控制量的扰动窗口归一化RMSE降幅；图11(b)为模型前馈与反馈复合控制相对纯反馈的进一步降幅；图11(c)为归一化绝对误差随来流速度的变化，中线与阴影分别表示跨工况中位数与四分位区间；图11(d)为扣除各试验扰动前平均误差后的逐工况配对RMSE。原始RMSE和扣除初始偏差后的增量RMSE均在9/9个工况中满足$E_{\mathrm{FF+FB}}<E_{\mathrm{FB}}<E_{\mathrm{static}}$。
+
+\end{multicols}
+\begin{center}
+\vbox{\centering
+\includegraphics[width=12cm]{Image/fig11_condition_summary.pdf}\\[1mm]
+{\small 图11\quad 90$^{\circ}$纯轴向来流下三种控制方法在全部匹配工况中的误差比较：(a)纯反馈相对固定控制量的归一化RMSE降幅；(b)模型前馈与反馈复合控制相对纯反馈的进一步降幅；(c)各方法归一化绝对误差随来流速度的变化；(d)扣除各试验扰动前平均误差后的逐工况配对RMSE
+\\ Fig.\,11 \quad Error comparison of the three control methods across all matched conditions under 90$^{\circ}$ purely axial inflow: (a) normalized RMSE reduction of feedback only versus the static-map open loop; (b) further RMSE reduction of model feedforward plus feedback versus feedback only; (c) normalized absolute error versus freestream speed for each method; (d) condition-wise paired RMSE after subtracting each trial's pre-disturbance mean error}}
+\end{center}
+\begin{multicols}{2}
+
+相对于固定控制量，纯反馈在9个匹配工况中的扰动窗口归一化RMSE降幅为80.2\%--92.9\%，中位数为89.7\%；峰值误差的中位降幅为85.2\%，说明闭环反馈能够显著抑制轴向来流导致的稳态升力损失。在纯反馈基础上加入旋翼升力逆模型前馈后，9个工况的归一化RMSE均进一步下降，降幅为45.7\%--74.3\%，中位数为62.2\%；峰值误差的中位降幅为40.1\%。其原因在于纯反馈须等待升力误差形成后才能修正控制量，而模型前馈可依据来流速度同步给出补偿转速，从而减小快速加速阶段的瞬态升力损失。来流加速时间由1 s增加至10 s时，前馈相对纯反馈的优势总体增大，表明在较缓慢但持续的来流变化中旋翼模型能够更充分地承担所需控制量；在最急剧的1 s加速条件下，前馈在全部期望升力下仍保持优势。考虑到固定控制量试验的零来流初始升力与期望值存在小幅偏差，进一步扣除各试验扰动前的平均误差后，固定控制量、纯反馈和模型前馈与反馈复合控制的归一化RMSE中位数分别为34.03\%、3.97\%和1.49\%，三种方法的性能排序仍在9/9个工况中成立，说明复合控制的优势主要来自对来流扰动的动态补偿能力，而非固定控制量组的初始标定偏差。
+
+图12进一步给出模型前馈的作用机理，用以解释上述性能优势的来源，而非重复证明性能高低。旋翼升力逆模型给出的前馈转速随来流增加提前上升，编码器实测转速能够跟随该指令；总控制量主要由前馈分量构成，反馈分量只承担较小修正——在前馈与反馈复合试验中，反馈项绝对值占总输出的试验级中位数为5.7\%。基于角速度估计和向心加速度得到的两种来流速度变化趋势一致，支持前馈所依赖的来流状态估计是可靠的。上述结果共同支持“模型承担主要扰动补偿、反馈消除残余误差”的机理解释。
+
+\end{multicols}
+\begin{center}
+\vbox{\centering
+\includegraphics[width=9cm]{Image/fig12_feedforward_mechanism.pdf}\\[1mm]
+{\small 图12\quad 模型前馈作用机理及信号一致性核验：旋翼升力逆模型根据来流速度和期望升力提高目标转速，编码器转速随之变化；总控制量主要由前馈分量给出，反馈分量用于修正模型误差；基于角速度估计和向心加速度得到的来流速度变化趋势一致
+\\ Fig.\,12 \quad Feedforward mechanism and signal-consistency checks: the rotor lift inverse model raises the target rotor speed with freestream speed and desired thrust, which the encoder speed tracks; the total control output is dominated by the feedforward component, with the feedback component correcting model error; the freestream-speed trends from the angular-rate estimate and from centripetal acceleration agree}}
+\end{center}
+\begin{multicols}{2}
+
+需要说明的是，本节结论限定于90$^{\circ}$纯轴向来流这一显著气动扰动工况下的控制效果验证，而非对完整攻角包线的控制性能标定。根据前述气动分析，90$^{\circ}$工况下来流轴向分量最大，旋翼工作状态及升力受来流变化的影响最为显著，因此选取该工况进行三级对照试验；由此得到的结论限定于本试验所覆盖的轴向来流与升力范围，不代表控制器已在全部攻角范围内得到验证。此外，除15 N、1 s的模型前馈与反馈复合控制重复2次（试验级归一化RMSE分别为5.60\%和5.67\%）外，其余方法—工况单元均只完成1次试验，因此上述比较为描述性结果，不支持置信区间、显著性检验或“统计显著优于”等表述；25 N、1 s的模型前馈与反馈复合控制试验在扰动窗口内有56.5\%的时间处于归一化输出不低于0.98的状态，该工况的结果包含执行器限幅效应，应与其余工况区别看待。
 
 \section{结论}
 
