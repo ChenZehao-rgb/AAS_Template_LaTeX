@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.23)  24 AUG 2026 01:13
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.23)  25 AUG 2026 22:10
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -663,9 +663,6 @@ Package fontspec Info:
 
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 
 
 Package fontspec Info: 
@@ -705,21 +702,29 @@ Overfull \vbox (13.2832pt too high) has occurred while \output is active []
 
 
 ]
-
-
-
+File: Image/图1-四旋翼无人机坐标系定义.png Graphic file (type bmp)
+<Image/图1-四旋翼无人机坐标系定义.png>
 
 Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
  [2
 
 ]
-File: Image/图1-四旋翼无人机坐标系定义.png Graphic file (type bmp)
-<Image/图1-四旋翼无人机坐标系定义.png>
-
-Overfull \hbox (23.79964pt too wide) detected at line 197
+Overfull \hbox (23.79964pt too wide) detected at line 187
 []\OML/cmm/m/it/10.53937 ^^U[] \OT1/cmr/m/n/10.53937 = \OML/cmm/m/it/10.53937 ^^U[] \OT1/cmr/m/n/10.53937 + []\OML/cmm/m/it/10.53937 ;  ^^_[] \OT1/cmr/m/n/10.53937 = [] []
  []
+
+
+Overfull \hbox (3.61115pt too wide) detected at line 261
+[][]\OML/cmm/m/it/10.53937 L \OT1/cmr/m/n/10.53937 = []\OML/cmm/m/it/10.53937 ^^Z[]V[]C[] c\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 ) []\OML/cmm/m/it/10.53937 ^^Z;  []D \OT1/cmr/m/n/10.53937 = []\OML/cmm/m/it/10.53937 ^^Z[]V[]C[] c\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 ) []\OML/cmm/m/it/10.53937 ^^Z
+ []
+
+File: Image/fig2.pdf Graphic file (type pdf)
+<use Image/fig2.pdf>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
@@ -729,34 +734,24 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
- [3
+ [3]
+File: Image/fig3.pdf Graphic file (type pdf)
+<use Image/fig3.pdf>
 
-]
-Overfull \hbox (119.20251pt too wide) detected at line 240
-[]\OML/cmm/m/it/10.53937 v[]\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z;  \OT1/cmr/m/n/10.53937 ) = \OML/cmm/m/it/10.53937 ^^U[]\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z;  \OT1/cmr/m/n/10.53937 ) 
-[]\OML/cmm/m/it/10.53937 R[];  ^^U[]\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z;  \OT1/cmr/m/n/10.53937 ) = \OML/cmm/m/it/10.53937 ^^U[] []
- []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-Overfull \hbox (3.61115pt too wide) detected at line 270
-[][]\OML/cmm/m/it/10.53937 L \OT1/cmr/m/n/10.53937 = []\OML/cmm/m/it/10.53937 ^^Z[]V[]C[] c\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 ) []\OML/cmm/m/it/10.53937 ^^Z;  []D \OT1/cmr/m/n/10.53937 = []\OML/cmm/m/it/10.53937 ^^Z[]V[]C[] c\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 ) []\OML/cmm/m/it/10.53937 ^^Z
- []
-
-
-Overfull \hbox (56.88367pt too wide) detected at line 287
-[]\OML/cmm/m/it/10.53937 T[] \OT1/cmr/m/n/10.53937 = [] [][]   [][] []\OML/cmm/m/it/10.53937 ^^Z[]c\OT1/cmr/m/n/10.53937 (\OML/cmm/m/it/10.53937 ^^Z\OT1/cmr/m/n/10.53937 ) [] [] []\OML/cmm/m/it/10.53937 ^^Z [] 
- []
-
-File: Image/fig2.pdf Graphic file (type pdf)
-<use Image/fig2.pdf>
 
 
 
 Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
  [4]
-File: Image/fig3.pdf Graphic file (type pdf)
-<use Image/fig3.pdf>
+File: Image/图4a-桨叶气动参数提取步骤.png Graphic file (type bmp)
+<Image/图4a-桨叶气动参数提取步骤.png>
+File: Image/图4b.png Graphic file (type bmp)
+<Image/图4b.png>
+File: Image/图5-chord_pitch_comparison.pdf Graphic file (type pdf)
+<use Image/图5-chord_pitch_comparison.pdf>
 
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 [] 
@@ -766,16 +761,10 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
  [5]
-File: Image/图4a-桨叶气动参数提取步骤.png Graphic file (type bmp)
-<Image/图4a-桨叶气动参数提取步骤.png>
-File: Image/图4b.png Graphic file (type bmp)
-<Image/图4b.png>
-File: Image/图5-chord_pitch_comparison.pdf Graphic file (type pdf)
-<use Image/图5-chord_pitch_comparison.pdf>
 File: Image/图6a-旋转测试台.png Graphic file (type bmp)
 <Image/图6a-旋转测试台.png>
-File: Image/图6b-旋转测试台.png Graphic file (type bmp)
-<Image/图6b-旋转测试台.png>
+File: Image/fig6b.png Graphic file (type bmp)
+<Image/fig6b.png>
 
 Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
@@ -788,38 +777,17 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
  [7]
+Underfull \hbox (badness 10000) in paragraph at lines 529--530
+\OML/cmm/m/it/10.53937 C[]$\TU/SimSun(0)/m/n/10.53937 。|  考 虑 到 不 同 转 速 下 悬 停 理 论 值
+ []
+
+(./data_process/model_validation_table.tex)
 Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
  [8]
-File: Image/fig1_CT_vs_J.png Graphic file (type bmp)
-<Image/fig1_CT_vs_J.png>
-File: Image/fig2_error_breakdown.png Graphic file (type bmp)
-<Image/fig2_error_breakdown.png>
-
-
-
-Overfull \hbox (2.33975pt too wide) has occurred while \output is active
-[] 
- []
-
-
-Overfull \vbox (12.31282pt too high) has occurred while \output is active []
-
- [9] (./data_process/model_validation_table.tex)
 File: Image/fig9_rotor_model_diagnostics.pdf Graphic file (type pdf)
 <use Image/fig9_rotor_model_diagnostics.pdf>
 
-Overfull \vbox (12.24226pt too high) has occurred while \output is active []
-
- [10]
-File: Image/fig10_representative_response.pdf Graphic file (type pdf)
-<use Image/fig10_representative_response.pdf>
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 [] 
  []
@@ -827,7 +795,9 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
- [11]
+ [9]
+File: Image/fig10_representative_response.pdf Graphic file (type pdf)
+<use Image/fig10_representative_response.pdf>
 File: Image/fig11_condition_summary.pdf Graphic file (type pdf)
 <use Image/fig11_condition_summary.pdf>
 
@@ -838,7 +808,7 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
- [12]
+ [10]
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 [] 
  []
@@ -846,7 +816,7 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
- [13]
+ [11]
 File: Image/fig12_feedforward_mechanism.pdf Graphic file (type pdf)
 <use Image/fig12_feedforward_mechanism.pdf>
 
@@ -858,7 +828,9 @@ Overfull \vbox (10.14566pt too high) has occurred while \output is active []
 
 Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
- [14]
+ [12]
+
+
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 [] 
  []
@@ -866,24 +838,19 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 
 Overfull \vbox (12.31282pt too high) has occurred while \output is active []
 
- [15]
-
-
-Overfull \vbox (12.24226pt too high) has occurred while \output is active []
-
- [16] (./template.aux)
+ [13] (./template.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/07/14>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 10090 strings out of 473832
- 266704 string characters out of 5733158
- 675785 words of memory out of 5000000
- 32926 multiletter control sequences out of 15000+600000
+ 10077 strings out of 473832
+ 266657 string characters out of 5733158
+ 683800 words of memory out of 5000000
+ 32915 multiletter control sequences out of 15000+600000
  581307 words of font info for 163 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 108i,18n,125p,794b,593s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,11n,125p,794b,594s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on template.pdf (16 pages).
+Output written on template.pdf (13 pages).
