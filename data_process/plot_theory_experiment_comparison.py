@@ -364,12 +364,10 @@ def plot_comparison(curves: pd.DataFrame, image_dir: Path) -> None:
 
 
 def plot_diagnostics(
-    curves: pd.DataFrame, summary: pd.DataFrame, regression: dict[str, float | int], image_dir: Path
+    curves: pd.DataFrame, regression: dict[str, float | int], image_dir: Path
 ) -> None:
-    """Generate the parity plot and angle-dependent RMSE diagnostic."""
-    fig, (parity_ax, rmse_ax) = plt.subplots(
-        1, 2, figsize=(7.15, 3.15), gridspec_kw={"wspace": 0.28}
-    )
+    """Generate the theory-experiment parity plot."""
+    fig, parity_ax = plt.subplots(figsize=(3.6, 3.15))
 
     for rpm in RPM_LEVELS:
         subset = curves.loc[curves["rpm_nom"] == rpm]
@@ -415,30 +413,7 @@ def plot_diagnostics(
         bbox={"facecolor": "white", "edgecolor": "0.75", "linewidth": 0.5, "alpha": 0.9},
     )
 
-    for rpm in RPM_LEVELS:
-        subset = summary.loc[summary["rpm_nom"] == rpm].sort_values("alpha_deg")
-        rmse_ax.plot(
-            subset["alpha_deg"],
-            subset["RMSE_CT"],
-            color=RPM_COLORS[rpm],
-            marker=RPM_MARKERS[rpm],
-            markersize=4.2,
-            markerfacecolor="white",
-            markeredgewidth=0.8,
-            linewidth=1.25,
-            label=f"{rpm} rpm",
-        )
-
-    rmse_ax.set_xlabel(r"Disk angle of attack, $\alpha_p$ ($^\circ$)")
-    rmse_ax.set_ylabel("RMSE of $C_T$")
-    rmse_ax.set_xticks(ANGLE_LEVELS)
-    rmse_ax.set_ylim(bottom=0)
-    rmse_ax.grid(axis="y", color="0.88", linewidth=0.45, linestyle=":")
-    rmse_ax.legend(frameon=False, loc="upper right")
-
-    parity_ax.text(0.01, 1.02, "(a)", transform=parity_ax.transAxes, fontweight="bold")
-    rmse_ax.text(0.01, 1.02, "(b)", transform=rmse_ax.transAxes, fontweight="bold")
-    fig.subplots_adjust(left=0.095, right=0.99, top=0.96, bottom=0.17)
+    fig.subplots_adjust(left=0.17, right=0.97, top=0.96, bottom=0.17)
     _save_figure(fig, image_dir / "fig9_rotor_model_diagnostics")
 
 
@@ -523,7 +498,7 @@ def main() -> None:
     repeatability = repeatability_stats(sheets["hysteresis"])
 
     plot_comparison(sheets["curves"], image_dir)
-    plot_diagnostics(sheets["curves"], sheets["summary"], regression, image_dir)
+    plot_diagnostics(sheets["curves"], regression, image_dir)
     write_outputs(sheets, point_metrics, regression, repeatability, output_dir)
 
     print(point_metrics.to_string(index=False))
