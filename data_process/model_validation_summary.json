@@ -11,12 +11,95 @@
     "mape_pct": 5.083977721518987,
     "rmse_ct": 0.0006246936133852602
   },
+  "pooled_point_metrics_by_angle": [
+    {
+      "group": "0 deg",
+      "alpha_deg": 0,
+      "n": 126,
+      "bias_pct": 4.51547838095238,
+      "rmse_norm_pct": 7.43156703031155,
+      "maxerr_norm_pct": 12.672379,
+      "mape_pct": 8.933353883333334,
+      "rmse_ct": 0.0008025098921409798
+    },
+    {
+      "group": "15 deg",
+      "alpha_deg": 15,
+      "n": 126,
+      "bias_pct": -1.6947770158730155,
+      "rmse_norm_pct": 3.9077149142991825,
+      "maxerr_norm_pct": 14.941307,
+      "mape_pct": 4.696074048387097,
+      "rmse_ct": 0.0004253024693981807
+    },
+    {
+      "group": "30 deg",
+      "alpha_deg": 30,
+      "n": 126,
+      "bias_pct": 0.7079496349206349,
+      "rmse_norm_pct": 3.2613836352322725,
+      "maxerr_norm_pct": 9.654958,
+      "mape_pct": 3.9742770952380955,
+      "rmse_ct": 0.0003536579483688221
+    },
+    {
+      "group": "45 deg",
+      "alpha_deg": 45,
+      "n": 124,
+      "bias_pct": 3.882063387096774,
+      "rmse_norm_pct": 5.018172167123082,
+      "maxerr_norm_pct": 9.727097,
+      "mape_pct": 5.32871897580645,
+      "rmse_ct": 0.0005416927619851466
+    },
+    {
+      "group": "60 deg",
+      "alpha_deg": 60,
+      "n": 126,
+      "bias_pct": 1.8583044126984127,
+      "rmse_norm_pct": 2.4591601959553766,
+      "maxerr_norm_pct": 6.920827,
+      "mape_pct": 2.1743065952380953,
+      "rmse_ct": 0.0002664841339569649
+    },
+    {
+      "group": "75 deg",
+      "alpha_deg": 75,
+      "n": 124,
+      "bias_pct": -3.4651880080645165,
+      "rmse_norm_pct": 4.416604609973394,
+      "maxerr_norm_pct": 11.742506,
+      "mape_pct": 3.6297320967741933,
+      "rmse_ct": 0.00047933202009032427
+    },
+    {
+      "group": "90 deg",
+      "alpha_deg": 90,
+      "n": 125,
+      "bias_pct": -7.946908944,
+      "rmse_norm_pct": 10.03626582598245,
+      "maxerr_norm_pct": 19.749097,
+      "mape_pct": 7.024732112,
+      "rmse_ct": 0.0010907675939447413
+    },
+    {
+      "group": "Overall",
+      "alpha_deg": null,
+      "n": 877,
+      "bias_pct": -0.2997886989737744,
+      "rmse_norm_pct": 5.762022641399933,
+      "maxerr_norm_pct": 19.749097,
+      "mape_pct": 5.083977721518987,
+      "rmse_ct": 0.0006246936133852602
+    }
+  ],
   "regression_on_binned_curves": {
     "n": 231,
     "slope": 0.8608050588105612,
     "intercept": 0.001277626307924411,
     "pearson_r": 0.9602566429943843,
-    "r_squared": 0.8977048146220952,
+    "r_squared": 0.9220928204148444,
+    "nash_sutcliffe_efficiency": 0.8977048146220952,
     "ccc": 0.954427954819546,
     "bias": -3.201731601731603e-05,
     "mae": 0.0004542597402597403,

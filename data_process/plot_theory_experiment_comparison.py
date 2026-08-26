@@ -25,9 +25,9 @@ table, and a JSON summary used to write the results section.
 
 Outputs
 -------
-Image/fig8_rotor_model_comparison.{pdf,png}
 Image/fig9_rotor_model_diagnostics.{pdf,png}
 data_process/model_validation_metrics.csv
+data_process/model_validation_metrics_by_angle.csv
 data_process/model_validation_table.tex
 data_process/model_validation_summary.json
 """
@@ -42,6 +42,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib import font_manager
 from matplotlib.lines import Line2D
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,6 +63,20 @@ ANGLE_COLORS = {
 }
 RPM_COLORS = {3000: "#0077BB", 4000: "#EE7733", 5000: "#009988"}
 RPM_MARKERS = {3000: "o", 4000: "s", 5000: "^"}
+
+CJK_FONT_CANDIDATES = (
+    "Noto Serif SC",
+    "Source Han Serif SC",
+    "SimSun",
+    "STSong",
+    "Microsoft YaHei",
+    "SimHei",
+)
+INSTALLED_FONT_FAMILIES = {font.name for font in font_manager.fontManager.ttflist}
+CJK_FONT_FAMILY = next(
+    (name for name in CJK_FONT_CANDIDATES if name in INSTALLED_FONT_FAMILIES),
+    "sans-serif",
+)
 
 
 def configure_matplotlib() -> None:
@@ -131,7 +146,8 @@ def regression_stats(curves: pd.DataFrame) -> dict[str, float | int]:
     pearson_r = float(np.corrcoef(theory, exp)[0, 1])
     sse = float(np.sum(residual**2))
     sst = float(np.sum((exp - exp.mean()) ** 2))
-    r_squared = 1.0 - sse / sst
+    regression_r_squared = pearson_r**2
+    nash_sutcliffe_efficiency = 1.0 - sse / sst
     covariance = float(np.mean((theory - theory.mean()) * (exp - exp.mean())))
     ccc = 2.0 * covariance / (
         float(np.var(theory)) + float(np.var(exp)) + float((theory.mean() - exp.mean()) ** 2)
@@ -142,7 +158,8 @@ def regression_stats(curves: pd.DataFrame) -> dict[str, float | int]:
         "slope": float(slope),
         "intercept": float(intercept),
         "pearson_r": pearson_r,
-        "r_squared": float(r_squared),
+        "r_squared": float(regression_r_squared),
+        "nash_sutcliffe_efficiency": float(nash_sutcliffe_efficiency),
         "ccc": float(ccc),
         "bias": float(np.mean(residual)),
         "mae": float(np.mean(np.abs(residual))),
@@ -177,6 +194,27 @@ def build_point_metrics(points: pd.DataFrame) -> pd.DataFrame:
     for rpm in RPM_LEVELS:
         rows.append({"group": f"{rpm} rpm", **_pooled_point_stats(points.loc[points["rpm_nom"] == rpm])})
     rows.append({"group": "Overall", **_pooled_point_stats(points)})
+    return pd.DataFrame(rows)
+
+
+def build_angle_metrics(points: pd.DataFrame) -> pd.DataFrame:
+    """Return pooled-error statistics by disk angle plus an overall row."""
+    rows: list[dict[str, float | int | str]] = []
+    for angle in ANGLE_LEVELS:
+        rows.append(
+            {
+                "group": f"{angle} deg",
+                "alpha_deg": angle,
+                **_pooled_point_stats(points.loc[points["alpha_deg"] == angle]),
+            }
+        )
+    rows.append(
+        {
+            "group": "Overall",
+            "alpha_deg": np.nan,
+            **_pooled_point_stats(points),
+        }
+    )
     return pd.DataFrame(rows)
 
 
@@ -391,8 +429,10 @@ def plot_diagnostics(
     parity_ax.set_xlim(line_limits)
     parity_ax.set_ylim(line_limits)
     parity_ax.set_aspect("equal", adjustable="box")
-    parity_ax.set_xlabel(r"Theoretical $C_T$")
-    parity_ax.set_ylabel(r"Experimental $C_T$")
+    # Explicitly select a CJK-capable font for the surrounding Chinese text;
+    # the $C_T$ fragment is still rendered by the Times mathtext settings.
+    parity_ax.set_xlabel(r"理论 $C_T$ 值", fontfamily=CJK_FONT_FAMILY)
+    parity_ax.set_ylabel(r"实验 $C_T$ 值", fontfamily=CJK_FONT_FAMILY)
     parity_ax.grid(color="0.88", linewidth=0.45, linestyle=":")
     parity_ax.legend(frameon=False, loc="upper left", handletextpad=0.4)
 
@@ -420,12 +460,16 @@ def plot_diagnostics(
 def write_outputs(
     sheets: dict[str, pd.DataFrame],
     point_metrics: pd.DataFrame,
+    angle_metrics: pd.DataFrame,
     regression: dict[str, float | int],
     repeatability: dict[str, float],
     output_dir: Path,
 ) -> None:
     """Write auditable numeric summaries and the LaTeX table body."""
     point_metrics.to_csv(output_dir / "model_validation_metrics.csv", index=False, encoding="utf-8-sig")
+    angle_metrics.to_csv(
+        output_dir / "model_validation_metrics_by_angle.csv", index=False, encoding="utf-8-sig"
+    )
     sheets["curves"].to_csv(
         output_dir / "model_validation_four_branch_mean.csv", index=False, encoding="utf-8-sig"
     )
@@ -439,6 +483,21 @@ def write_outputs(
         "pooled_point_metrics_overall": {
             k: (int(v) if k == "n" else float(v)) for k, v in overall.items() if k != "group"
         },
+        "pooled_point_metrics_by_angle": [
+            {
+                k: (
+                    v
+                    if k == "group"
+                    else None
+                    if pd.isna(v)
+                    else int(v)
+                    if k in {"alpha_deg", "n"}
+                    else float(v)
+                )
+                for k, v in row.items()
+            }
+            for row in angle_metrics.to_dict(orient="records")
+        ],
         "regression_on_binned_curves": regression,
         "repeatability": repeatability,
     }
@@ -447,26 +506,28 @@ def write_outputs(
     )
 
     rows = []
-    for _, row in point_metrics.iterrows():
-        label = "全部" if row["group"] == "Overall" else row["group"].replace(" rpm", "")
+    for _, row in angle_metrics.iterrows():
+        label = "全部" if row["group"] == "Overall" else str(int(row["alpha_deg"]))
         rows.append(
-            f"{label} & {int(row['n'])} & {row['bias_pct']:.2f}\\% & {row['rmse_norm_pct']:.2f}\\% & "
-            f"{row['maxerr_norm_pct']:.2f}\\% & {row['mape_pct']:.2f}\\% & {row['rmse_ct']:.5f} \\\\"
+            f"{label} & {int(row['n'])} & {row['bias_pct']:.2f} & {row['rmse_norm_pct']:.2f} & "
+            f"{row['maxerr_norm_pct']:.2f} & {row['mape_pct']:.2f} \\\\"
         )
     table_tex = "\n".join(
         [
             r"\begin{center}",
-            r"\vbox{\centering{\small 表4\quad 旋翼升力模型精度统计",
-            r"\\ Table\,4 \quad Accuracy statistics of the rotor lift model}\vskip2mm",
+            r"\vbox{\centering{\small 表3\quad 不同桨盘攻角下的旋翼升力模型误差统计",
+            r"\\ Table\,3 \quad Error statistics of the rotor lift model at different disk angles of attack}\vskip2mm",
             r"{\scriptsize\centering",
-            r"\resizebox{\columnwidth}{!}{%",
-            r"\begin{tabular}{crrrrrr}",
+            r"\setlength{\tabcolsep}{3.5pt}%",
+            r"\begin{tabular}{@{}crrrrr@{}}",
             r"\toprule",
-            r"转速/(r/min) & $N$ & Bias & RMSE$_{\mathrm{norm}}$ & MaxErr$_{\mathrm{norm}}$ & MAPE & RMSE($C_T$) \\",
+            r"$\alpha_p/(^\circ)$ & $N$ & Bias/\% & RMSE$_{\mathrm{norm}}$/\% & MaxErr$_{\mathrm{norm}}$/\% & MAPE/\% \\",
             r"\midrule",
             *rows,
             r"\bottomrule",
-            r"\end{tabular}}}",
+            r"\end{tabular}}",
+            r"\vskip1mm",
+            r"\parbox{0.98\columnwidth}{\scriptsize 注：除$N$外各统计量均以百分数列示。Bias、RMSE$_{\mathrm{norm}}$和MaxErr$_{\mathrm{norm}}$均以对应转速下的理论悬停升力系数归一化；MAPE仅统计理论模型有效插值范围内的数据点。}",
             r"}",
             r"\end{center}",
         ]
@@ -495,13 +556,14 @@ def main() -> None:
 
     regression = regression_stats(sheets["curves"])
     point_metrics = build_point_metrics(sheets["points"])
+    angle_metrics = build_angle_metrics(sheets["points"])
     repeatability = repeatability_stats(sheets["hysteresis"])
 
-    plot_comparison(sheets["curves"], image_dir)
     plot_diagnostics(sheets["curves"], regression, image_dir)
-    write_outputs(sheets, point_metrics, regression, repeatability, output_dir)
+    write_outputs(sheets, point_metrics, angle_metrics, regression, repeatability, output_dir)
 
     print(point_metrics.to_string(index=False))
+    print(angle_metrics.to_string(index=False))
     print(json.dumps(regression, indent=2))
     print(json.dumps(repeatability, indent=2))
     print(f"Figures written to: {image_dir}")
