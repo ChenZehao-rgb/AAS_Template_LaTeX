@@ -1,17 +1,19 @@
 # Fdb version 4
-["xdvipdfmx"] 1787719029.29848 "template.xdv" "template.pdf" "template" 1787719070.43814 0
-  "template.xdv" 1787719029 274048 7d9edc7e43d1fa5b7a6a7592631d4ba3 "xelatex"
+["xdvipdfmx"] 1787735901.02987 "template.xdv" "template.pdf" "template" 1787735938.42332 0
+  "template.xdv" 1787735900 269784 23e1eae0c42d673d1c8ba7aa2ecaf3c9 "xelatex"
   (generated)
   "template.pdf"
   (rewritten before read)
-["xelatex"] 1787719023.56405 "template.tex" "template.xdv" "template" 1787719070.4269 0
-  "Image/fig10_representative_response.pdf" 1787504675 165699 bf4b213d3a83b90fab3fa84818f1a8b5 ""
-  "Image/fig11_condition_summary.pdf" 1787504677 87456 90880ff21515ae6c2c64baa3bca45ac0 ""
-  "Image/fig12_feedforward_mechanism.pdf" 1787504678 84902 057a3e35294ac0c5f379ad873dc5e3ad ""
+["xelatex"] 1787735896.2177 "template.tex" "template.xdv" "template" 1787735938.41194 0
+  "Image/fig10_representative_response.pdf" 1787735843 146908 c0fd2d0a29e0a7b7abf5e42cdd9380dd ""
+  "Image/fig11_condition_summary.pdf" 1787735844 57937 97b6f4306b84c443a25cd777dbf2f382 ""
+  "Image/fig12_speed_error.pdf" 1787735845 46135 057395ea66b18008fe1370f4105dd5d0 ""
+  "Image/fig13_feedforward_mechanism.pdf" 1787735846 68705 ce410c15b996e5a1a0d6d4ea26324f53 ""
   "Image/fig2.pdf" 1787490955 191007 1f2fca54db01721821d1a78a9a4350e0 ""
   "Image/fig3.pdf" 1787643494 205234 36008e4b6c6252aa113b743006fe5775 ""
   "Image/fig6b.png" 1787647854 13983104 6cfc0828b13a959c6a10de074686cdd9 ""
-  "Image/fig9_rotor_model_diagnostics.pdf" 1787719015 43195 a74f83d1b4590bf70c994546e189e0e6 ""
+  "Image/fig9_freestream_ramp.pdf" 1787735842 38352 d4f7b2959e80960c374a48fa9d95ad5f ""
+  "Image/fig9_rotor_model_diagnostics.pdf" 1787726408 46857 3b13a03c9eab85052ea0a6aff9b42bd4 ""
   "Image/图1-四旋翼无人机坐标系定义.png" 1787302946 1106990 2c3dbb38cb371d8521ae6950e459b057 ""
   "Image/图4a-桨叶气动参数提取步骤.png" 1787314990 3046742 9116d5c492ea746efe0c490ee6255bcb ""
   "Image/图4b.png" 1787316087 2527074 6c76be39a893a91a8554325bb8cf6e66 ""
@@ -122,10 +124,10 @@
   "d:/texlive/2025/texmf-dist/web2c/texmf.cnf" 1750652853 42148 61becc7c670cd061bb319c643c27fdd4 ""
   "d:/texlive/2025/texmf-var/web2c/xetex/xelatex.fmt" 1750659750 5639839 4660f9ab484fb8f970bd8005c805610a ""
   "d:/texlive/2025/texmf.cnf" 1750659428 713 e69b156964470283e0530f5060668171 ""
-  "data_process/model_validation_table.tex" 1787719016 1093 480967ba927fa2d5b725b66e0596c2a1 ""
+  "data_process/model_validation_table.tex" 1787726539 923 d5dd5258d56c75d016697fd0179fab77 ""
   "picins.sty" 1787034754 18385 916739e9c8f52c6a085688f05d1594e2 ""
-  "template.aux" 1787719066 4121 a0c2c9287257a09bdd9ac9995d59086e "xelatex"
-  "template.tex" 1787718974 46386 43eb40c0130a74db0d48d6c0ff892a18 ""
+  "template.aux" 1787735900 4070 39515d52f97cebdfc644f4e3768e0455 "xelatex"
+  "template.tex" 1787735879 46002 4f61b9dc04aade2303a17b8d31822e20 ""
   (generated)
   "template.aux"
   "template.log"
