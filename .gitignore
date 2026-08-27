@@ -1,3 +1,3 @@
-data/
+data/**/*.ulg
 build/
 _build_check/

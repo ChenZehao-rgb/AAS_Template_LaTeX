@@ -13,6 +13,8 @@
 \usepackage{booktabs} % 做三线表的上下两条粗线用
 \usepackage{multirow}
 \usepackage{algpseudocode} % 算法伪代码
+\usepackage{cite}
+\usepackage[numbers, sort&compress]{natbib}
 
 \setcounter{page}{1}
 
@@ -46,13 +48,13 @@ Month Date, Year}
 
 \cnauthor{陈泽昊$^{\scriptscriptstyle1}$ 常彦春$^{\scriptscriptstyle1}$ 刘干$^{\scriptscriptstyle1}$ 杨丽英$^{\scriptscriptstyle1}$ 周浩$^{\scriptscriptstyle1}$ 何玉庆$^{\scriptscriptstyle1}$}
 
-\cnabstract{高机动飞行中的斜向来流会使静态升力映射失配,导致旋翼实际升力偏离指令值.为提高执行器层的升力预测与扰动抑制能力,本文建立由多旋翼无人机运动状态到单旋翼轴向升力的机理模型,并结合实测桨叶几何、翼型极线及非均匀诱导入流叶素模型计算升力.在此基础上,提出以旋翼逆模型为前馈、以直接升力测量为反馈的闭环控制方法,并搭建桨盘攻角和转台角速度可调的旋转试验台.结果表明,所建模型能够准确描述测试包线内的升力变化规律,模型前馈与直接力反馈复合控制可有效抑制单旋翼台架上的强来流扰动.}
+\cnabstract{高机动飞行中的动态来流会使静态升力映射失配,导致旋翼实际升力偏离指令值.为提高执行器层的升力预测与扰动抑制能力,本文建立由多旋翼无人机运动状态到单旋翼轴向升力的机理模型,并结合实测桨叶几何、翼型极线及非均匀诱导入流叶素模型计算升力.在此基础上,提出以旋翼逆模型为前馈、以直接升力测量为反馈的闭环控制方法,并搭建桨盘攻角和转台角速度可调的旋转试验台.结果表明,所建模型能够准确描述测试包线内的升力变化规律,模型前馈与直接力反馈复合控制可有效抑制单旋翼台架上的强来流扰动.}
 
 \cnkeyword{多旋翼无人机,高机动飞行,升力反馈控制}
 
 \doi{10.16383/j.aas.20xx.cxxxxxx}
 
-\entitle{Rotor Lift Modeling and Control for Aggressive Flight Maneuvers}
+\entitle{Rotor Lift Modeling and Control for Aggressive Flight}
 
 % TODO: 英文作者信息请作者补充
 \enauthor{SHANG Shu-Lin$^{1}$}
@@ -71,16 +73,16 @@ Month Date, Year}
 
 %这一章为引言,无需写标题.
 
-近年来,低空经济加速向规模化、常态化运行发展,多旋翼无人机凭借垂直起降、定点悬停与机动灵活等优势,已成为应急救援、基础设施巡检和复杂环境作业的重要装备[1-3].随着任务空间由开阔、低速场景拓展至城市障碍物密集区域,无人机需要在其中敏捷穿梭,即在快速姿态变化等条件下保持稳定飞行.在此类高机动工况下,旋翼承受显著的斜向来流,使飞控控制指令对应的实际升力偏离标称值,进而影响机体姿态与位置控制的精度与稳定性.
+近年来,低空经济加速向规模化、常态化运行发展,多旋翼无人机凭借垂直起降、定点悬停与机动灵活等优势,已成为应急救援、基础设施巡检和复杂环境作业的重要装备[1,2].随着任务空间由开阔、低速场景拓展至城市障碍物密集区域,无人机需要在其中敏捷穿梭,即需要在快速姿态变化条件下保持稳定飞行.在此类高机动工况下,旋翼承受显著的动态来流扰动,使飞控控制指令对应的实际升力偏离标称值,进而影响机体姿态与位置控制的精度与稳定性.
 
 现有多旋翼飞控通常依据静态标定得到的升力-控制量映射,将控制分配器输出的期望升力转换为电机控制指令.该映射在近悬停与弱扰动条件下可近似表示为转速（或归一化控制量）的二次函数,但其参数隐含了特定来流、桨盘姿态与推进系统状态.当无人机快速前飞、转弯或翻转时,旋翼局部来流的速度与方向同时改变,桨盘内轴向与面内速度分量高速变化,从而改变叶素入流角、有效迎角及气动力分布.由此产生的升力偏差首先出现在执行器层,而传统控制架构通常需待机体姿态或位置误差形成后才能间接修正,作用链路较长,难以及时抑制旋翼层面的扰动.
 
-为提升机动飞行下执行器的控制精度,现有研究大致可分为基于模型与基于测量两类.基于模型的方法致力于建立旋翼高保真模型：Bauersfeld等[4]将叶素理论旋翼模型与神经网络相结合,以叶素理论刻画高速入流下的升力变化,以数据驱动神经网络学习剩余力与力矩残差；Liu等[5]通过全包线
+为提升机动飞行下执行器的控制精度,现有研究大致可分为基于模型与基于测量两类.基于模型的方法致力于建立旋翼高保真模型：Bauersfeld等[3]将叶素理论旋翼模型与神经网络相结合,以叶素理论刻画高速入流下的升力变化,以数据驱动神经网络学习剩余力与力矩残差；Liu等[4]通过全包线
 风洞试验辨识推进模型,并将局部雅可比矩阵用于增量非线性动态逆(INDI)控制,在机动飞行中在线计算局部升力变化所需的控制量,以提高大机动条件下的控制分配精度.此类方法精度较高,但普遍依赖大量试验数据的训练或辨识.
 \onecolumn\begin{multicols}{2}%这一行用于第一页末尾
-基于测量的方法则通过力传感器直接感知旋翼升力：Gonzalez-Morgado等[6]采用应变片式测力方式检测机臂形变,间接测量旋翼升力并结合比例-积分-微分(PID)控制抑制地面效应与天花板效应,但该间接测量会引入高频噪声、信噪比较低；Jiang等[7-8]在机臂与旋翼连接处加装力传感器直接测量升力,并针对旋翼动力系统的非线性设计升力反馈线性化控制器,通过单自由度台架实验验证了其在风扰环境下提高姿态控制精度的能力.上述工作证明了升力闭环控制的有效性,但均针对悬停或近悬停工况,尚未覆盖高机动飞行下动态斜来流的作用.
+基于测量的方法则通过力传感器直接感知旋翼升力并进行控制：Gonzalez-Morgado等[5]采用应变片式测力方式检测机臂形变,间接测量旋翼升力并结合比例-积分-微分(PID)控制抑制地面效应与天花板效应,但应变片测量会引入高频噪声、信噪比较低；Jiang等[6,7]在机臂与旋翼连接处加装力传感器直接测量升力,并针对旋翼动力系统的非线性设计升力反馈线性化控制器,通过单自由度台架实验验证了其在风扰环境下提高姿态控制精度的能力.上述工作证明了升力闭环控制的有效性,但均针对悬停或近悬停工况,尚未覆盖高机动飞行下动态斜来流的作用.
 
-在旋翼气动建模方面,叶素理论在高风速下能够较精确地刻画单个旋翼的升力特性,已形成较为成熟的建模方案.Theys等[9]针对0$^{\circ}$-90$^{\circ}$桨盘攻角开展风洞实验,比较了叶素动量理论与涡格法的预测能力；Serrano等[10]进一步评估了非零攻角条件下多种诱导入流模型的精度；Simmons等[11]利用全攻角风洞数据辨识了包含电机静、动态特性与螺旋桨气动特性的推进系统模型.上述工作为建立旋翼动态入流模型奠定了理论基础,但均处于风洞稳态来流条件,难以复现旋翼运动与加速过程中的动态入流特征.
+在旋翼气动建模方面,叶素理论在高风速下能够较精确地刻画单个旋翼的升力特性,已形成较为成熟的建模方案.Theys等[8]针对0$^{\circ}$-90$^{\circ}$桨盘攻角开展风洞实验,比较了叶素动量理论与涡格法的预测能力；Serrano等[9]进一步评估了非零攻角条件下多种诱导入流模型的精度；Simmons等[10]利用全攻角风洞数据辨识了包含电机静、动态特性与螺旋桨气动特性的推进系统模型.上述工作为建立旋翼动态入流模型奠定了理论基础,但均处于风洞稳态来流条件,难以复现旋翼运动与加速过程中的动态入流特征.
 
 综上所述,高保真辨识模型依赖大量专用试验数据且泛化性有限,现有升力反馈控制亦多在悬停工况下验证,其在高机动动态来流下补偿模型失配的能力尚不明确；叶素理论模型虽能刻画稳态斜来流下的升力特性,却缺乏对旋翼运动与加速过程的动态入流描述.因此,亟需一种能够复现高机动工况、且无需大规模试验辨识的旋翼建模与升力反馈控制方法.
 
@@ -179,7 +181,7 @@ V_{t,i}=\left\|\left(\bm{I}_3-\bm{n}_i\bm{n}_i^{\mathrm{T}}\right)\bm{u}_i\right
 \label{eq:mu_lambda}
 \end{equation}
 
-诱导入流比 $\lambda_{\mathrm{ind},i}$ 由 Glauert 前飞动量定理[12]确定, 尾迹偏斜角为 $\chi_i$:
+诱导入流比 $\lambda_{\mathrm{ind},i}$ 由 Glauert 前飞动量定理[11]确定, 尾迹偏斜角为 $\chi_i$:
 
 \begin{equation}
 \begin{aligned}
@@ -233,7 +235,7 @@ U_P(\rho,\psi)&=V_{a,i}+v_{\mathrm{ind}}(\rho,\psi) \label{eq:UP}
 式~(\ref{eq:UP}) 中的诱导速度 $v_{\mathrm{ind}}$ 无法直接测量, 需要建模确定.
 在轴向来流下, 诱导速度在桨盘内近似均匀; 而在斜来流下, 尾迹发生偏斜,
 诱导速度沿桨盘呈现前行--后行方向(纵向)的非均匀分布. 本文采用 Serrano 等验证的
-一阶谐波线性入流模型[10], 将局部诱导入流比表示为平均诱导入流比与纵向一阶谐波之和:
+一阶谐波线性入流模型[9], 将局部诱导入流比表示为平均诱导入流比与纵向一阶谐波之和:
 
 \begin{equation}
 \begin{aligned}
@@ -263,7 +265,7 @@ Re(\rho,\psi)=\frac{\rho_\infty c(\rho)\,V_R}{\mu_\infty}
 \end{equation}
 
 其中 $c(\rho)$ 为弦长分布, $\mu_\infty$为动力粘度.
-以有效迎角 $\alpha_{\mathrm{eff}}$ 与雷诺数 $Re$ 查取由 XFOIL[13] 计算的翼型极曲线
+以有效迎角 $\alpha_{\mathrm{eff}}$ 与雷诺数 $Re$ 查取由 XFOIL[12] 计算的翼型极曲线
 $C_l(\alpha_{\mathrm{eff}},Re)$、$C_d(\alpha_{\mathrm{eff}},Re)$, 得叶素单位展长的
 升力与阻力
 
@@ -306,7 +308,7 @@ T_i=\frac{N_b}{2\pi}\int_{0}^{2\pi}\!\!\int_{\rho_0}^{R_p}
 
 四旋翼无人机飞行控制器由位置-速度外环、姿态-角速度内环与控制分配器组成.外环根据位置与速度误差生成期望总升力 $T$ 与期望姿态 $\bm{\theta}_d$,内环生成期望控制力矩 $\bm{M}=[\tau_x,\tau_y,\tau_z]^{\mathrm{T}}$；控制分配器进一步将期望总升力与力矩分解为各旋翼的目标升力 $T_{d,i}$.随后,升力-控制量映射器将 $T_{d,i}$ 转换为归一化电机指令 $u_i$,再由电子调速器、电机与螺旋桨产生实际升力 $T_i$.该结构如图3(a)所示.
 
-如图3(b)所示,在现有开源飞控系统中,升力-控制量映射器通常定义为如下的静态二次映射：
+如图3(b)所示,在现有开源飞控系统中[13],升力-控制量映射器通常定义为如下的静态二次映射：
 \begin{equation}
 T_{d,i}=f_{map}(u_i)=c_a u_i^2+(1-c_a)u_i
 \label{eq:static_map}
@@ -357,7 +359,7 @@ Fig.\,4\quad Photogrammetry, 3D reconstruction and cross-section extraction of t
 
 \begin{center}
 \vbox{
-\centerline{\includegraphics[width=9cm]{Image/图5-chord_pitch_comparison.pdf}}
+\centerline{\includegraphics[width=9cm]{Image/fig5_chord_pitch_comparison.pdf}}
 \vskip2mm
 {\small 图5\quad 桨叶弦长比与安装角的径向分布（$0.25\le r/R\le0.90$）
 \\
@@ -366,13 +368,13 @@ Fig.\,5\quad Radial distributions of blade chord ratio and pitch angle ($0.25\le
 
 为检验几何提取结果,将弦长比$c/R$和安装角$\theta$的径向分布与Carroll[18]基于激光扫描获得的T-Motor 18$\times$6.1桨叶数据进行比较,如图5所示.选取$0.25\le r/R\le0.90$的主要气动承载区间作为比较区间,将两组曲线插值至同一径向网格,并以两者均值作为相对差异的归一化基准.弦长比的平均绝对差异、均方根差异和最大绝对差异分别为0.010、0.011和0.018,平均相对差异为6.0\%；安装角的上述三项绝对差异分别为$0.54^{\circ}$、$0.60^{\circ}$和$1.25^{\circ}$,平均相对差异为4.8\%.两项参数的曲线相关系数均约为0.995,表明摄影测量能够准确描述桨叶的弦长与安装角变化,其几何分辨率满足本文叶素模型的输入要求.
 
-最后,将各径向位置的归一化截面坐标输入XFOIL[13],在覆盖本文叶素工作范围的$\alpha_{\mathrm{eff}}$--$Re$离散网格上计算二维极线,建立供第~\ref{subsec:lift}~节查取的$C_l(\alpha_{\mathrm{eff}},Re)$和$C_d(\alpha_{\mathrm{eff}},Re)$数据库.
+最后,将各径向位置的归一化截面坐标输入XFOIL[12],在覆盖本文叶素工作范围的$\alpha_{\mathrm{eff}}$--$Re$离散网格上计算二维极线,建立供第~\ref{subsec:lift}~节查取的$C_l(\alpha_{\mathrm{eff}},Re)$和$C_d(\alpha_{\mathrm{eff}},Re)$数据库.
 \subsection{高机动工况构造：旋翼测试台}
 \label{subsec:bench}
 为在地面条件下构造可重复的高机动工况,本文搭建旋转悬臂式单旋翼测试平台,如图6(a)所示.驱动电机带动转盘和悬臂绕竖直轴旋转,旋翼单元安装于距离旋转中心$R_0$的悬臂末端上.旋翼单元的细节如图6(b)所示,通过倾转支架与竖直方向的夹角$\theta$,进而调节桨盘攻角$\alpha_p$;通过转台角速度$\Omega_a$改变旋翼单元面对的来流速度.
 \begin{center}
 \vbox{
-\centerline{\includegraphics[width=8cm]{Image/图6a-旋转测试台.png}}
+\centerline{\includegraphics[width=8cm]{Image/fig6a_rotating_test_rig.png}}
 {\small (a)}
 \centerline{\includegraphics[width=8cm]{Image/fig6b.png}}
 {\small (b)}
@@ -499,7 +501,7 @@ Algorithm\,2\quad Online inverse lookup of the lift table}
 
 \subsection{旋翼升力模型精度验证}
 \label{subsec:model_verif}
-测试对象为T-Motor MN5008 KV340电机与P18$\times$6.1\,CF螺旋桨,旋翼轴向升力由同轴力传感器测量,转台角速度由安装在悬臂末端的飞控惯性测量单元(IMU)记录,电机转速由AS5600磁编码器获取.试验选取约3000、4000和5000\,rpm的典型转速,在每个工况点停留3s,重复4次,记录对应的旋翼转速和升力,具体实验设置如表2所示.
+测试对象为T-Motor MN5008 KV340电机与P18$\times$6.1\,CF螺旋桨,旋翼轴向升力由同轴力传感器测量,转台角速度由安装在悬臂末端的飞控惯性测量单元(IMU)记录,电机转速由AS5600磁编码器获取.试验选取约3000、4000和5000\,rpm的典型转速,在每个工况点停留3s,记录对应的旋翼转速和升力,具体实验设置如表2所示.
 
 \begin{center}
 \vbox{\centering{\small 表2\quad 旋翼测试台测试设置
@@ -527,11 +529,32 @@ Table\,2 \quad Test settings of the rotor test bench} \vskip2mm
 \\ Fig.\,7 \quad Agreement between theoretical and experimental rotor thrust coefficients}}
 \end{center}
 
-\input{data_process/model_validation_table.tex}
+\begin{center}
+\vbox{\centering{\small 表3\quad 不同桨盘攻角下的旋翼升力模型误差统计
+\\ Table\,3 \quad Error statistics of the rotor lift model at different disk angles of attack}\vskip2mm
+{\scriptsize\centering
+\setlength{\tabcolsep}{3.5pt}%
+\begin{tabular}{@{}crrrrr@{}}
+\toprule
+$\alpha_p/(^\circ)$ & RMSE$_{\mathrm{norm}}$/\% & MaxErr$_{\mathrm{norm}}$/\% & MAPE/\% \\
+\midrule
+0  & 7.43 & 12.67 & 8.93 \\
+15  & 3.91 & 14.94 & 4.70 \\
+30  & 3.26 & 9.65 & 3.97 \\
+45  & 5.02 & 9.73 & 5.33 \\
+60  & 2.46 & 6.92 & 2.17 \\
+75  & 4.42 & 11.74 & 3.63 \\
+90  & 10.04 & 19.75 & 7.02 \\
+全部  & 5.76 & 19.75 & 5.08 \\
+\bottomrule
+\end{tabular}}
+\vskip1mm
+}
+\end{center}
 
 表3汇总了按桨盘攻角合并三个转速后理论$C_T$值与实际$C_T$值的误差.全部样本的归一化均方根误差(RMSE)为$5.76\%$,平均绝对百分比误差(MAPE)为$5.08\%$.在$15^{\circ}$--$75^{\circ}$斜来流范围内,按攻角汇总的RMSE为$2.46\%$--$5.02\%$；两个端点工况的误差相对较大：$0^{\circ}$和$90^{\circ}$的汇总RMSE分别为$7.43\%$和$10.04\%$.
 
-其他关于叶素动量理论(BEMT)旋翼建模的研究中,误差量级为:Carroll[16]等使用激光扫描提取桨叶翼型和气动参数,建立了与本文一致的TmotorP18$\times$6.1螺旋桨的变攻角BEMT模型,其理论与试验结果的误差范围为$5\%-15\%$；Serrano等[10]表明,引入Glauert或Coleman非均匀入流模型后,非零攻角下的最大偏差可控制在$15\%$以内；Theys等[9]则指出,传统BEMT和涡格法虽能预测斜流下的总体趋势,但精度会随来流倾斜显著下降,在小角度下误差量级约为$10\%$,在大角度斜流下误差量级约$10\%-30\%$.相比之下,本文模型在各攻角下的RMSE小于$10\%$,在所有工况点下的最大误差小于$20\%$,与现有研究中的物理模型处于同一量级,进一步验证了\ref{subsec:geo}节中摄影测量的精度和旋翼叶素模型的准确性.该精度能够为后续模型前馈提供有效基准,其余模型失配则由升力反馈进一步补偿.
+其他关于叶素动量理论(BEMT)旋翼建模的研究中,误差量级为:Carroll[18]等使用激光扫描提取桨叶翼型和气动参数,建立了与本文一致的TmotorP18$\times$6.1螺旋桨的变攻角BEMT模型,其理论与试验结果的误差范围为$5\%-15\%$；Serrano等[9]表明,引入Glauert或Coleman非均匀入流模型后,非零攻角下的最大偏差可控制在$15\%$以内；Theys等[8]则指出,传统BEMT和涡格法虽能预测斜流下的总体趋势,但精度会随来流倾斜显著下降,在小角度下误差量级约为$10\%$,在大角度斜流下误差量级约$10\%-30\%$.相比之下,本文模型在各攻角下的RMSE小于$10\%$,在所有工况点下的最大误差小于$20\%$,与现有研究中的物理模型处于同一量级,进一步验证了\ref{subsec:geo}节中摄影测量的精度和旋翼叶素模型的准确性.该精度能够为后续模型前馈提供有效基准,其余模型失配则由升力反馈进一步补偿.
 \begin{center}
 \vbox{\centering
 \includegraphics[width=8cm]{Image/fig9_freestream_ramp.pdf}\\[1mm]
@@ -597,9 +620,7 @@ Table\,2 \quad Test settings of the rotor test bench} \vskip2mm
 图12进一步给出模型前馈的作用机理：旋翼升力逆模型给出的前馈转速随来流增加提前上升,编码器实测转速能够跟随该指令；总控制量主要由前馈分量构成,反馈分量只承担较小修正.
 \section{结论}
 
-本文面向低空经济应用中多旋翼无人机在复杂气流和快速机动条件下的推进系统升力失配问题,建立了从整机运动状态到单旋翼轴向升力的机理模型,并提出基于模型前馈与直接力反馈的升力闭环控制方法.
-
-实验结果表明,所搭建的旋翼升力模型能够准确描述无人机高机动飞行工况下的升力变化情况,并且在模型离线生成查找表--飞控在线查表的部署方案中,能相对准确的提供期望转速前馈量；相对于固定控制量,纯升力反馈控制方法能够有效降低升力误差.复合控制中,模型前馈给出准确的期望转速,反馈环仅补偿模型残差与未建模扰动,从而在来流扰动下实现更小且更稳定的升力误差.
+本文面向低空经济应用中多旋翼无人机在复杂气流和快速机动条件下的推进系统升力失配问题,建立了从整机运动状态到单旋翼轴向升力的机理模型,并提出基于模型前馈与直接力反馈的升力闭环控制方法.实验结果表明,所搭建的旋翼升力模型能够准确描述无人机高机动飞行工况下的升力变化情况,并且在模型离线生成查找表--飞控在线查表的部署方案中,能相对准确的提供期望转速前馈量；相对于固定控制量,纯升力反馈控制方法能够有效降低升力误差.复合控制中,模型前馈给出准确的期望转速,反馈环仅补偿模型残差与未建模扰动,从而在来流扰动下实现更小且更稳定的升力误差.
 
 未来工作：1. 轻量化旋翼测量单元,让其能集成到旋翼无人机结构中；2.基于所搭建的旋翼悬臂式旋转测试台,在悬臂末端安装能够进行姿态控制的双旋翼单元或者四旋翼整机,进行更真实的无人机机动飞行模拟,以验证旋翼模型的精度和升力反馈控制效果.
 
@@ -610,27 +631,27 @@ Table\,2 \quad Test settings of the rotor test bench} \vskip2mm
 
 \bibitem{2} 陈林, 缪志强, 王祥科, 等. 自主飞行器技术及其在低空经济中的应用综述[J]. 机器人, 2025, 47(3): 470-496
 
-\bibitem{3} 张军, 陈磊, 高智杰. 低空无人机技术研究现状与展望[J]. 中国工程科学, 2025, 27(2): 73-85
+\bibitem{3} Bauersfeld L, Kaufmann E, Foehn P, et al. NeuroBEM: Hybrid aerodynamic quadrotor model[C]//Robotics: Science and Systems XVII. 2021
 
-\bibitem{4} Bauersfeld L, Kaufmann E, Foehn P, et al. NeuroBEM: Hybrid aerodynamic quadrotor model[C]//Robotics: Science and Systems XVII. 2021
+\bibitem{4} Liu H, Lin D, Ye J, et al. Quadrotor aggressive control based on angular acceleration feedback and high-fidelity propulsion model. {\sl IEEE Transactions on Industrial Electronics}, 2025
 
-\bibitem{5} Liu H, Lin D, Ye J, et al. Quadrotor aggressive control based on angular acceleration feedback and high-fidelity propulsion model. {\sl IEEE Transactions on Industrial Electronics}, 2025
+\bibitem{5} Gonzalez-Morgado A, Sanchez-Cuevas P J, Heredia G, et al. Rotor-force controller for multirotors under aerodynamic interferences. {\sl Aerospace Science and Technology}, 2025, {\bf 157}: 109861
 
-\bibitem{6} Gonzalez-Morgado A, Sanchez-Cuevas P J, Heredia G, et al. Rotor-force controller for multirotors under aerodynamic interferences. {\sl Aerospace Science and Technology}, 2025, {\bf 157}: 109861
+\bibitem{6} 蒋涵, 常彦春, 杨丽英, 等. 基于升力反馈的旋翼无人机控制方法[J]. 机器人, 2026, 48(3): 518-530
 
-\bibitem{7} 蒋涵, 常彦春, 杨丽英, 等. 基于升力反馈的旋翼无人机控制方法[J]. 机器人, 2026, 48(3): 518-530
+\bibitem{7} 蒋涵, 陈泽昊, 常彦春, 等. 基于直接升力控制的旋翼无人机风扰抑制方法[J]. 中国科学: 技术科学, 2026: 1-13
 
-\bibitem{8} 蒋涵, 陈泽昊, 常彦春, 等. 基于直接升力控制的旋翼无人机风扰抑制方法[J]. 中国科学: 技术科学, 2026: 1-13
+\bibitem{8} Theys B, Dimitriadis G, Hendrick P, et al. Experimental and numerical study of micro-aerial-vehicle propeller performance in oblique flow. {\sl Journal of Aircraft}, 2017, {\bf 54}(3): 1076-1084
 
-\bibitem{9} Theys B, Dimitriadis G, Hendrick P, et al. Experimental and numerical study of micro-aerial-vehicle propeller performance in oblique flow. {\sl Journal of Aircraft}, 2017, {\bf 54}(3): 1076-1084
+\bibitem{9} Serrano D, Ren M, Qureshi A J, et al. Effect of disk angle-of-attack on aerodynamic performance of small propellers. {\sl Aerospace Science and Technology}, 2019, {\bf 92}: 901-914
 
-\bibitem{10} Serrano D, Ren M, Qureshi A J, et al. Effect of disk angle-of-attack on aerodynamic performance of small propellers. {\sl Aerospace Science and Technology}, 2019, {\bf 92}: 901-914
+\bibitem{10} Simmons B M. System identification for propellers at high incidence angles. {\sl Journal of Aircraft}, 2021, {\bf 58}(6): 1336-1350
 
-\bibitem{11} Simmons B M. System identification for propellers at high incidence angles. {\sl Journal of Aircraft}, 2021, {\bf 58}(6): 1336-1350
+\bibitem{11} H. Glauert, A General Theory of the Autogyro, R\&M No. 1111, British A.R.C., November 1926
 
-\bibitem{12} H. Glauert, A General Theory of the Autogyro, R\&M No. 1111, British A.R.C., November 1926
+\bibitem{12} Drela M. XFOIL: An analysis and design system[M]//Low Reynolds Number Aerodynamics. Berlin: Springer, 1989: 1-12
 
-\bibitem{13} Drela M. XFOIL: An analysis and design system[M]//Low Reynolds Number Aerodynamics. Berlin: Springer, 1989: 1-12
+\bibitem{13} Meier L, Honegger D, Pollefeys M. PX4: A node-based multithreaded open source robotics framework for deeply embedded platforms[C]//2015 IEEE International Conference on Robotics and Automation. IEEE, 2015: 6235-6242
 
 \bibitem{14} Selig M S. UIUC Airfoil Data Site[EB/OL]. \url{https://m-selig.ae.illinois.edu/ads.html}
 
@@ -640,8 +661,7 @@ Table\,2 \quad Test settings of the rotor test bench} \vskip2mm
 
 \bibitem{17} CHENG Z, LI H, ASANO Y, et al. Multi-view 3D reconstruction of a texture-less smooth surface of unknown generic reflectance[C]//Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2021: 16226-16235.
 
-\bibitem{18} BALTSAVIAS E P. A comparison between photogrammetry and laser scanning[J]. ISPRS Journal of Photogrammetry and Remote Sensing, 1999, 54(2-3): 83-94.
-
+\bibitem{18} T. B. Carroll, “A DESIGN METHODOLOGY FOR ROTORS OF SMALL MULTIROTOR VEHICLES.”
 
 % \bibitem{17} Davis E, Pounds P E I. Direct sensing of thrust and velocity for a quadrotor rotor array. {\sl IEEE Robotics and Automation Letters}, 2017, {\bf 2}(3): 1360-1366
 
@@ -651,7 +671,6 @@ Table\,2 \quad Test settings of the rotor test bench} \vskip2mm
 
 % \bibitem{20} Gill R, D'Andrea R. Propeller thrust and drag in forward flight[C]//2017 IEEE Conference on Control Technology and Applications. IEEE, 2017: 73-79
 
-% \bibitem{21} Meier L, Honegger D, Pollefeys M. PX4: A node-based multithreaded open source robotics framework for deeply embedded platforms[C]//2015 IEEE International Conference on Robotics and Automation. IEEE, 2015: 6235-6242
 
 \end{thebibliography}
 

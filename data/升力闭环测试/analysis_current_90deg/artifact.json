@@ -1,0 +1,625 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "90°轴向来流下升力闭环控制：现有数据分析与论文图表方案",
+    "description": "基于当前 90°轴向来流 ULog 的描述性闭环性能比较及后续实验设计建议。",
+    "generatedAt": "2026-08-22T18:05:35+08:00",
+    "sources": [
+      {
+        "id": "axial-ulog-source",
+        "label": "90°轴向来流 19 个 ULog 的配对指标（由 analyze_closed_loop.py 生成）",
+        "path": "analysis_metrics.sqlite",
+        "query": {
+          "engine": "SQLite",
+          "sql": "SELECT target_n, nominal_ramp_s, ff_rmse_pct, fb_rmse_pct, rmse_reduction_pct, ff_peak_pct, fb_peak_pct, peak_reduction_pct, ff_trials, fb_trials FROM paired_metrics ORDER BY nominal_ramp_s ASC, target_n ASC",
+          "description": "从经 pyulog 处理的单试验指标中读取 9 个方法配对单元；图中的长表是该查询结果的确定性整形。",
+          "language": "sql",
+          "tables_used": [
+            "paired_metrics"
+          ],
+          "filters": [
+            "攻角=90度",
+            "目标升力∈{15,20,25} N",
+            "标称加速时间∈{1,5,10} s",
+            "方法∈{模型前馈+反馈,纯反馈}",
+            "仅使用推力/控制通道 1；其余通道为零",
+            "扰动窗口=来流 10%-90% 上升段+到达 90% 后 3 s"
+          ],
+          "metric_definitions": [
+            "e_T=T_c-T_m，T_m 为 thrust_kalman_filter_data_1 线性插值到控制时间基的值。",
+            "归一化 RMSE=100*sqrt(mean(e_T^2))/T_c。",
+            "归一化峰值误差=100*max(abs(e_T))/T_c。",
+            "相对降幅=100*(纯反馈-模型前馈+反馈)/纯反馈。",
+            "15 N/1 s 前馈+反馈的两次试验先在单元内取均值；其余单元 n=1。"
+          ]
+        }
+      }
+    ],
+    "cards": [],
+    "charts": [
+      {
+        "id": "rmse-by-condition",
+        "title": "不同目标升力与加速时间下的归一化 RMSE",
+        "subtitle": "扰动窗口，数值为目标升力的百分比；15 N/1 s 前馈+反馈为两次试验均值，其余 n=1",
+        "type": "bar",
+        "intent": "comparison",
+        "question": "在相同目标升力和加速时间下，两种闭环方法的跟踪误差如何比较？",
+        "rationale": "分组柱形图保留 9 个工况的配对结构，便于识别方法效应是否在不同工况下一致。",
+        "comparisonContext": {
+          "baseline": "相同目标升力/加速时间的纯反馈试验",
+          "denominator": "目标升力 T_c",
+          "grain": "方法×目标升力×标称加速时间",
+          "normalization": "RMSE/T_c×100",
+          "unit": "%"
+        },
+        "dataset": "comparison_long",
+        "sourceId": "axial-ulog-source",
+        "encodings": {
+          "x": {
+            "field": "condition",
+            "type": "ordinal",
+            "label": "工况"
+          },
+          "y": {
+            "field": "rmse_pct",
+            "type": "quantitative",
+            "label": "归一化 RMSE",
+            "unit": "%"
+          },
+          "color": {
+            "field": "method",
+            "type": "nominal",
+            "label": "控制方法"
+          },
+          "tooltip": [
+            {
+              "field": "target_n",
+              "type": "quantitative",
+              "label": "目标升力",
+              "unit": "N"
+            },
+            {
+              "field": "nominal_ramp_s",
+              "type": "quantitative",
+              "label": "加速时间",
+              "unit": "s"
+            },
+            {
+              "field": "peak_pct",
+              "type": "quantitative",
+              "label": "峰值误差",
+              "unit": "%"
+            },
+            {
+              "field": "n_trials",
+              "type": "quantitative",
+              "label": "试验次数"
+            }
+          ]
+        },
+        "valueFormat": "number",
+        "unit": "%",
+        "layout": "full",
+        "palette": {
+          "kind": "categorical",
+          "name": "blue-orange"
+        },
+        "legend": {
+          "position": "bottom",
+          "title": "控制方法"
+        },
+        "settings": {
+          "groupMode": "grouped",
+          "categoryLabelPolicy": "rotate",
+          "showValues": true,
+          "sort": "none"
+        },
+        "surface": {
+          "surface": "export",
+          "viewMode": "both"
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "paired-metrics-table",
+        "title": "各配对工况的跟踪误差及降幅",
+        "subtitle": "归一化误差均以目标升力为分母，降幅为模型前馈+反馈相对纯反馈的百分比",
+        "dataset": "comparison_table",
+        "defaultSort": {
+          "field": "nominal_ramp_s",
+          "direction": "asc"
+        },
+        "density": "dense",
+        "sourceId": "axial-ulog-source",
+        "layout": "full",
+        "columns": [
+          {
+            "field": "target_n",
+            "label": "目标升力 (N)",
+            "format": "number"
+          },
+          {
+            "field": "nominal_ramp_s",
+            "label": "加速时间 (s)",
+            "format": "number"
+          },
+          {
+            "field": "ff_rmse_pct",
+            "label": "前馈+反馈 RMSE (%)",
+            "format": "number"
+          },
+          {
+            "field": "fb_rmse_pct",
+            "label": "纯反馈 RMSE (%)",
+            "format": "number"
+          },
+          {
+            "field": "rmse_reduction_pct",
+            "label": "RMSE 降幅 (%)",
+            "format": "number",
+            "movement": true
+          },
+          {
+            "field": "ff_peak_pct",
+            "label": "前馈+反馈峰值 (%)",
+            "format": "number"
+          },
+          {
+            "field": "fb_peak_pct",
+            "label": "纯反馈峰值 (%)",
+            "format": "number"
+          },
+          {
+            "field": "peak_reduction_pct",
+            "label": "峰值降幅 (%)",
+            "format": "number",
+            "movement": true
+          },
+          {
+            "field": "ff_trials",
+            "label": "前馈+反馈 n",
+            "format": "number"
+          },
+          {
+            "field": "fb_trials",
+            "label": "纯反馈 n",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# 90°轴向来流下升力闭环控制：现有数据分析与论文图表方案",
+        "layout": "full"
+      },
+      {
+        "id": "technical-summary",
+        "type": "markdown",
+        "body": "## 技术摘要\n\n**当前数据支持“模型前馈+反馈优于纯反馈”的描述性结论。** 在 9 个目标升力×加速时间配对工况中，前馈+反馈的归一化 RMSE 在 9/9 个单元中更低，中位降幅为 62.2%；峰值误差中位降幅为 40.1%。\n\n**但现阶段不能宣称已证明“前馈+反馈 > 反馈 >> 固定控制量”。** 固定控制量对照尚未开展，且除 15 N/1 s 的前馈+反馈外，其余单元均只有一次试验。",
+        "layout": "full",
+        "sourceId": "axial-ulog-source"
+      },
+      {
+        "id": "key-findings",
+        "type": "markdown",
+        "body": "## 方法优势在全部现有工况中保持一致\n\n下图保留每个目标升力和加速时间单元，不使用混合后的单一总平均。这样可以直接检查前馈改善是否仅来自某个有利工况。",
+        "layout": "full"
+      },
+      {
+        "id": "rmse-chart-block",
+        "type": "chart",
+        "chartId": "rmse-by-condition",
+        "layout": "full"
+      },
+      {
+        "id": "rmse-chart-interpretation",
+        "type": "markdown",
+        "body": "在 1 s 快速加速下，两种闭环的误差都高于 5 s 和 10 s 工况，但模型前馈仍在三个目标升力下降低 RMSE。因此，论文的主要论据应是“同一单元内的配对改善”，而不是比较不同目标升力或不同加速时间的绝对误差。",
+        "layout": "full",
+        "sourceId": "axial-ulog-source"
+      },
+      {
+        "id": "paired-table-block",
+        "type": "table",
+        "tableId": "paired-metrics-table",
+        "layout": "full"
+      },
+      {
+        "id": "scope-definitions",
+        "type": "markdown",
+        "body": "## 评价口径与数据范围\n\n- **有效通道：** 仅通道 1 存在非零目标、控制输出和升力测量，因此不对四通道取平均。\n- **对齐：** 对 `bet_freestream_m_s` 中值滤波，以高低速平台之间的 10% 持续跨越点为时间零点，90% 持续跨越点为加速段终点。\n- **主指标：** 扰动窗口归一化 RMSE、MAE 和峰值误差，分母均为目标升力。\n- **测量：** 使用 `thrust_kalman_filter_data_1`；`rpm_raw` 乘以负号后与模型转速比较。",
+        "layout": "full"
+      },
+      {
+        "id": "methodology",
+        "type": "markdown",
+        "body": "## 图表证据链应同时回答“效果”和“机理”\n\n1. **代表工况时序（主文）：** 分面板绘制来流速度、升力及目标、跟踪误差，禁止双纵轴。建议选 20 N/1 s，因其扰动强且不处于目标升力边界。\n2. **全工况配对汇总（主文）：** 用热图或配对点图展示 3×3 单元的归一化 RMSE 与降幅，保留工况异质性。\n3. **误差-来流速度曲线（主文或附录）：** 按来流速度分箱，绘制 9 个工况单元的中位绝对归一化误差与四分位带，仅称为描述性离散带。\n4. **前馈机理图（附录优先）：** 展示 BET 反解转速、编码器转速、前馈/反馈/总输出，用于说明“前馈提供主要控制量，反馈补偿残差”，不将其替代跟踪误差证据。",
+        "layout": "full"
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "body": "## 当前结论需要保留的限制\n\n- **无固定控制量对照：** 现有数据不能支持“纯反馈远优于固定控制量”。\n- **缺少独立重复：** 多数单元 n=1，不应给出 p 值、95% 置信区间或“统计显著优于”的表述。\n- **25 N 工况存在输出限幅：** 25 N/1 s 的前馈+反馈试验在扰动窗口内约 56.5% 的样本处于归一化输出不低于 0.98，25 N 结果包含执行器限幅效应。\n- **只有 90°攻角：** 结论只适用于纯轴向来流，不能外推至 0° 和 45°。\n- **来流估计与惯性载荷：** 向心加速度反算速度与角速度估计存在系统差，应在方法中报告标定或一致性检查。",
+        "layout": "full",
+        "sourceId": "axial-ulog-source"
+      },
+      {
+        "id": "next-steps",
+        "type": "markdown",
+        "body": "## 使最终论据成立的补测优先级\n\n1. 先补齐 90°下的固定控制量 3×3 单元，并为三种方法的每个单元至少完成 3 次独立重复；若资源许可，5 次更稳妥。\n2. 同一配对或区组内保持相同加速轨迹、目标升力、滤波参数、评价窗口和限幅，并随机化方法执行顺序。\n3. 补齐 0°和 45°后，使用方法×攻角×目标升力×加速时间的分层模型或区组自助法，将“方法主效应”与工况交互效应分开。\n4. 预先固定主指标为扰动窗口归一化 RMSE，峰值误差和加速后稳态偏差作为次要指标，避免事后挑选最有利的结果。",
+        "layout": "full"
+      },
+      {
+        "id": "further-questions",
+        "type": "markdown",
+        "body": "## 尚需确认的实验定义\n\n- “固定控制量”是指以零来流二次推力-转速/PWM 映射设置一个不随来流变化的控制量，还是直接固定转速？两者的结论对象不同。\n- 反馈方法的初始控制量如何给定，是否与固定控制量完全一致？这决定了两者的对照是否公平。\n- 飞控中的 `thrust_error[0]` 与传感器滤波值之间存在时间基/滤波延迟差异，最终统计应统一选择传感器滤波序列并明确延迟处理。",
+        "layout": "full"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-22T18:05:35+08:00",
+    "status": "ready",
+    "datasets": {
+      "summary": [
+        {
+          "median_rmse_reduction_pct": 62.2,
+          "median_mae_reduction_pct": 60.6,
+          "median_peak_reduction_pct": 40.1,
+          "winning_cells": 9,
+          "total_paired_cells": 9,
+          "total_logs": 19
+        }
+      ],
+      "comparison_long": [
+        {
+          "condition": "15 N / 1 s",
+          "method": "Model FF + feedback",
+          "target_n": 15,
+          "nominal_ramp_s": 1,
+          "rmse_pct": 5.6375,
+          "mae_pct": 4.346,
+          "peak_pct": 15.0483,
+          "n_trials": 2,
+          "rmse_reduction_pct": 45.7174
+        },
+        {
+          "condition": "15 N / 1 s",
+          "method": "Feedback only",
+          "target_n": 15,
+          "nominal_ramp_s": 1,
+          "rmse_pct": 10.3854,
+          "mae_pct": 7.5097,
+          "peak_pct": 26.2593,
+          "n_trials": 1,
+          "rmse_reduction_pct": 45.7174
+        },
+        {
+          "condition": "15 N / 5 s",
+          "method": "Model FF + feedback",
+          "target_n": 15,
+          "nominal_ramp_s": 5,
+          "rmse_pct": 2.4228,
+          "mae_pct": 2.0397,
+          "peak_pct": 6.3205,
+          "n_trials": 1,
+          "rmse_reduction_pct": 47.4638
+        },
+        {
+          "condition": "15 N / 5 s",
+          "method": "Feedback only",
+          "target_n": 15,
+          "nominal_ramp_s": 5,
+          "rmse_pct": 4.6116,
+          "mae_pct": 4.0492,
+          "peak_pct": 9.8129,
+          "n_trials": 1,
+          "rmse_reduction_pct": 47.4638
+        },
+        {
+          "condition": "15 N / 10 s",
+          "method": "Model FF + feedback",
+          "target_n": 15,
+          "nominal_ramp_s": 10,
+          "rmse_pct": 1.2741,
+          "mae_pct": 1.084,
+          "peak_pct": 4.7912,
+          "n_trials": 1,
+          "rmse_reduction_pct": 57.7591
+        },
+        {
+          "condition": "15 N / 10 s",
+          "method": "Feedback only",
+          "target_n": 15,
+          "nominal_ramp_s": 10,
+          "rmse_pct": 3.0162,
+          "mae_pct": 2.7539,
+          "peak_pct": 5.9162,
+          "n_trials": 1,
+          "rmse_reduction_pct": 57.7591
+        },
+        {
+          "condition": "20 N / 1 s",
+          "method": "Model FF + feedback",
+          "target_n": 20,
+          "nominal_ramp_s": 1,
+          "rmse_pct": 3.8686,
+          "mae_pct": 2.9997,
+          "peak_pct": 9.6905,
+          "n_trials": 1,
+          "rmse_reduction_pct": 57.2762
+        },
+        {
+          "condition": "20 N / 1 s",
+          "method": "Feedback only",
+          "target_n": 20,
+          "nominal_ramp_s": 1,
+          "rmse_pct": 9.055,
+          "mae_pct": 6.5682,
+          "peak_pct": 23.0834,
+          "n_trials": 1,
+          "rmse_reduction_pct": 57.2762
+        },
+        {
+          "condition": "20 N / 5 s",
+          "method": "Model FF + feedback",
+          "target_n": 20,
+          "nominal_ramp_s": 5,
+          "rmse_pct": 1.4391,
+          "mae_pct": 1.2048,
+          "peak_pct": 5.4907,
+          "n_trials": 1,
+          "rmse_reduction_pct": 63.9423
+        },
+        {
+          "condition": "20 N / 5 s",
+          "method": "Feedback only",
+          "target_n": 20,
+          "nominal_ramp_s": 5,
+          "rmse_pct": 3.9911,
+          "mae_pct": 3.5243,
+          "peak_pct": 7.3477,
+          "n_trials": 1,
+          "rmse_reduction_pct": 63.9423
+        },
+        {
+          "condition": "20 N / 10 s",
+          "method": "Model FF + feedback",
+          "target_n": 20,
+          "nominal_ramp_s": 10,
+          "rmse_pct": 0.7565,
+          "mae_pct": 0.6254,
+          "peak_pct": 2.969,
+          "n_trials": 1,
+          "rmse_reduction_pct": 71.4384
+        },
+        {
+          "condition": "20 N / 10 s",
+          "method": "Feedback only",
+          "target_n": 20,
+          "nominal_ramp_s": 10,
+          "rmse_pct": 2.6487,
+          "mae_pct": 2.432,
+          "peak_pct": 4.9607,
+          "n_trials": 1,
+          "rmse_reduction_pct": 71.4384
+        },
+        {
+          "condition": "25 N / 1 s",
+          "method": "Model FF + feedback",
+          "target_n": 25,
+          "nominal_ramp_s": 1,
+          "rmse_pct": 2.899,
+          "mae_pct": 2.3006,
+          "peak_pct": 8.7661,
+          "n_trials": 1,
+          "rmse_reduction_pct": 62.1856
+        },
+        {
+          "condition": "25 N / 1 s",
+          "method": "Feedback only",
+          "target_n": 25,
+          "nominal_ramp_s": 1,
+          "rmse_pct": 7.6664,
+          "mae_pct": 5.7302,
+          "peak_pct": 18.2519,
+          "n_trials": 1,
+          "rmse_reduction_pct": 62.1856
+        },
+        {
+          "condition": "25 N / 5 s",
+          "method": "Model FF + feedback",
+          "target_n": 25,
+          "nominal_ramp_s": 5,
+          "rmse_pct": 1.2102,
+          "mae_pct": 0.8834,
+          "peak_pct": 5.8603,
+          "n_trials": 1,
+          "rmse_reduction_pct": 65.8041
+        },
+        {
+          "condition": "25 N / 5 s",
+          "method": "Feedback only",
+          "target_n": 25,
+          "nominal_ramp_s": 5,
+          "rmse_pct": 3.5391,
+          "mae_pct": 3.1131,
+          "peak_pct": 6.6596,
+          "n_trials": 1,
+          "rmse_reduction_pct": 65.8041
+        },
+        {
+          "condition": "25 N / 10 s",
+          "method": "Model FF + feedback",
+          "target_n": 25,
+          "nominal_ramp_s": 10,
+          "rmse_pct": 0.5956,
+          "mae_pct": 0.4815,
+          "peak_pct": 1.7537,
+          "n_trials": 1,
+          "rmse_reduction_pct": 74.3063
+        },
+        {
+          "condition": "25 N / 10 s",
+          "method": "Feedback only",
+          "target_n": 25,
+          "nominal_ramp_s": 10,
+          "rmse_pct": 2.3183,
+          "mae_pct": 2.1451,
+          "peak_pct": 4.0661,
+          "n_trials": 1,
+          "rmse_reduction_pct": 74.3063
+        }
+      ],
+      "comparison_table": [
+        {
+          "target_n": 15,
+          "nominal_ramp_s": 1,
+          "ff_rmse_pct": 5.64,
+          "fb_rmse_pct": 10.39,
+          "rmse_reduction_pct": 45.7,
+          "ff_peak_pct": 15.05,
+          "fb_peak_pct": 26.26,
+          "peak_reduction_pct": 42.7,
+          "ff_trials": 2,
+          "fb_trials": 1
+        },
+        {
+          "target_n": 20,
+          "nominal_ramp_s": 1,
+          "ff_rmse_pct": 3.87,
+          "fb_rmse_pct": 9.06,
+          "rmse_reduction_pct": 57.3,
+          "ff_peak_pct": 9.69,
+          "fb_peak_pct": 23.08,
+          "peak_reduction_pct": 58.0,
+          "ff_trials": 1,
+          "fb_trials": 1
+        },
+        {
+          "target_n": 25,
+          "nominal_ramp_s": 1,
+          "ff_rmse_pct": 2.9,
+          "fb_rmse_pct": 7.67,
+          "rmse_reduction_pct": 62.2,
+          "ff_peak_pct": 8.77,
+          "fb_peak_pct": 18.25,
+          "peak_reduction_pct": 52.0,
+          "ff_trials": 1,
+          "fb_trials": 1
+        },
+        {
+          "target_n": 15,
+          "nominal_ramp_s": 5,
+          "ff_rmse_pct": 2.42,
+          "fb_rmse_pct": 4.61,
+          "rmse_reduction_pct": 47.5,
+          "ff_peak_pct": 6.32,
+          "fb_peak_pct": 9.81,
+          "peak_reduction_pct": 35.6,
+          "ff_trials": 1,
+          "fb_trials": 1
+        },
+        {
+          "target_n": 20,
+          "nominal_ramp_s": 5,
+          "ff_rmse_pct": 1.44,
+          "fb_rmse_pct": 3.99,
+          "rmse_reduction_pct": 63.9,
+          "ff_peak_pct": 5.49,
+          "fb_peak_pct": 7.35,
+          "peak_reduction_pct": 25.3,
+          "ff_trials": 1,
+          "fb_trials": 1
+        },
+        {
+          "target_n": 25,
+          "nominal_ramp_s": 5,
+          "ff_rmse_pct": 1.21,
+          "fb_rmse_pct": 3.54,
+          "rmse_reduction_pct": 65.8,
+          "ff_peak_pct": 5.86,
+          "fb_peak_pct": 6.66,
+          "peak_reduction_pct": 12.0,
+          "ff_trials": 1,
+          "fb_trials": 1
+        },
+        {
+          "target_n": 15,
+          "nominal_ramp_s": 10,
+          "ff_rmse_pct": 1.27,
+          "fb_rmse_pct": 3.02,
+          "rmse_reduction_pct": 57.8,
+          "ff_peak_pct": 4.79,
+          "fb_peak_pct": 5.92,
+          "peak_reduction_pct": 19.0,
+          "ff_trials": 1,
+          "fb_trials": 1
+        },
+        {
+          "target_n": 20,
+          "nominal_ramp_s": 10,
+          "ff_rmse_pct": 0.76,
+          "fb_rmse_pct": 2.65,
+          "rmse_reduction_pct": 71.4,
+          "ff_peak_pct": 2.97,
+          "fb_peak_pct": 4.96,
+          "peak_reduction_pct": 40.1,
+          "ff_trials": 1,
+          "fb_trials": 1
+        },
+        {
+          "target_n": 25,
+          "nominal_ramp_s": 10,
+          "ff_rmse_pct": 0.6,
+          "fb_rmse_pct": 2.32,
+          "rmse_reduction_pct": 74.3,
+          "ff_peak_pct": 1.75,
+          "fb_peak_pct": 4.07,
+          "peak_reduction_pct": 56.9,
+          "ff_trials": 1,
+          "fb_trials": 1
+        }
+      ]
+    },
+    "accessIssues": []
+  },
+  "sources": [
+    {
+      "id": "axial-ulog-source",
+      "label": "90°轴向来流 19 个 ULog 的配对指标（由 analyze_closed_loop.py 生成）",
+      "path": "analysis_metrics.sqlite",
+      "query": {
+        "engine": "SQLite",
+        "sql": "SELECT target_n, nominal_ramp_s, ff_rmse_pct, fb_rmse_pct, rmse_reduction_pct, ff_peak_pct, fb_peak_pct, peak_reduction_pct, ff_trials, fb_trials FROM paired_metrics ORDER BY nominal_ramp_s ASC, target_n ASC",
+        "description": "从经 pyulog 处理的单试验指标中读取 9 个方法配对单元；图中的长表是该查询结果的确定性整形。",
+        "language": "sql",
+        "tables_used": [
+          "paired_metrics"
+        ],
+        "filters": [
+          "攻角=90度",
+          "目标升力∈{15,20,25} N",
+          "标称加速时间∈{1,5,10} s",
+          "方法∈{模型前馈+反馈,纯反馈}",
+          "仅使用推力/控制通道 1；其余通道为零",
+          "扰动窗口=来流 10%-90% 上升段+到达 90% 后 3 s"
+        ],
+        "metric_definitions": [
+          "e_T=T_c-T_m，T_m 为 thrust_kalman_filter_data_1 线性插值到控制时间基的值。",
+          "归一化 RMSE=100*sqrt(mean(e_T^2))/T_c。",
+          "归一化峰值误差=100*max(abs(e_T))/T_c。",
+          "相对降幅=100*(纯反馈-模型前馈+反馈)/纯反馈。",
+          "15 N/1 s 前馈+反馈的两次试验先在单元内取均值；其余单元 n=1。"
+        ]
+      }
+    }
+  ]
+}
