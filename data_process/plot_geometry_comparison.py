@@ -172,7 +172,7 @@ def main() -> None:
             color=DARK,
             linewidth=1.7,
             linestyle=(0, (4.0, 2.5)),
-            label="论文参考值（数字化提取）",
+            label="参考值（carrol[16]）",
             zorder=2,
         )
         axis.plot(
