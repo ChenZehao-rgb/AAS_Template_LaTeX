@@ -563,60 +563,66 @@ def _sparse_style(color: str, marker: str, stride: int) -> dict:
     )
 
 
+RAMP_COLORS = {1: "#0077BB", 5: "#EE7733", 10: "#CC3311"}
+RAMP_SHADE_ALPHA = {1: 0.30, 5: 0.20, 10: 0.12}
+RAMP_LABEL = {1: "1 s 加速", 5: "5 s 加速", 10: "10 s 加速"}
+
+
 def plot_freestream_ramp(runs: list[Run]) -> None:
     """Standalone, single-column freestream-speed ramp curve.
 
-    Split out of plot_representative() so it can run alongside the body text in
-    one column, rather than eating full-width figure space for a curve whose
-    only job is to show the ramp shape used in fig10. Shares fig10's x-axis
-    range so the two figures read on the same time scale.
+    Overlays the 1 s, 5 s, and 10 s freestream-acceleration curves (each the
+    20 N / feedforward+feedback trial, since the rig-driven freestream profile
+    does not depend on the control method) on a shared tau axis, where tau = 0
+    is each run's own 10% crossing. The three shaded windows mark each run's
+    evaluation window (10%-90% acceleration segment plus 3 s, matching the
+    disturbance window used for every reported metric), in the same color as
+    their curve at different alpha (widest/lightest for the slowest 10 s ramp,
+    narrowest/darkest for the fastest 1 s ramp) so the three windows stay
+    visually distinguishable even though they overlap.
     """
-    target_levels = (15, 20, 25)
-    by_target = {target_n: representative_runs(runs, target_n=target_n, ramp_s=1) for target_n in target_levels}
-    ramp_end = max(run.t90_s - run.t10_s for selected in by_target.values() for run in selected.values())
-    xlim = (-2.0, ramp_end + 4.0)  # matches plot_representative()'s x-axis range
-    reference = by_target[20]["ff_fb"]
+    ramp_levels = (1, 5, 10)
+    by_ramp = {ramp_s: representative_runs(runs, target_n=20, ramp_s=ramp_s)["ff_fb"] for ramp_s in ramp_levels}
+    ramp_ends = {ramp_s: run.t90_s - run.t10_s for ramp_s, run in by_ramp.items()}
+    eval_ends = {ramp_s: ramp_end + 3.0 for ramp_s, ramp_end in ramp_ends.items()}
+    xlim = (-2.0, max(ramp_ends.values()) + 4.0)
 
-    fig = plt.figure(figsize=(3.4, 1.6))
+    fig = plt.figure(figsize=(3.4, 1.9))
     ax = fig.add_subplot(111)
 
-    mask = (reference.tau_s >= xlim[0]) & (reference.tau_s <= xlim[1])
-    ax.plot(
-        reference.tau_s[mask],
-        reference.freestream_smooth_m_s[mask],
-        color=COLORS["ff_fb"],
-        linewidth=1.6,
-        zorder=2,
-    )
-    ax.axvspan(0.0, ramp_end, color="0.92", zorder=-3)
+    # Draw the widest (10 s) shaded window first so the narrower windows layer
+    # on top of it, and plot curves widest-ramp-first so the fastest (1 s,
+    # most visually salient) curve is drawn last and stays on top.
+    for ramp_s in sorted(ramp_levels, reverse=True):
+        ax.axvspan(0.0, eval_ends[ramp_s], color=RAMP_COLORS[ramp_s], alpha=RAMP_SHADE_ALPHA[ramp_s], zorder=-3)
+    for ramp_s in sorted(ramp_levels, reverse=True):
+        run = by_ramp[ramp_s]
+        mask = (run.tau_s >= xlim[0]) & (run.tau_s <= xlim[1])
+        ax.plot(
+            run.tau_s[mask],
+            run.freestream_smooth_m_s[mask],
+            color=RAMP_COLORS[ramp_s],
+            linewidth=1.6,
+            zorder=2,
+            label=RAMP_LABEL[ramp_s],
+        )
     ax.axvline(0.0, color=COLORS["neutral"], linestyle=":", linewidth=0.8, zorder=1)
     style_grid(ax)
     ax.set_xlim(*xlim)
     ax.set_xlabel("时间 (s)")
     ax.set_ylabel("来流速度 V∞ (m/s)")
     ymin, ymax = ax.get_ylim()
-    ax.set_ylim(ymin, ymax + 0.12 * (ymax - ymin))
+    ax.set_ylim(ymin, ymax + 0.16 * (ymax - ymin))
+    ax.legend(frameon=False, loc="upper left", handlelength=1.6, fontsize=6.5, ncol=1)
 
-    # Label lives inside the axes (not as a title in the margin above) so the
-    # figure crops tightly when it sits in a single text column.
-    ax.text(
-        ramp_end / 2,
-        ax.get_ylim()[1] - 0.04 * (ax.get_ylim()[1] - ax.get_ylim()[0]),
-        "10%–90% 加速段",
-        ha="center",
-        va="top",
-        fontsize=7,
-        color="0.35",
-    )
-
-    fig.subplots_adjust(left=0.20, right=0.97, top=0.95, bottom=0.28)
+    fig.subplots_adjust(left=0.20, right=0.97, top=0.95, bottom=0.24)
     save_figure(fig, "fig9_freestream_ramp")
 
 
-def plot_representative(runs: list[Run]) -> None:
-    """Fastest (1 s) ramp, all three desired-thrust levels side by side."""
+def plot_representative(runs: list[Run], ramp_s: int = 1, stem: str = "fig10_representative_response") -> None:
+    """All three desired-thrust levels side by side for one nominal ramp duration."""
     target_levels = (15, 20, 25)
-    by_target = {target_n: representative_runs(runs, target_n=target_n, ramp_s=1) for target_n in target_levels}
+    by_target = {target_n: representative_runs(runs, target_n=target_n, ramp_s=ramp_s) for target_n in target_levels}
     xmax = max(run.t90_s - run.t10_s for selected in by_target.values() for run in selected.values()) + 4.0
 
     fig = plt.figure(figsize=(7.16, 4.85))
@@ -627,6 +633,9 @@ def plot_representative(runs: list[Run]) -> None:
     for col, target_n in enumerate(target_levels):
         selected = by_target[target_n]
         ramp_end = max(run.t90_s - run.t10_s for run in selected.values())
+        # Shade the same disturbance/evaluation window used for every reported
+        # metric (10%-90% ramp plus 3 s), not just the raw acceleration segment.
+        eval_end = ramp_end + 3.0
         ax_t, ax_e = thrust_axes[col], error_axes[col]
         for method in METHOD_ORDER:
             run = selected[method]
@@ -640,10 +649,15 @@ def plot_representative(runs: list[Run]) -> None:
         tolerance_n = 0.05 * target_n
         ax_e.axhspan(-tolerance_n, tolerance_n, color="0.92", zorder=-2)
         for axis in (ax_t, ax_e):
-            axis.axvspan(0.0, ramp_end, color="0.95", zorder=-3)
+            axis.axvspan(0.0, eval_end, color="0.95", zorder=-3)
             axis.axvline(0.0, color=COLORS["neutral"], linestyle=":", linewidth=0.7, zorder=1)
             style_grid(axis)
         ax_e.set_xlabel("时间 (s)")
+        # Headroom so the panel label never overlaps the FF+FB curve, which can
+        # otherwise sit close to the target line for the whole window (e.g. the
+        # well-tracked 10 s ramp cases).
+        ymin, ymax = ax_t.get_ylim()
+        ax_t.set_ylim(ymin, ymax + 0.16 * (ymax - ymin))
         panel_label(ax_t, f"({chr(ord('a') + col)}) $T_c$ = {target_n} N", x=0.06, y=0.95)
     thrust_axes[0].set_ylabel("升力 Tm (N)")
     error_axes[0].set_ylabel("误差 eT = Tc − Tm (N)")
@@ -669,7 +683,7 @@ def plot_representative(runs: list[Run]) -> None:
     style_handles = [
         Line2D([0], [0], color=COLORS["target"], lw=1.0, ls="--", label="期望升力"),
         Patch(facecolor="0.92", edgecolor="none", label="±5% 误差带"),
-        Patch(facecolor="0.95", edgecolor="none", label="来流加速段"),
+        Patch(facecolor="0.95", edgecolor="none", label="评价窗口"),
     ]
     fig.legend(
         handles=method_handles + style_handles,
@@ -681,7 +695,7 @@ def plot_representative(runs: list[Run]) -> None:
         handlelength=1.9,
     )
     fig.subplots_adjust(left=0.075, right=0.98, top=0.905, bottom=0.10, hspace=0.16, wspace=0.36)
-    save_figure(fig, "fig10_representative_response")
+    save_figure(fig, stem)
 
 
 def condition_matrix(
@@ -751,10 +765,12 @@ def speed_binned_error(runs: list[Run]) -> dict[str, tuple[np.ndarray, np.ndarra
     per_cell: dict[tuple[int, int, str], list[np.ndarray]] = {}
     for run in runs:
         ramp_end_tau = run.t90_s - run.t10_s
-        ramp = (run.tau_s >= 0.0) & (run.tau_s <= ramp_end_tau)
+        # Same disturbance window as trial_metrics() (10%-90% ramp plus 3 s),
+        # so every reported evaluation window is defined identically.
+        evaluation_window = (run.tau_s >= 0.0) & (run.tau_s <= ramp_end_tau + 3.0)
         values = np.full(len(centers), np.nan)
         for index, (left, right) in enumerate(zip(edges[:-1], edges[1:])):
-            mask = ramp & (run.freestream_smooth_m_s >= left) & (run.freestream_smooth_m_s < right)
+            mask = evaluation_window & (run.freestream_smooth_m_s >= left) & (run.freestream_smooth_m_s < right)
             if np.count_nonzero(mask) >= 3:
                 values[index] = float(np.nanmean(np.abs(run.error_n[mask])) / run.target_n * 100.0)
         per_cell.setdefault((run.target_n, run.nominal_ramp_s, run.method), []).append(values)
@@ -1384,7 +1400,9 @@ def main() -> None:
     write_csv(OUTPUT_DIR / "condition_metrics.csv", condition_rows)
     write_csv(OUTPUT_DIR / "three_method_comparison.csv", comparison_rows)
     plot_freestream_ramp(runs)
-    plot_representative(runs)
+    plot_representative(runs, ramp_s=1, stem="fig10_representative_response")
+    plot_representative(runs, ramp_s=5, stem="fig10_representative_response_5s")
+    plot_representative(runs, ramp_s=10, stem="fig10_representative_response_10s")
     plot_summary(comparison_rows)
     plot_speed_error(runs)
     plot_mechanism(runs)

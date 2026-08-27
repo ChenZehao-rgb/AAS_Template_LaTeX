@@ -558,8 +558,8 @@ $\alpha_p/(^\circ)$ & RMSE$_{\mathrm{norm}}$/\% & MaxErr$_{\mathrm{norm}}$/\% & 
 \begin{center}
 \vbox{\centering
 \includegraphics[width=8cm]{Image/fig9_freestream_ramp.pdf}\\[1mm]
-{\small 图8\quad 1\,s来流加速工况下来流速度曲线
-\\ Fig.\,8 \quad Freestream-speed curve under the 1\,s freestream-acceleration condition}}
+{\small 图8\quad 1、5、10\,s来流加速工况下来流速度曲线,阴影为各自的评价窗口(10\%--90\%加速段及其后3 s)
+\\ Fig.\,8 \quad Freestream-speed curves under the 1, 5, and 10\,s freestream-acceleration conditions, with shading marking each condition's evaluation window (10\%-90\% acceleration segment plus 3\,s)}}
 \end{center}
 
 \subsection{升力闭环控制效果验证}
@@ -580,20 +580,59 @@ $\alpha_p/(^\circ)$ & RMSE$_{\mathrm{norm}}$/\% & MaxErr$_{\mathrm{norm}}$/\% & 
 {\small 图9\quad 15、20、25 N期望升力和1 s来流加速工况下三种控制方法的动态响应.(a)--(c)分别为15、20、25 N期望升力下的实测升力与跟踪误差.
 \\ Fig.\,9 \quad Dynamic response of the three control methods under 15, 20, and 25\,N desired lift with the 1\,s freestream-acceleration condition. (a)--(c) show the measured lift and tracking error under 15, 20, and 25\,N desired lift, respectively.}}
 \end{center}
+
+\begin{center}
+\vbox{\centering
+\includegraphics[width=15.5cm]{Image/fig10_representative_response_5s.pdf}\\[1mm]
+{\small 图10\quad 15、20、25 N期望升力和5 s来流加速工况下三种控制方法的动态响应.(a)--(c)分别为15、20、25 N期望升力下的实测升力与跟踪误差.
+\\ Fig.\,10 \quad Dynamic response of the three control methods under 15, 20, and 25\,N desired lift with the 5\,s freestream-acceleration condition. (a)--(c) show the measured lift and tracking error under 15, 20, and 25\,N desired lift, respectively.}}
+\end{center}
+
+\begin{center}
+\vbox{\centering
+\includegraphics[width=15.5cm]{Image/fig10_representative_response_10s.pdf}\\[1mm]
+{\small 图11\quad 15、20、25 N期望升力和10 s来流加速工况下三种控制方法的动态响应.(a)--(c)分别为15、20、25 N期望升力下的实测升力与跟踪误差.
+\\ Fig.\,11 \quad Dynamic response of the three control methods under 15, 20, and 25\,N desired lift with the 10\,s freestream-acceleration condition. (a)--(c) show the measured lift and tracking error under 15, 20, and 25\,N desired lift, respectively.}}
+\end{center}
+
+\begin{center}
+\vbox{\centering{\small 表4\quad 1、5、10 s加速工况下9种期望升力--加速时间组合的扰动窗口(10\%--90\%加速段及其后3 s)RMSE统计
+\\ Table\,4 \quad Disturbance-window (10\%-90\% acceleration segment plus 3\,s) RMSE statistics for the 9 desired-lift/acceleration-time combinations under the 1, 5, and 10\,s acceleration conditions}\vskip2mm
+{\scriptsize\centering
+\setlength{\tabcolsep}{3.5pt}%
+\begin{tabular}{@{}ccrrrrr@{}}
+\toprule
+$T_c$/N & $t_{\mathrm{ramp}}$/s & Static RMSE/N & FB RMSE/N & FF+FB RMSE/N & FB相对Static降幅/\% & FF+FB相对FB降幅/\% \\
+\midrule
+15 & 1  & 8.12  & 1.56 & 0.85 & 80.81 & 45.72 \\
+15 & 5  & 6.69  & 0.69 & 0.36 & 89.67 & 47.46 \\
+15 & 10 & 5.91  & 0.45 & 0.19 & 92.35 & 57.76 \\
+20 & 1  & 9.15  & 1.81 & 0.77 & 80.21 & 57.28 \\
+20 & 5  & 7.52  & 0.80 & 0.29 & 89.38 & 63.94 \\
+20 & 10 & 6.76  & 0.53 & 0.15 & 92.17 & 71.44 \\
+25 & 1  & 10.66 & 1.92 & 0.72 & 82.02 & 62.19 \\
+25 & 5  & 8.98  & 0.88 & 0.30 & 90.15 & 65.80 \\
+25 & 10 & 8.18  & 0.58 & 0.15 & 92.92 & 74.31 \\
+\bottomrule
+\end{tabular}}
+\vskip1mm
+}
+\end{center}
+
 \begin{multicols}{2}
 其中,纯升力反馈方案与模型前馈与反馈复合控制方案采用相同的PID参数,复合控制中前馈项和反馈项的比例为$1:1$.试验覆盖期望升力15、20、25 N与来流加速时间1、5、10 s(测试台从静止到最大速度的时间),共构成9个匹配工况,三种方法在同一工况下采用相同的目标升力阶跃指令、限幅与数据处理流程.
 
-来流速度$V_\infty=\Omega_a R_0$,各试验依据中值滤波后的$V_\infty$进行时间对齐,以来流由低、高平台差值的10\%处作为扰动起点、90\%处作为加速结束时刻；主要评价窗口取该10\%--90\%加速段及其后3 s,兼顾瞬态误差与加速结束后的恢复过程；图8给出1 s来流加速工况下的来流速度曲线.
+来流速度$V_\infty=\Omega_a R_0$,各试验依据中值滤波后的$V_\infty$进行时间对齐,以来流由低、高平台差值的10\%处作为扰动起点、90\%处作为加速结束时刻；主要评价窗口取该10\%--90\%加速段及其后3 s,兼顾瞬态误差与加速结束后的恢复过程；图8给出1、5、10 s三种来流加速工况下的来流速度曲线.
 
-图9给出15、20、25 N三个期望升力在1 s来流加速工况下的动态响应过程,该工况下加速时间最短、来流变化最快,最能体现瞬态控制差异.与图8中坐标轴定义一致,竖虚线表示来流速度达到变化幅值10\%的时刻,浅灰色纵向区域为10\%--90\%加速段,水平灰色区域表示期望升力的$\pm5\%$误差带.从图中可以看出,
+图9给出15、20、25 N三个期望升力在1 s来流加速工况下的动态响应过程,该工况下加速时间最短、来流变化最快,最能体现瞬态控制差异.与图8中坐标轴定义一致,竖虚线表示来流速度达到变化幅值10\%的时刻,浅灰色纵向区域为评价窗口(10\%--90\%加速段及其后3 s),水平灰色区域表示期望升力的$\pm5\%$误差带.从图中可以看出,
 三种期望升力的变化规律一致：固定控制量下,升力随轴向来流增加而大幅下降,且加速结束后仍存在稳态偏差；纯反馈能够逐步恢复升力,但存在明显的瞬态跌落；模型前馈与反馈复合控制在来流加速阶段即同步提高控制量,将跟踪误差限制在更小范围内.
 
 \end{multicols}
 \begin{center}
 \vbox{\centering
 \includegraphics[width=14cm]{Image/fig11_condition_summary.pdf}\\[1mm]
-{\small 图10\quad 纯轴向来流下三种控制方法在全部工况中的误差比较：(a)纯反馈相对固定控制量的归一化RMSE降幅；(b)模型前馈与反馈复合控制相对纯反馈的进一步降幅
-\\ Fig.\,10 \quad Error comparison of the three control methods across all matched conditions under purely axial freestream: (a) normalized RMSE reduction of pure feedback relative to the fixed control input; (b) further reduction of model feedforward plus feedback relative to pure feedback}}
+{\small 图12\quad 纯轴向来流下三种控制方法在全部工况中的误差比较：(a)纯反馈相对固定控制量的归一化RMSE降幅；(b)模型前馈与反馈复合控制相对纯反馈的进一步降幅
+\\ Fig.\,12 \quad Error comparison of the three control methods across all matched conditions under purely axial freestream: (a) normalized RMSE reduction of pure feedback relative to the fixed control input; (b) further reduction of model feedforward plus feedback relative to pure feedback}}
 \end{center}
 \begin{multicols}{2}
 
@@ -601,23 +640,23 @@ $\alpha_p/(^\circ)$ & RMSE$_{\mathrm{norm}}$/\% & MaxErr$_{\mathrm{norm}}$/\% & 
 \vbox{
 \centerline{\includegraphics[width=8cm]{Image/fig12_speed_error.pdf}}
 \vskip2mm
-{\small 图11\quad 三种控制方法归一化绝对误差随来流速度的变化
-\\ Fig.\,11 \quad Normalized absolute tracking error of the three control methods over the freestream-speed sweep}}
+{\small 图13\quad 三种控制方法归一化绝对误差随来流速度的变化
+\\ Fig.\,13 \quad Normalized absolute tracking error of the three control methods over the freestream-speed sweep}}
 \end{center}
 
-图10给出全部匹配工况的综合比较,原始RMSE和扣除初始偏差后的增量RMSE均在所有工况中满足$E_{\mathrm{FF+FB}}<E_{\mathrm{FB}}<E_{\mathrm{static}}$.相对于固定控制量,纯反馈在9个匹配工况中的扰动窗口归一化RMSE降幅为80.2\%--92.9\%,说明升力反馈能够显著抑制轴向来流导致的稳态升力损失.在纯反馈基础上加入旋翼升力逆模型前馈后,9个工况的归一化RMSE均进一步下降,降幅为45.7\%--74.3\%.
+图12给出全部匹配工况的综合比较,原始RMSE和扣除初始偏差后的增量RMSE均在所有工况中满足$E_{\mathrm{FF+FB}}<E_{\mathrm{FB}}<E_{\mathrm{static}}$.相对于固定控制量,纯反馈在9个匹配工况中的扰动窗口归一化RMSE降幅为80.2\%--92.9\%,说明升力反馈能够显著抑制轴向来流导致的稳态升力损失.在纯反馈基础上加入旋翼升力逆模型前馈后,9个工况的归一化RMSE均进一步下降,降幅为45.7\%--74.3\%.
 
 \begin{center}
 \vbox{
 \centerline{\includegraphics[width=8cm]{Image/fig13_feedforward_mechanism.pdf}}
 \vskip2mm
-{\small 图12\quad 模型前馈作用机理：(a)旋翼升力逆模型给出的前馈转速与编码器实测转速；(b)前馈、反馈及总控制输出的归一化分量
-\\ Fig.\,12 \quad Feedforward mechanism: (a) model-predicted vs. encoder-measured rotor speed; (b) normalized feedforward, feedback, and total control output}}
+{\small 图14\quad 模型前馈作用机理：(a)旋翼升力逆模型给出的前馈转速与编码器实测转速；(b)前馈、反馈及总控制输出的归一化分量
+\\ Fig.\,14 \quad Feedforward mechanism: (a) model-predicted vs. encoder-measured rotor speed; (b) normalized feedforward, feedback, and total control output}}
 \end{center}
 
-图11给出三种控制方法归一化绝对误差随来流速度的变化,中线和阴影分别表示跨工况中位数和四分位区间,同样表明模型前馈与反馈复合控制在整个来流速度范围内均具有最小且最稳定的误差水平.
+图13给出三种控制方法归一化绝对误差随来流速度的变化,中线和阴影分别表示跨工况中位数和四分位区间,同样表明模型前馈与反馈复合控制在整个来流速度范围内均具有最小且最稳定的误差水平.
 
-图12进一步给出模型前馈的作用机理：旋翼升力逆模型给出的前馈转速随来流增加提前上升,编码器实测转速能够跟随该指令；总控制量主要由前馈分量构成,反馈分量只承担较小修正.
+图14进一步给出模型前馈的作用机理：旋翼升力逆模型给出的前馈转速随来流增加提前上升,编码器实测转速能够跟随该指令；总控制量主要由前馈分量构成,反馈分量只承担较小修正.
 \section{结论}
 
 本文面向低空经济应用中多旋翼无人机在复杂气流和快速机动条件下的推进系统升力失配问题,建立了从整机运动状态到单旋翼轴向升力的机理模型,并提出基于模型前馈与直接力反馈的升力闭环控制方法.实验结果表明,所搭建的旋翼升力模型能够准确描述无人机高机动飞行工况下的升力变化情况,并且在模型离线生成查找表--飞控在线查表的部署方案中,能相对准确的提供期望转速前馈量；相对于固定控制量,纯升力反馈控制方法能够有效降低升力误差.复合控制中,模型前馈给出准确的期望转速,反馈环仅补偿模型残差与未建模扰动,从而在来流扰动下实现更小且更稳定的升力误差.
