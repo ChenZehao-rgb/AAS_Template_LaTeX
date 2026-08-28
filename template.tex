@@ -61,7 +61,7 @@ Month Date, Year}
 
 \enabstract{Dynamic inflow during high-maneuverability flight can cause a mismatch in the static thrust mapping, resulting in the actual thrust of the rotor deviating from the commanded value. To improve thrust prediction and disturbance suppression capabilities at the actuator level, this paper establishes a mechanistic model that maps the motion state of a multirotor UAV to the axial thrust of a single rotor, and calculates thrust by combining measured blade geometry, airfoil polar curves, and a non-uniform induced inflow element model. Based on this, a closed-loop control method is proposed that uses a rotor inverse model as feedforward and direct thrust measurements as feedback. A rotating test bench with adjustable blade disk angle of attack and turntable angular velocity was constructed. The results show that the developed model can accurately describe the thrust variation patterns within the test envelope, and the composite control of model feedforward and direct force feedback can effectively suppress strong on-flow disturbances on the single-rotor test bench.}
 
-\enkeyword{Multirotor unmanned aerial vehicle, High-maneuverability flight, Thrust feedback control,Blade element momentum theory}
+\enkeyword{Multirotor unmanned aerial vehicle, High-maneuverability flight, Thrust feedback control, Blade element momentum theory}
     
 \cnaddress{【待填写作者与引用信息】}
 
@@ -584,7 +584,7 @@ $\alpha_p/(^\circ)$ & RMSE$_{\mathrm{norm}}$/\% & MaxErr$_{\mathrm{norm}}$/\% & 
 来流速度$V_\infty=\Omega_a R_0$,各试验依据中值滤波后的$V_\infty$进行时间对齐.对于1 s加速工况,来流变化最快,首尾阶段易受转台启停的非线性过渡及测量噪声影响、阈值穿越点检测不稳定,故以来流由低、高平台差值的10\%处作为扰动起点、90\%处作为加速结束时刻,评价窗口取该10\%--90\%加速段及其后3 s,兼顾瞬态误差与加速结束后的恢复过程；对于5、10 s加速工况,加速持续时间较长,首尾过渡段占全程比例小、阈值穿越点检测稳定,故评价窗口改取来流0\%--100\%的完整加速段及其后3 s,以完整覆盖加速阶段的跟踪过程.图8给出1 s来流加速工况下的来流速度曲线.
 
 图9给出15、20、25 N三个期望升力在1 s来流加速工况下的动态响应过程,该工况下加速时间最短、来流变化最快,最能体现瞬态控制差异.与图8中坐标轴定义一致,竖虚线表示来流速度达到变化幅值10\%的时刻,浅灰色纵向区域为10\%--90\%加速段,水平灰色区域表示期望升力的$\pm5\%$误差带.从图中可以看出,
-三种期望升力的变化规律一致：固定控制量下,升力随轴向来流增加而大幅下降,且加速结束后仍存在稳态偏差；纯反馈能够逐步恢复升力,但存在明显的瞬态跌落；模型前馈与反馈复合控制在来流加速阶段即同步提高控制量,将跟踪误差限制在更小范围内.进一步绘制在1s、5s、10s三种来流速度下，期望升力20N的动态响应过程，如图10所示.
+三种期望升力的变化规律一致：固定控制量下,升力随轴向来流增加而大幅下降,且加速结束后仍存在稳态偏差；纯反馈能够逐步恢复升力,但存在明显的瞬态跌落；模型前馈与反馈复合控制在来流加速阶段即同步提高控制量,将跟踪误差限制在更小范围内.进一步绘制在1s、5s、10s三种来流速度下,期望升力20N的动态响应过程,如图10所示.
 \end{multicols}
 \begin{center}
 \vbox{\centering
@@ -639,7 +639,7 @@ $T_c$/N & $t_{\mathrm{ramp}}$/s & Static/N & FB/N & FF+FB/N & FB降幅/\% & FF+F
 
 图11给出三种控制方法归一化绝对误差随来流速度的变化,对15、20、25 N期望升力与1、5、10 s加速时间共9个工况按来流速度统一叠加,中线和阴影分别表示跨工况中位数和四分位区间.这一处理旨在检验前述基于个别工况得到的结论是否对期望升力和加速快慢具有普适性,而非仅在特定工况下成立.结果显示,固定控制量的误差随来流速度增大而单调上升,且跨工况分散范围最宽；纯反馈方案的误差同样随来流速度增大而扩大,分散范围有所收窄；模型前馈与反馈复合控制的误差曲线几乎不随来流速度变化,且跨工况分散范围全程最窄.这表明模型前馈与反馈复合控制在整个来流速度范围内均具有最小且最稳定的误差水平,该优势不依赖于具体的期望升力或加速时间设定,验证了该控制方法的鲁棒性.
 
-图12进一步给出复合控制的作用机理.图(a)中前馈转速、实际电机转速与来流速度曲线均取自期望升力20 N/1 s加速工况的前馈-反馈复合控制试验，三者共享同一时间轴,纵坐标彼此独立、仅用于比较相位关系.结果显示,来流速度与实际电机转速的爬升相位高度一致(二者到达半程幅值的时刻均约为$\tau = 0.31 s$),而模型前馈给出的期望转速在相同判据下滞后约0.06 s,且爬升末段未表现出来流速度与实际电机转速共同出现的过冲.结合(b)图中反馈分量在加速阶段的变化可知,这一相位滞后与幅值残差主要由反馈环节实时补偿:由于纯反馈方案与前馈-反馈复合控制方案采用相同的PID参数,该结果表明前馈把反馈原本需要独立补偿的扰动升力缺口,压缩为一个量级远小于该缺口的相位与幅值残差,使同一套反馈增益足以在扰动初期即完成修正——这正是复合控制相对纯反馈响应更快、误差更小且更稳定的根本原因.
+图12进一步给出复合控制的作用机理.图(a)中前馈转速、实际电机转速与来流速度曲线均取自期望升力20 N/1 s加速工况的前馈-反馈复合控制试验,三者共享同一时间轴,纵坐标彼此独立、仅用于比较相位关系.结果显示,来流速度与实际电机转速的爬升相位高度一致(二者到达半程幅值的时刻均约为$\tau = 0.31 s$),而模型前馈给出的期望转速在相同判据下滞后约0.06 s,且爬升末段未表现出来流速度与实际电机转速共同出现的过冲.结合(b)图中反馈分量在加速阶段的变化可知,这一相位滞后与幅值残差主要由反馈环节实时补偿:由于纯反馈方案与前馈-反馈复合控制方案采用相同的PID参数,该结果表明前馈把反馈原本需要独立补偿的扰动升力缺口,压缩为一个量级远小于该缺口的相位与幅值残差,使同一套反馈增益足以在扰动初期即完成修正——这正是复合控制相对纯反馈响应更快、误差更小且更稳定的根本原因.
 
 \section{结论}
 
@@ -650,50 +650,44 @@ $T_c$/N & $t_{\mathrm{ramp}}$/s & Static/N & FB/N & FF+FB/N & FB降幅/\% & FF+F
 \begin{thebibliography}{99}
 \zihao{6} \addtolength{\itemsep}{0.2em} \urlstyle{rm}
 
-\bibitem{1} 中国科学院地理科学与资源研究所. 中国低空经济发展指数报告(2025)[EB/OL]. 2025-05-07
+\bibitem{1} 王姣娥, 杜德林, 陈卓, 等. 中国低空经济发展指数报告(2026). 北京: 中国科学院地理科学与资源研究所, 2026
 
-\bibitem{2} 陈林, 缪志强, 王祥科, 等. 自主飞行器技术及其在低空经济中的应用综述[J]. 机器人, 2025, 47(3): 470-496
+\bibitem{2} Chen Lin, Miao Zhi-Qiang, Wang Xiang-Ke, Chen Mou, Duan Hai-Bin, Wang Yao-Nan. Overview on autonomous aircraft technology and its application to low-altitude economy. {\sl Robot}, 2025, {\bf 47}(3): 470$-$496 \\
+(陈林, 缪志强, 王祥科, 陈谋, 段海滨, 王耀南. 自主飞行器技术及其在低空经济中的应用综述. 机器人, 2025, 47(3): 470$-$496)
 
-\bibitem{3} Bauersfeld L, Kaufmann E, Foehn P, et al. NeuroBEM: Hybrid aerodynamic quadrotor model[C]//Robotics: Science and Systems XVII. 2021
+\bibitem{3} Bauersfeld L, Kaufmann E, Foehn P, Sun S, Scaramuzza D. NeuroBEM: Hybrid aerodynamic quadrotor model. In: Proceedings of Robotics: Science and Systems XVII (RSS). Virtual: RSS Foundation, 2021
 
-\bibitem{4} Liu H, Lin D, Ye J, et al. Quadrotor aggressive control based on angular acceleration feedback and high-fidelity propulsion model. {\sl IEEE Transactions on Industrial Electronics}, 2025
+\bibitem{4} Liu H, Lin D, Ye J, Jiang T, Huang J S. Quadrotor aggressive control based on angular acceleration feedback and high-fidelity propulsion model. {\sl IEEE Transactions on Industrial Electronics}, DOI: 10.1109/TIE.2025.3572921
 
-\bibitem{5} Gonzalez-Morgado A, Sanchez-Cuevas P J, Heredia G, et al. Rotor-force controller for multirotors under aerodynamic interferences. {\sl Aerospace Science and Technology}, 2025, {\bf 157}: 109861
+\bibitem{5} Gonzalez-Morgado A, Sanchez-Cuevas P J, Heredia G, Ollero A. Rotor-force controller for multirotors under aerodynamic interferences. {\sl Aerospace Science and Technology}, 2025, {\bf 157}: 109861
 
-\bibitem{6} 蒋涵, 常彦春, 杨丽英, 等. 基于升力反馈的旋翼无人机控制方法[J]. 机器人, 2026, 48(3): 518-530
+\bibitem{6} Jiang Han, Chang Yan-Chun, Yang Li-Ying, He Yu-Qing. Thrust feedback-based control method for rotor UAV. {\sl Robot}, 2026, {\bf 48}(3): 518$-$530 \\
+(蒋涵, 常彦春, 杨丽英, 何玉庆. 基于升力反馈的旋翼无人机控制方法. 机器人, 2026, 48(3): 518$-$530)
 
-\bibitem{7} 蒋涵, 陈泽昊, 常彦春, 等. 基于直接升力控制的旋翼无人机风扰抑制方法[J]. 中国科学: 技术科学, 2026: 1-13
+\bibitem{7} Jiang Han, Chen Ze-Hao, Chang Yan-Chun, Yang Li-Ying, Liu Lian-Qing, He Yu-Qing. A wind disturbance suppression method for multirotor UAVs based on direct thrust control. {\sl SCIENTIA SINICA Technologica}, 2026, {\bf 56}, DOI: 10.1360/SST-2025-0274 \\
+(蒋涵, 陈泽昊, 常彦春, 杨丽英, 刘连庆, 何玉庆. 基于直接升力控制的旋翼无人机风扰抑制方法. 中国科学: 技术科学, 2026, 56, DOI: 10.1360/SST-2025-0274)
 
-\bibitem{8} Theys B, Dimitriadis G, Hendrick P, et al. Experimental and numerical study of micro-aerial-vehicle propeller performance in oblique flow. {\sl Journal of Aircraft}, 2017, {\bf 54}(3): 1076-1084
+\bibitem{8} Theys B, Dimitriadis G, Hendrick P, De Schutter J. Experimental and numerical study of micro-aerial-vehicle propeller performance in oblique flow. {\sl Journal of Aircraft}, 2017, {\bf 54}(3): 1076$-$1084
 
-\bibitem{9} Serrano D, Ren M, Qureshi A J, et al. Effect of disk angle-of-attack on aerodynamic performance of small propellers. {\sl Aerospace Science and Technology}, 2019, {\bf 92}: 901-914
+\bibitem{9} Serrano D, Ren M, Qureshi A J, Ghaemi S. Effect of disk angle-of-attack on aerodynamic performance of small propellers. {\sl Aerospace Science and Technology}, 2019, {\bf 92}: 901$-$914
 
-\bibitem{10} Simmons B M. System identification for propellers at high incidence angles. {\sl Journal of Aircraft}, 2021, {\bf 58}(6): 1336-1350
+\bibitem{10} Simmons B M. System identification for propellers at high incidence angles. {\sl Journal of Aircraft}, 2021, {\bf 58}(6): 1336$-$1350
 
-\bibitem{11} H. Glauert, A General Theory of the Autogyro, R\&M No. 1111, British A.R.C., November 1926
+\bibitem{11} Glauert H. A general theory of the autogyro. R\&M No. 1111. London: British Aeronautical Research Committee, 1926
 
-\bibitem{12} Drela M. XFOIL: An analysis and design system[M]//Low Reynolds Number Aerodynamics. Berlin: Springer, 1989: 1-12
+\bibitem{12} Drela M. XFOIL: An analysis and design system for low Reynolds number airfoils. In: {\sl Low Reynolds Number Aerodynamics}. Berlin: Springer, 1989. 1$-$12
 
-\bibitem{13} Meier L, Honegger D, Pollefeys M. PX4: A node-based multithreaded open source robotics framework for deeply embedded platforms[C]//2015 IEEE International Conference on Robotics and Automation. IEEE, 2015: 6235-6242
+\bibitem{13} Meier L, Honegger D, Pollefeys M. PX4: A node-based multithreaded open source robotics framework for deeply embedded platforms. In: Proceedings of 2015 IEEE International Conference on Robotics and Automation (ICRA). Seattle, WA, USA: IEEE, 2015. 6235$-$6240
 
-\bibitem{14} Selig M S. UIUC Airfoil Data Site[EB/OL]. \url{https://m-selig.ae.illinois.edu/ads.html}
+\bibitem{14} Selig M S. UIUC airfoil data site. Urbana-Champaign: University of Illinois at Urbana-Champaign. \url{https://m-selig.ae.illinois.edu/ads.html}
 
-\bibitem{15} Tang E, Chung S J. Rapid extraction of propeller geometry using photogrammetry[J]. {\sl International Journal of Micro Air Vehicles}, 2022, {\bf 14}: 1-22. DOI: 10.1177/17568293221132044
+\bibitem{15} Tang E, Chung S J. Rapid extraction of propeller geometry using photogrammetry. {\sl International Journal of Micro Air Vehicles}, 2022, {\bf 14}: 1$-$22. DOI: 10.1177/17568293221132044
 
-\bibitem{16} Baltsavias, E. P. A comparison between photogrammetry and laser scanning. ISPRS Journal of Photogrammetry and Remote Sensing, 1999, 54(2–3): 83–94. DOI: 10.1016/S0924-2716(99)00014-3
+\bibitem{16} Baltsavias E P. A comparison between photogrammetry and laser scanning. {\sl ISPRS Journal of Photogrammetry and Remote Sensing}, 1999, {\bf 54}(2$-$3): 83$-$94. DOI: 10.1016/S0924-2716(99)00014-3
 
-\bibitem{17} CHENG Z, LI H, ASANO Y, et al. Multi-view 3D reconstruction of a texture-less smooth surface of unknown generic reflectance[C]//Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 2021: 16226-16235.
+\bibitem{17} Cheng Z, Li H, Asano Y, Zheng Y, Sato I. Multi-view 3D reconstruction of a texture-less smooth surface of unknown generic reflectance. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). Virtual: IEEE, 2021. 16226$-$16235
 
-\bibitem{18} T. B. Carroll, “A DESIGN METHODOLOGY FOR ROTORS OF SMALL MULTIROTOR VEHICLES.”
-
-% \bibitem{17} Davis E, Pounds P E I. Direct sensing of thrust and velocity for a quadrotor rotor array. {\sl IEEE Robotics and Automation Letters}, 2017, {\bf 2}(3): 1360-1366
-
-% \bibitem{18} Brandt J B, Selig M S. Propeller performance data at low Reynolds numbers[C]//49th AIAA Aerospace Sciences Meeting. Orlando: AIAA, 2011: AIAA 2011-1255
-
-% \bibitem{19} Itoh Y, Satoh A. Modeling and numerical investigation of aerodynamic characteristics of a propeller circling on a whirling arm. {\sl Transactions of the Japan Society for Aeronautical and Space Sciences}, 2021, {\bf 64}(6): 335-347
-
-% \bibitem{20} Gill R, D'Andrea R. Propeller thrust and drag in forward flight[C]//2017 IEEE Conference on Control Technology and Applications. IEEE, 2017: 73-79
-
+\bibitem{18} Carroll T B. A design methodology for rotors of small multirotor vehicles [Master thesis]. Toronto, Canada: Ryerson University, 2017
 
 \end{thebibliography}
 

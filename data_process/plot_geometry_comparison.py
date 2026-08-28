@@ -19,13 +19,25 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = Path(__file__).with_name("fig5_full_range_source.pdf")
-OUTPUT = ROOT / "Image" / "图5-chord_pitch_comparison.pdf"
+OUTPUT = ROOT / "Image" / "fig5_chord_pitch_comparison.pdf"
 
 R_OVER_R_MIN = 0.25
 R_OVER_R_MAX = 0.90
 BLUE = "#1F5A99"
 DARK = "#333333"
 GRID = "#D9D9D9"
+
+# The figure is drawn at FIG_WIDTH_IN but placed in the document at
+# DISPLAY_WIDTH_CM (see \includegraphics[width=9cm,...] in template.tex), so
+# any point size set here is shrunk by that ratio once typeset. Scale the
+# in-figure font size up so the text reads at BODY_FONT_PT (the document's
+# \normalsize, \zihao{5} = 10.5bp) once the figure is placed.
+FIG_WIDTH_IN = 6.82
+DISPLAY_WIDTH_CM = 9.0
+BODY_FONT_PT = 10.5
+FONT_SCALE = FIG_WIDTH_IN / (DISPLAY_WIDTH_CM / 2.54)
+SIZE_ADJUST = 0.7  # requested: 30% smaller than the body-text match
+BASE_FONTSIZE = BODY_FONT_PT * FONT_SCALE * SIZE_ADJUST
 
 
 def _is_blue(color: tuple[float, ...] | None) -> bool:
@@ -142,9 +154,11 @@ def _extract_source() -> list[dict[str, tuple[np.ndarray, np.ndarray]]]:
 def _configure_style() -> None:
     mpl.rcParams.update(
         {
-            "font.family": "sans-serif",
-            "font.sans-serif": ["Microsoft YaHei", "SimHei", "DejaVu Sans"],
-            "mathtext.fontset": "stix",
+            "font.family": ["Times New Roman", "SimSun"],
+            "mathtext.fontset": "custom",
+            "mathtext.rm": "SimSun",
+            "mathtext.it": "Times New Roman:italic",
+            "mathtext.bf": "Times New Roman:bold",
             "axes.unicode_minus": False,
             "pdf.fonttype": 42,
         }
@@ -204,7 +218,7 @@ def main() -> None:
             right=True,
             length=3.0,
             width=0.8,
-            labelsize=8,
+            labelsize=BASE_FONTSIZE,
         )
         for spine in axis.spines.values():
             spine.set_color("black")
@@ -214,21 +228,21 @@ def main() -> None:
             0.91,
             f"({chr(ord('a') + panel_index)})",
             transform=axis.transAxes,
-            fontsize=9,
+            fontsize=BASE_FONTSIZE,
         )
 
     axes[0].set_ylim(0.0, 0.24)
     axes[0].set_yticks(np.arange(0.0, 0.241, 0.04))
-    axes[0].set_ylabel(r"弦长比  $c/R$", fontsize=10)
+    axes[0].set_ylabel(r"$\mathrm{弦长比}\ \ c/R$", fontsize=BASE_FONTSIZE)
     axes[0].legend(
-        loc="upper right", frameon=False, fontsize=7.5, handlelength=3.0
+        loc="lower left", frameon=False, fontsize=BASE_FONTSIZE, handlelength=3.0
     )
 
     axes[1].set_ylim(0.0, 25.0)
     axes[1].set_yticks(np.arange(0.0, 25.1, 5.0))
-    axes[1].set_ylabel(r"安装角  $\theta\ (^{\circ})$", fontsize=10)
-    axes[1].set_xlabel(r"径向位置  $r/R$", fontsize=10)
-    x_ticks = np.array([0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.90])
+    axes[1].set_ylabel(r"$\mathrm{安装角}\ \ \theta\ (^{\circ})$", fontsize=BASE_FONTSIZE)
+    axes[1].set_xlabel(r"$\mathrm{径向位置}\ \ r/R$", fontsize=BASE_FONTSIZE)
+    x_ticks = np.array([0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
     axes[1].set_xticks(x_ticks)
     axes[1].set_xticklabels([f"{value:.2f}" for value in x_ticks])
 
