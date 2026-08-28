@@ -189,9 +189,18 @@ def odd_kernel(samples: float, maximum: int) -> int:
     return value if value % 2 == 1 else value + 1
 
 
-def detect_ramp(
-    timestamp_s: np.ndarray, freestream_m_s: np.ndarray, sampling_hz: float
+def detect_ramp_thresholds(
+    timestamp_s: np.ndarray,
+    freestream_m_s: np.ndarray,
+    sampling_hz: float,
+    low_frac: float = 0.10,
+    high_frac: float = 0.90,
 ) -> tuple[np.ndarray, float, float, float, float]:
+    """Find the crossing times of the ``low_frac``/``high_frac`` fractions of the
+    low-to-high freestream-speed span, using the same sustained-crossing
+    logic regardless of which fractions are requested (e.g. 0.10/0.90 for the
+    conventional 10%-90% ramp window, or 0.0/1.0 for the full acceleration
+    span from immediate onset to plateau)."""
     kernel = odd_kernel(0.35 * sampling_hz, len(freestream_m_s))
     smooth = median_filter(freestream_m_s, size=kernel, mode="nearest")
     first_five = timestamp_s <= min(timestamp_s[0] + 5.0, timestamp_s[-1])
@@ -204,23 +213,33 @@ def detect_ramp(
     if high - low < 5.0:
         raise ValueError(f"Freestream change is too small: low={low:.3f}, high={high:.3f}")
 
-    threshold_10 = low + 0.10 * (high - low)
-    threshold_90 = low + 0.90 * (high - low)
+    threshold_low = low + low_frac * (high - low)
+    threshold_high = low + high_frac * (high - low)
     sustained_samples = max(3, int(round(0.25 * sampling_hz)))
-    above_90 = (smooth >= threshold_90).astype(int)
-    sustained_90 = np.convolve(
-        above_90, np.ones(sustained_samples, dtype=int), mode="same"
+    above_high = (smooth >= threshold_high).astype(int)
+    sustained_high = np.convolve(
+        above_high, np.ones(sustained_samples, dtype=int), mode="same"
     ) >= sustained_samples
-    candidates_90 = np.flatnonzero(sustained_90)
-    if not len(candidates_90):
-        raise ValueError("Could not find a sustained 90% freestream crossing")
-    index_90 = int(candidates_90[0])
+    candidates_high = np.flatnonzero(sustained_high)
+    if not len(candidates_high):
+        raise ValueError(
+            f"Could not find a sustained {high_frac:.0%} freestream crossing"
+        )
+    index_high = int(candidates_high[0])
 
-    below_10_before_90 = np.flatnonzero(smooth[:index_90] <= threshold_10)
-    if not len(below_10_before_90):
-        raise ValueError("Could not find the 10% freestream crossing before the plateau")
-    index_10 = int(below_10_before_90[-1] + 1)
-    return smooth, float(timestamp_s[index_10]), float(timestamp_s[index_90]), low, high
+    below_low_before_high = np.flatnonzero(smooth[:index_high] <= threshold_low)
+    if not len(below_low_before_high):
+        raise ValueError(
+            f"Could not find the {low_frac:.0%} freestream crossing before the plateau"
+        )
+    index_low = int(below_low_before_high[-1] + 1)
+    return smooth, float(timestamp_s[index_low]), float(timestamp_s[index_high]), low, high
+
+
+def detect_ramp(
+    timestamp_s: np.ndarray, freestream_m_s: np.ndarray, sampling_hz: float
+) -> tuple[np.ndarray, float, float, float, float]:
+    return detect_ramp_thresholds(timestamp_s, freestream_m_s, sampling_hz, 0.10, 0.90)
 
 
 def load_run(path: Path) -> Run:
@@ -684,6 +703,110 @@ def plot_representative(runs: list[Run]) -> None:
     save_figure(fig, "fig10_representative_response")
 
 
+def plot_representative_ramp_times(
+    runs: list[Run], target_n: int = 20, ramp_levels: tuple[int, ...] = (1, 5, 10)
+) -> None:
+    """Same response-figure style/layout as plot_representative(), but panels
+    vary the freestream-acceleration time (1/5/10 s) at a fixed desired
+    thrust instead of varying desired thrust at a fixed 1 s ramp.
+
+    The evaluation window drawn on each panel follows the manuscript's fig10
+    convention (10%-90% ramp + 3 s) only for the 1 s column, matching that
+    figure exactly. The 5 s and 10 s columns instead use the full 0%-100%
+    ramp span (immediate acceleration onset to plateau) + 3 s, since those
+    slower ramps are better characterized by their full transient than by an
+    interior 10%-90% slice.
+    """
+    by_ramp = {
+        ramp_s: representative_runs(runs, target_n=target_n, ramp_s=ramp_s) for ramp_s in ramp_levels
+    }
+
+    # For the 5 s/10 s columns, recompute each run's own 0%-100% ramp span:
+    # Run only stores the 10%-90% crossings (t10_s/t90_s), and re-zeroing tau
+    # at each run's own onset mirrors how tau_s is already re-zeroed at each
+    # run's own t10_s for the 1 s column.
+    full_ramp: dict[Path, tuple[np.ndarray, float]] = {}
+    for ramp_s in ramp_levels:
+        if ramp_s == 1:
+            continue
+        for run in by_ramp[ramp_s].values():
+            _, t0, t100, _, _ = detect_ramp_thresholds(
+                run.timestamp_s, run.freestream_m_s, run.sampling_hz, 0.0, 1.0
+            )
+            full_ramp[run.path] = (run.timestamp_s - t0, t100 - t0)
+
+    fig = plt.figure(figsize=(7.16, 4.85))
+    grid = fig.add_gridspec(2, 3, height_ratios=(1.0, 1.0), hspace=0.16, wspace=0.36)
+    thrust_axes = [fig.add_subplot(grid[0, col]) for col in range(3)]
+    error_axes = [fig.add_subplot(grid[1, col], sharex=thrust_axes[col]) for col in range(3)]
+
+    for col, ramp_s in enumerate(ramp_levels):
+        selected = by_ramp[ramp_s]
+        ax_t, ax_e = thrust_axes[col], error_axes[col]
+        if ramp_s == 1:
+            tau_by_method = {method: run.tau_s for method, run in selected.items()}
+            ramp_end = max(run.t90_s - run.t10_s for run in selected.values())
+        else:
+            tau_by_method = {method: full_ramp[run.path][0] for method, run in selected.items()}
+            ramp_end = max(full_ramp[run.path][1] for run in selected.values())
+        xlim = (-2.0, ramp_end + 4.0)
+
+        for method in METHOD_ORDER:
+            run = selected[method]
+            tau = tau_by_method[method]
+            mask = (tau >= xlim[0]) & (tau <= xlim[1])
+            n_visible = int(np.count_nonzero(mask))
+            style = _sparse_style(COLORS[method], MARKERS[method], max(1, n_visible // 12))
+            ax_t.plot(tau[mask], run.measured_n[mask], linewidth=1.1, **style)
+            ax_e.plot(tau[mask], run.error_n[mask], linewidth=1.0, **style)
+        ax_t.axhline(target_n, color=COLORS["target"], linestyle="--", linewidth=0.9, zorder=1)
+        ax_e.axhline(0.0, color=COLORS["target"], linewidth=0.6, zorder=1)
+        tolerance_n = 0.05 * target_n
+        ax_e.axhspan(-tolerance_n, tolerance_n, color="0.92", zorder=-2)
+        for axis in (ax_t, ax_e):
+            axis.axvspan(0.0, ramp_end, color="0.95", zorder=-3)
+            axis.axvline(0.0, color=COLORS["neutral"], linestyle=":", linewidth=0.7, zorder=1)
+            style_grid(axis)
+            axis.set_xlim(*xlim)
+        ax_e.set_xlabel("时间 (s)")
+        panel_label(ax_t, f"({chr(ord('a') + col)}) $t_{{\\mathrm{{ramp}}}}$ = {ramp_s} s", x=0.06, y=0.95)
+    thrust_axes[0].set_ylabel("升力 Tm (N)")
+    error_axes[0].set_ylabel("误差 eT = Tc − Tm (N)")
+    for axis in thrust_axes:
+        plt.setp(axis.get_xticklabels(), visible=False)
+
+    method_handles = [
+        Line2D(
+            [0],
+            [0],
+            color=COLORS[method],
+            marker=MARKERS[method],
+            markerfacecolor="white",
+            markeredgecolor=COLORS[method],
+            markeredgewidth=0.8,
+            linewidth=1.4,
+            label=METHOD_LABEL_ZH[method],
+        )
+        for method in METHOD_ORDER
+    ]
+    style_handles = [
+        Line2D([0], [0], color=COLORS["target"], lw=1.0, ls="--", label="期望升力"),
+        Patch(facecolor="0.92", edgecolor="none", label="±5% 误差带"),
+        Patch(facecolor="0.95", edgecolor="none", label="来流加速段"),
+    ]
+    fig.legend(
+        handles=method_handles + style_handles,
+        loc="upper center",
+        bbox_to_anchor=(0.56, 0.995),
+        ncol=3,
+        frameon=False,
+        columnspacing=1.3,
+        handlelength=1.9,
+    )
+    fig.subplots_adjust(left=0.075, right=0.98, top=0.905, bottom=0.10, hspace=0.16, wspace=0.36)
+    save_figure(fig, f"fig14_ramp_time_response_{target_n}N")
+
+
 def condition_matrix(
     condition_rows: list[dict[str, object]], method: str, metric: str
 ) -> np.ndarray:
@@ -906,6 +1029,25 @@ def plot_mechanism(runs: list[Run]) -> None:
         zorder=3,
     )
 
+    # Freestream speed on a secondary axis lets panel (a) show the
+    # feedforward rpm command rising in step with the disturbance it is
+    # compensating for, without the reader having to cross-reference the
+    # freestream-ramp figure.
+    freestream_axis = axes[0].twinx()
+    freestream_axis.plot(
+        ff.tau_s[mask],
+        ff.freestream_smooth_m_s[mask],
+        color=COLORS["neutral"],
+        linestyle="--",
+        linewidth=0.8,
+        zorder=0,
+        label="来流速度",
+    )
+    freestream_axis.set_ylabel("来流速度 (m/s)", color=COLORS["neutral"], fontsize=8)
+    freestream_axis.tick_params(axis="y", colors=COLORS["neutral"], labelsize=7)
+    freestream_axis.spines["right"].set_color(COLORS["neutral"])
+    freestream_axis.grid(False)
+
     axes[0].set_ylabel("转速 (rpm)")
     axes[1].set_ylabel("控制量")
     axes[1].set_xlabel("时间 (s)")
@@ -918,10 +1060,21 @@ def plot_mechanism(runs: list[Run]) -> None:
         axis.axvspan(0.0, ramp_end_tau, color="0.95", zorder=-3)
         axis.axvline(0.0, color=COLORS["neutral"], linestyle=":", linewidth=0.7, zorder=1)
         style_grid(axis)
-        axis.legend(frameon=False, ncol=1, handlelength=1.4, fontsize=6.5, **legend_kwargs[index])
+    handles_a, labels_a = axes[0].get_legend_handles_labels()
+    handles_fs, labels_fs = freestream_axis.get_legend_handles_labels()
+    axes[0].legend(
+        handles_a + handles_fs,
+        labels_a + labels_fs,
+        frameon=False,
+        ncol=1,
+        handlelength=1.4,
+        fontsize=6.5,
+        **legend_kwargs[0],
+    )
+    axes[1].legend(frameon=False, ncol=1, handlelength=1.4, fontsize=6.5, **legend_kwargs[1])
     panel_label(axes[0], "(a)")
     panel_label(axes[1], "(b)")
-    fig.subplots_adjust(left=0.22, right=0.97, top=0.97, bottom=0.11, hspace=0.16)
+    fig.subplots_adjust(left=0.22, right=0.84, top=0.97, bottom=0.11, hspace=0.16)
     save_figure(fig, "fig13_feedforward_mechanism")
 
 
@@ -1385,6 +1538,7 @@ def main() -> None:
     write_csv(OUTPUT_DIR / "three_method_comparison.csv", comparison_rows)
     plot_freestream_ramp(runs)
     plot_representative(runs)
+    plot_representative_ramp_times(runs)
     plot_summary(comparison_rows)
     plot_speed_error(runs)
     plot_mechanism(runs)
