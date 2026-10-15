@@ -1,0 +1,5 @@
+﻿group,raw_rows,positive_rows,stopped_rows,adjacent_plateau_clusters,nominal_13_matches,stable_samples_available,stable_window_reextractable
+up_1,17,16,1,13,True,False,False
+down_1,14,13,1,13,True,False,False
+up_2,16,15,1,13,True,False,False
+down_2,14,13,1,13,True,False,False

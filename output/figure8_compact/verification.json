@@ -1,0 +1,359 @@
+{
+  "all_pass": true,
+  "checks": {
+    "processing_function_AST_unchanged": true,
+    "1s_metrics_identical": true,
+    "1s_row0_all_samples_and_times_identical": true,
+    "1s_row0_line_style_identical": true,
+    "1s_row0_every_sample_in_axes": true,
+    "1s_row0_rmse_text_identical": true,
+    "1s_row1_all_samples_and_times_identical": true,
+    "1s_row1_line_style_identical": true,
+    "1s_row1_every_sample_in_axes": true,
+    "1s_row1_rmse_text_identical": true,
+    "1s_row1_rmse_clear_of_trace": true,
+    "1s_row1_rmse_clear_of_zero": true,
+    "1s_row1_common_y_limits_ticks": true,
+    "1s_column_time_axes_and_shading_aligned": true,
+    "5s_metrics_identical": true,
+    "5s_row0_all_samples_and_times_identical": true,
+    "5s_row0_line_style_identical": true,
+    "5s_row0_every_sample_in_axes": true,
+    "5s_row0_rmse_text_identical": true,
+    "5s_row1_all_samples_and_times_identical": true,
+    "5s_row1_line_style_identical": true,
+    "5s_row1_every_sample_in_axes": true,
+    "5s_row1_rmse_text_identical": true,
+    "5s_row1_rmse_clear_of_trace": true,
+    "5s_row1_rmse_clear_of_zero": true,
+    "5s_row1_common_y_limits_ticks": true,
+    "5s_column_time_axes_and_shading_aligned": true,
+    "10s_metrics_identical": true,
+    "10s_row0_all_samples_and_times_identical": true,
+    "10s_row0_line_style_identical": true,
+    "10s_row0_every_sample_in_axes": true,
+    "10s_row0_rmse_text_identical": true,
+    "10s_row1_all_samples_and_times_identical": true,
+    "10s_row1_line_style_identical": true,
+    "10s_row1_every_sample_in_axes": true,
+    "10s_row1_rmse_text_identical": true,
+    "10s_row1_rmse_clear_of_trace": true,
+    "10s_row1_rmse_clear_of_zero": true,
+    "10s_row1_common_y_limits_ticks": true,
+    "10s_column_time_axes_and_shading_aligned": true,
+    "row_y_axes_independent": true,
+    "actual_height_ratio_0_7": true,
+    "three_columns_share_y_within_each_row": true,
+    "native_1s_export_identical": true,
+    "1s_summary_and_processing_identical": true,
+    "vector_pdf_no_raster_objects": true,
+    "all_pdf_fonts_embedded": true,
+    "pdf_text_inside_page": true,
+    "paper_image_matches_render_.pdf": true,
+    "paper_image_matches_render_.png": true
+  },
+  "before": {
+    "canvas_inches": [
+      6.1,
+      3.6
+    ],
+    "pdf_mm": [
+      147.44629720052083,
+      90.09468375311957
+    ],
+    "height_ratio": 1.0,
+    "lower_ylim": [
+      -6,
+      4
+    ]
+  },
+  "after": {
+    "canvas_inches": [
+      6.1,
+      3.1
+    ],
+    "pdf_mm": [
+      149.77004640367295,
+      78.25828306410047
+    ],
+    "height_ratio": 0.6999999999999998,
+    "lower_ylim": [
+      -2,
+      1
+    ],
+    "lower_yticks": [
+      -2,
+      -1,
+      0,
+      1
+    ],
+    "paper_width_mm": 155.0,
+    "paper_height_mm": 80.99105372673569,
+    "actual_axes_height_mm": [
+      38.30113122171945,
+      26.810791855203615
+    ],
+    "major_tick_font_pt": 7.5,
+    "label_font_pt": 9.0
+  },
+  "traces": [
+    {
+      "nominal_s": 1,
+      "row": 0,
+      "samples": 784,
+      "extrema": {
+        "min": {
+          "force_N": -4.1972462,
+          "tau_s": 0.297061000000042
+        },
+        "max": {
+          "force_N": 2.5301157,
+          "tau_s": 1.2897990000000163
+        },
+        "peak_abs": {
+          "force_N": -4.1972462,
+          "tau_s": 0.297061000000042
+        }
+      },
+      "transient_range_N": [
+        -4.1972462,
+        -0.0392266
+      ],
+      "xlim": [
+        -3.0,
+        4.83970800000003
+      ],
+      "ylim": [
+        -6.0,
+        4.0
+      ],
+      "yticks": [
+        -6.0,
+        -4.0,
+        -2.0,
+        0.0,
+        2.0,
+        4.0
+      ],
+      "rmse_N": 2.5970927714895287,
+      "evaluation_window_s": [
+        283.063521,
+        286.903229
+      ]
+    },
+    {
+      "nominal_s": 1,
+      "row": 1,
+      "samples": 784,
+      "extrema": {
+        "min": {
+          "force_N": -1.3797335429732778,
+          "tau_s": 0.6021760000000427
+        },
+        "max": {
+          "force_N": 0.4216167282547527,
+          "tau_s": 3.7591280000000324
+        },
+        "peak_abs": {
+          "force_N": -1.3797335429732778,
+          "tau_s": 0.6021760000000427
+        }
+      },
+      "transient_range_N": [
+        -1.3797335429732778,
+        -0.25635137380827455
+      ],
+      "xlim": [
+        -3.0,
+        4.83970800000003
+      ],
+      "ylim": [
+        -2.0,
+        1.0
+      ],
+      "yticks": [
+        -2.0,
+        -1.0,
+        0.0,
+        1.0
+      ],
+      "rmse_N": 0.41248093628415544,
+      "evaluation_window_s": [
+        283.063521,
+        286.903229
+      ]
+    },
+    {
+      "nominal_s": 5,
+      "row": 0,
+      "samples": 1109,
+      "extrema": {
+        "min": {
+          "force_N": -1.5876,
+          "tau_s": -0.13075800000001436
+        },
+        "max": {
+          "force_N": 2.2834,
+          "tau_s": 7.9717959999999835
+        },
+        "peak_abs": {
+          "force_N": 2.2834,
+          "tau_s": 7.9717959999999835
+        }
+      },
+      "transient_range_N": [
+        -1.3328,
+        1.0486
+      ],
+      "xlim": [
+        -3.0,
+        8.092966999999987
+      ],
+      "ylim": [
+        -6.0,
+        4.0
+      ],
+      "yticks": [
+        -6.0,
+        -4.0,
+        -2.0,
+        0.0,
+        2.0,
+        4.0
+      ],
+      "rmse_N": 1.4518369727863027,
+      "evaluation_window_s": [
+        174.806341,
+        181.899308
+      ]
+    },
+    {
+      "nominal_s": 5,
+      "row": 1,
+      "samples": 1109,
+      "extrema": {
+        "min": {
+          "force_N": -0.3675651550292969,
+          "tau_s": 1.2214229999999873
+        },
+        "max": {
+          "force_N": 0.11077629774808884,
+          "tau_s": 6.301465000000007
+        },
+        "peak_abs": {
+          "force_N": -0.3675651550292969,
+          "tau_s": 1.2214229999999873
+        }
+      },
+      "transient_range_N": [
+        -0.3675651550292969,
+        0.04504331573843956
+      ],
+      "xlim": [
+        -3.0,
+        8.092966999999987
+      ],
+      "ylim": [
+        -2.0,
+        1.0
+      ],
+      "yticks": [
+        -2.0,
+        -1.0,
+        0.0,
+        1.0
+      ],
+      "rmse_N": 0.15336697094157162,
+      "evaluation_window_s": [
+        174.806341,
+        181.899308
+      ]
+    },
+    {
+      "nominal_s": 10,
+      "row": 0,
+      "samples": 1496,
+      "extrema": {
+        "min": {
+          "force_N": -0.7545999999999999,
+          "tau_s": 2.0156199999999984
+        },
+        "max": {
+          "force_N": 2.2834,
+          "tau_s": 10.692845999999996
+        },
+        "peak_abs": {
+          "force_N": 2.2834,
+          "tau_s": 10.692845999999996
+        }
+      },
+      "transient_range_N": [
+        -0.7545999999999999,
+        1.4307999999999998
+      ],
+      "xlim": [
+        -3.0,
+        11.959711999999996
+      ],
+      "ylim": [
+        -6.0,
+        4.0
+      ],
+      "yticks": [
+        -6.0,
+        -4.0,
+        -2.0,
+        0.0,
+        2.0,
+        4.0
+      ],
+      "rmse_N": 1.1938325065002386,
+      "evaluation_window_s": [
+        51.608845,
+        62.568557
+      ]
+    },
+    {
+      "nominal_s": 10,
+      "row": 1,
+      "samples": 1496,
+      "extrema": {
+        "min": {
+          "force_N": -0.2946872413158417,
+          "tau_s": 2.644917999999997
+        },
+        "max": {
+          "force_N": 0.1013815701007843,
+          "tau_s": 11.775926999999996
+        },
+        "peak_abs": {
+          "force_N": -0.2946872413158417,
+          "tau_s": 2.644917999999997
+        }
+      },
+      "transient_range_N": [
+        -0.2946872413158417,
+        0.08227567374706268
+      ],
+      "xlim": [
+        -3.0,
+        11.959711999999996
+      ],
+      "ylim": [
+        -2.0,
+        1.0
+      ],
+      "yticks": [
+        -2.0,
+        -1.0,
+        0.0,
+        1.0
+      ],
+      "rmse_N": 0.0916588795990731,
+      "evaluation_window_s": [
+        51.608845,
+        62.568557
+      ]
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "dynamic": [
+    {
+      "file": "7-15-1s加速-静态.ulg",
+      "u_cmd": 0.40799999237060547,
+      "n_pre_rpm": 3530.887169921875,
+      "t10_s": 324.300877,
+      "t90_s": 325.111922,
+      "plot_samples": 392,
+      "plot_min_pct": -5.76936248268752,
+      "plot_max_pct": 8.717406705711463,
+      "plot_over_5_samples": 44,
+      "evaluation_samples": 191,
+      "evaluation_peak_abs_pct": 8.717406705711463,
+      "evaluation_over_5_samples": 34,
+      "steady_samples": 50,
+      "steady_mean_pct": 3.6963068635120226
+    },
+    {
+      "file": "8-20-1s加速-静态.ulg",
+      "u_cmd": 0.5299999713897705,
+      "n_pre_rpm": 4060.45740625,
+      "t10_s": 385.864464,
+      "t90_s": 386.684258,
+      "plot_samples": 391,
+      "plot_min_pct": -2.450502141703757,
+      "plot_max_pct": 7.845341596636775,
+      "plot_over_5_samples": 8,
+      "evaluation_samples": 191,
+      "evaluation_peak_abs_pct": 7.845341596636775,
+      "evaluation_over_5_samples": 7,
+      "steady_samples": 50,
+      "steady_mean_pct": 2.64361659393407
+    },
+    {
+      "file": "9-25-1s加速-静态.ulg",
+      "u_cmd": 0.640999972820282,
+      "n_pre_rpm": 4472.8695703125,
+      "t10_s": 448.791865,
+      "t90_s": 449.59788,
+      "plot_samples": 391,
+      "plot_min_pct": -4.794955587314748,
+      "plot_max_pct": 6.010031259557122,
+      "plot_over_5_samples": 6,
+      "evaluation_samples": 191,
+      "evaluation_peak_abs_pct": 5.907809060739897,
+      "evaluation_over_5_samples": 2,
+      "steady_samples": 50,
+      "steady_mean_pct": 1.5529233142862848
+    }
+  ],
+  "checks": {
+    "processing_functions_unchanged": [
+      "static_data",
+      "dynamic_data",
+      "topic",
+      "ts",
+      "mask",
+      "values",
+      "stats"
+    ],
+    "identical_exported_tables": [
+      "static_fits.csv",
+      "static_common_u_spread.csv",
+      "dynamic_native_rpm_plot_data.csv",
+      "dynamic_main_inflow_comparison.csv",
+      "dynamic_all_9_trials_metrics.csv"
+    ],
+    "native_plot_samples_unchanged": true,
+    "reference_lines_retained": true,
+    "panel_and_annotation_geometry_checks": true,
+    "solid_markerless_curves_and_legend": true,
+    "legend_inside_axes_without_curve_or_reference_overlap": true,
+    "plotting_area_dimensions_and_fonts_unchanged": true,
+    "panel_a_legend_group_order_and_styles_verified": true,
+    "panel_a_statistic_annotation_removed": true,
+    "panel_b_plotting_code_unchanged": true,
+    "right_axis_present_and_all_pdf_text_within_page": true,
+    "vector_pdf_no_raster_images": true
+  },
+  "geometry": {
+    "figure7_typography": {
+      "reference_pdf": "Image/fig9_rotor_model_diagnostics.pdf",
+      "reference_export_width_mm": 69.74551133049857,
+      "reference_insert_width_mm": 75.0,
+      "reference_scale": 1.075338019168034,
+      "column_width_mm": 83.0,
+      "fonts_pt": {
+        "axis": 9.678042172512306,
+        "tick": 8.065035143760255,
+        "legend": 7.527366134176238,
+        "panel": 9.678042172512306,
+        "statistic": 8.065035143760255
+      }
+    },
+    "static_rpm_mapping_dynamic_inflow": {
+      "pdf_width_mm": 82.99999944898816,
+      "pdf_height_mm": 120.69289143880208,
+      "axes": [
+        {
+          "position": [
+            0.1351523008084452,
+            0.6081818181818182,
+            0.7419363622385314,
+            0.38181818181818183
+          ],
+          "xlim": [
+            800.0,
+            5900.0
+          ],
+          "ylim": [
+            0.07,
+            0.96
+          ]
+        },
+        {
+          "position": [
+            0.1351523008084452,
+            0.15000000000000013,
+            0.7419363622385314,
+            0.3818181818181817
+          ],
+          "xlim": [
+            -3.0,
+            4.819794000000002
+          ],
+          "ylim": [
+            -7.2180394015274185,
+            10.166083624551362
+          ]
+        },
+        {
+          "position": [
+            0.1351523008084452,
+            0.15000000000000013,
+            0.7419363622385314,
+            0.3818181818181817
+          ],
+          "xlim": [
+            -3.0,
+            4.819794000000002
+          ],
+          "ylim": [
+            -1.0,
+            13.0
+          ]
+        }
+      ],
+      "pdf_raster_images": 0,
+      "crop_inch": [
+        0.0,
+        0.41819318719240167,
+        3.267716535433071,
+        5.16988188976378
+      ]
+    }
+  },
+  "actual_pdf_fonts_pt": {
+    "axis": 9.6780424118042,
+    "tick": 8.065034866333008,
+    "legend": 7.5273661613464355,
+    "panel": 9.6780424118042
+  },
+  "static_spread": {
+    "Dmax_pct": 4.197739995989233,
+    "u_at_Dmax": 0.268,
+    "common_u": [
+      0.187769231,
+      0.899959184
+    ],
+    "interpretation": "four sweeps in two cycles, not four independent test repetitions",
+    "method": "piecewise linear n(u), no extrapolation, common interval; union of all knots plus dense sampling; adjacent duplicate plateau means averaged equally because sample counts unavailable"
+  }
+}

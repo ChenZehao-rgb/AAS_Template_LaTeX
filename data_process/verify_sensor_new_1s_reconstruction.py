@@ -38,7 +38,8 @@ checks={
     'all_fonts_embedded':all(f['embedded_bytes']>0 for g in geo for f in g['fonts']),
     'all_figures_vector':all(not fitz.open(OUT/(g['file']+'.pdf'))[0].get_images() for g in geo),
     'requested_annotation_removed':all('离线重建' not in g['pdf_text'] for g in geo),
-    'restored_common_y_range':all(ax['ylim']==[-6.,4.] for g in geo for ax in g['axes']),
+    'standalone_y_range_preserved':all(ax['ylim']==[-6.,4.] for ax in geo[0]['axes']),
+    'figure8_row_specific_y_ranges':all(ax['ylim']==([-6.,4.] if i<3 else [-2.,1.]) for i,ax in enumerate(geo[1]['axes'])),
     'all_1s_plotted_samples_inside_axes':all(v[col].min()>=-6 and v[col].max()<=4 for col in ['before_raw_N','after_unclipped_filtered_N']),
 }
 for suffix in ['.pdf','.png','_pdf_check.png','_155mm_preview.png']:

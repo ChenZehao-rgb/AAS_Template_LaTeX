@@ -2,10 +2,10 @@
   "output_dir": "output/deployment_sensor_figures",
   "static_csv": "data/rpm_normalized.csv",
   "static_groups": [
-    {"id": "up_1", "label": "上沿 1", "csv_rows_1based": [1, 17]},
-    {"id": "down_1", "label": "下沿 1", "csv_rows_1based": [17, 30]},
-    {"id": "up_2", "label": "上沿 2", "csv_rows_1based": [31, 46]},
-    {"id": "down_2", "label": "下沿 2", "csv_rows_1based": [46, 59]}
+    {"id": "up_1", "label": "第1组", "csv_rows_1based": [1, 17]},
+    {"id": "down_1", "label": "第3组", "csv_rows_1based": [17, 30]},
+    {"id": "up_2", "label": "第2组", "csv_rows_1based": [31, 46]},
+    {"id": "down_2", "label": "第4组", "csv_rows_1based": [46, 59]}
   ],
   "static_group_provenance": "User confirmed two ascending and two descending sweeps; turning point shared by adjacent sweeps. CSV rows count data rows, excluding header.",
   "static_u_node_status": "unconfirmed: CSV contains only control_normalized and rpm_mean",

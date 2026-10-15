@@ -1,0 +1,7 @@
+{
+  "data_process\\plot_deployment_sensor_figures.py": "29c2a43031edb626d713ff81133f220825ad7ad6738a5e793ee7a97e03c1e78c",
+  "data_process\\deployment_sensor_figures_config.json": "f398199642ae997f2cac2fe6c946af9c00a8129ec42abfcb698df62f7e87d260",
+  "data_process\\verify_fig7_single_column.py": "8e135b4158a830468ed0b9a27ccaab2ff3561fe4f44af06faf5f7664a8525b04",
+  "output\\figure7_single_column\\static_rpm_mapping_dynamic_inflow.pdf": "279dbe4e9a9f056df1498d2a0c742d8b81bfe91f1fc094a4a0a951a02ad54cf7",
+  "Image\\fig9_rotor_model_diagnostics.pdf": "470c71c8a017a04969156fb6e67674ea4a7a7522f1c363c29a3bddfafb6c4134"
+}

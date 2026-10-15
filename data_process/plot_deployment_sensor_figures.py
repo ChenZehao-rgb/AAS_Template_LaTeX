@@ -16,6 +16,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.ticker import MultipleLocator, MaxNLocator
+from matplotlib.transforms import Bbox
 import numpy as np
 import pandas as pd
 from pyulog import ULog
@@ -152,8 +153,98 @@ def dynamic_data():
     csv('dynamic_main_inflow_comparison.csv',[dict(tau_s=t,**{f"v_{r['row']['nominal_reference_load_N']}N_m_s":vv[k,i] for k,r in enumerate(selected)}) for i,t in enumerate(grid)])
     return runs,selected,consistency
 
+def figure_a_typography():
+    """Match the actual, cropped Figure 9 PDF at its manuscript insertion width.
+
+    All units here are PostScript points (72/in), as used by Matplotlib/PDF.
+    Subscripts retain mathtext's normal relative sizing.
+    """
+    tex=(ROOT/'template.tex').read_text(encoding='utf-8')
+    match=re.search(r'includegraphics\[width=([\d.]+)cm\]\{Image/fig9_rotor_model_diagnostics.pdf\}',tex)
+    if not match:
+        raise ValueError('Cannot resolve the content-verified Figure 9 insertion width')
+    reference=fitz.open(ROOT/'Image/fig9_rotor_model_diagnostics.pdf')
+    page=reference[0]
+    spans=[s for block in page.get_text('dict')['blocks'] if 'lines' in block
+           for line in block['lines'] for s in line['spans']]
+    def size(text):
+        return next(s['size'] for s in spans if s['text'].strip()==text)
+    ratio=float(match[1])*10/(page.rect.width*25.4/72)
+    fonts=dict(axis=size('理论')*ratio,tick=size('0.002')*ratio,
+               legend=size('3000 rpm')*ratio,panel=size('(a)')*ratio)
+    fonts['statistic']=fonts['tick']
+    # AAS: A4 210 mm - 38 mm text margins, two columns with a 6 mm gap.
+    # Confirmed by the TeX dimension probe in tmp/figure7_dimensions.log.
+    cls=(ROOT/'aas.cls').read_text(encoding='utf-8')
+    if not all(token in cls for token in ('a4paper',r'\addtolength\textwidth{-38mm}',r'\setlength{\columnsep}{6mm}')):
+        raise ValueError('AAS geometry changed; remeasure column width before rendering')
+    width_mm=(210-38-6)/2
+    geometry['figure7_typography']=dict(reference_pdf='Image/fig9_rotor_model_diagnostics.pdf',
+        reference_export_width_mm=page.rect.width*25.4/72,reference_insert_width_mm=float(match[1])*10,
+        reference_scale=ratio,column_width_mm=width_mm,fonts_pt=fonts)
+    return width_mm,fonts
+
+
+def save_figure_a(fig,axes):
+    """Crop vertical whitespace while keeping the final PDF exactly one column wide."""
+    for ax in axes:
+        for label in (ax.xaxis.label,ax.yaxis.label):
+            if any('\u4e00'<=c<='\u9fff' for c in label.get_text()):
+                label.set_fontfamily('SimSun')
+    # Fit both outside y labels into the fixed horizontal export bounds.
+    # This changes axes geometry only, never text size or data.
+    for _ in range(3):
+        fig.canvas.draw();renderer=fig.canvas.get_renderer()
+        boxes=[ax.get_tightbbox(renderer) for ax in axes]
+        left=min(bb.x0 for bb in boxes);right=max(bb.x1 for bb in boxes)
+        pad=fig.dpi*.025
+        fig.subplots_adjust(left=fig.subplotpars.left+(pad-left)/fig.bbox.width,
+                            right=fig.subplotpars.right+(fig.bbox.width-pad-right)/fig.bbox.width)
+    fig.canvas.draw();renderer=fig.canvas.get_renderer()
+    bounds=Bbox.union([ax.get_tightbbox(renderer) for ax in axes])
+    crop=Bbox.from_extents(0,bounds.y0/fig.dpi-.025,fig.get_figwidth(),bounds.y1/fig.dpi+.025)
+    for ax in axes[:2]:
+        mark=ax.texts[0].get_window_extent(renderer);frame=ax.get_window_extent(renderer)
+        assert frame.contains(mark.x0,mark.y0) and frame.contains(mark.x1,mark.y1)
+        for line in ax.lines:
+            path=line.get_transform().transform_path(line.get_path())
+            assert not path.intersects_bbox(mark,filled=False), 'Panel mark overlaps a curve'
+    assert not axes[1].xaxis.label.get_window_extent(renderer).overlaps(axes[1].get_legend().get_window_extent(renderer))
+    for ax in axes[:2]:
+        legend_box=ax.get_legend().get_window_extent(renderer)
+        frame=ax.get_window_extent(renderer)
+        assert frame.contains(legend_box.x0,legend_box.y0) and frame.contains(legend_box.x1,legend_box.y1)
+        assert not legend_box.overlaps(ax.texts[0].get_window_extent(renderer))
+        for line in ax.lines:
+            assert not line.get_transform().transform_path(line.get_path()).intersects_bbox(legend_box,filled=False), 'Legend overlaps a curve or reference line'
+    assert axes[0].xaxis.label.get_window_extent(renderer).y0>axes[1].get_window_extent(renderer).y1
+    assert bounds.x0>=-0.1 and bounds.x1<=fig.bbox.width+.1
+    for line in axes[1].lines[:3]:
+        assert np.min(line.get_ydata())>axes[1].get_ylim()[0]
+        assert np.max(line.get_ydata())<axes[1].get_ylim()[1]
+    for suffix in ('pdf','png'):
+        fig.savefig(OUT/f'static_rpm_mapping_dynamic_inflow.{suffix}',
+                    dpi=CFG['export']['png_dpi'],bbox_inches=crop,pad_inches=0)
+    doc=fitz.open(OUT/'static_rpm_mapping_dynamic_inflow.pdf')
+    doc[0].get_pixmap(dpi=180,alpha=False).save(
+        OUT/'static_rpm_mapping_dynamic_inflow_83mm_preview.png')
+    geometry['static_rpm_mapping_dynamic_inflow']=dict(
+        pdf_width_mm=doc[0].rect.width*25.4/72,pdf_height_mm=doc[0].rect.height*25.4/72,
+        axes=[dict(position=list(ax.get_position().bounds),xlim=list(ax.get_xlim()),ylim=list(ax.get_ylim())) for ax in axes],
+        pdf_raster_images=len(doc[0].get_images()),crop_inch=list(crop.extents))
+    assert abs(doc[0].rect.width*25.4/72-83)<.001
+    plt.close(fig)
+
+
 def plot_A(groups,spread,selected):
-    fig,(a,b)=plt.subplots(2,1,figsize=(6.10,4.85))
+    width,fonts=figure_a_typography()
+    with plt.rc_context({'axes.labelsize':fonts['axis'],'xtick.labelsize':fonts['tick'],
+                         'ytick.labelsize':fonts['tick'],'legend.fontsize':fonts['legend']}):
+        _plot_A(groups,spread,selected,width,fonts)
+
+
+def _plot_A(groups,spread,selected,width,fonts):
+    fig,(a,b)=plt.subplots(2,1,figsize=(width/25.4,132/25.4))
     for k,g in enumerate(groups):
         pt=g['points'];n=np.linspace(pt.n.min(),pt.n.max(),300)
         a.plot(n,np.polyval(g['coeff'],n*2*np.pi/60),color=COLORS[k],ls=LINES[k],lw=1.1,zorder=2)
@@ -162,14 +253,19 @@ def plot_A(groups,spread,selected):
     a.set_ylabel(r'归一化控制量 $u_{\mathrm{cal}}$')
     a.set_xlim(800,5900);a.set_ylim(.07,.96)
     a.xaxis.set_major_locator(MultipleLocator(1000));a.yaxis.set_major_locator(MultipleLocator(.2))
-    style.panel_label(a,'(a) 四次静态扫描',y=.97)
-    a.text(.025,.79,rf'$\max_j D_j={spread["Dmax_pct"]:.2f}\%$',transform=a.transAxes,fontsize=8)
-    handles=[Line2D([0],[0],color=COLORS[k],ls=LINES[k],lw=1.1,marker=MARKERS[k],ms=3.5,mfc='white',mew=.8,label=g['label']) for k,g in enumerate(groups)]
-    a.legend(handles=handles,loc='lower right',ncol=2,frameon=False,columnspacing=1,handlelength=2.6)
+    a.text(.035,.965,'(a)',transform=a.transAxes,ha='left',va='top',fontsize=fonts['panel'],fontweight='bold')
+    # Reorder legend handles only: keep each data series and its style in place.
+    legend_order=['up_1','up_2','down_1','down_2']
+    by_id={g['id']:(k,g) for k,g in enumerate(groups)}
+    handles=[Line2D([0],[0],color=COLORS[k],ls=LINES[k],lw=1.1,marker=MARKERS[k],ms=3.5,mfc='white',mew=.8,label=g['label'])
+             for k,g in (by_id[group_id] for group_id in legend_order)]
+    a.legend(handles=handles,loc='upper left',bbox_to_anchor=(.035,.86),ncol=1,frameon=False,
+             handlelength=2.2,handletextpad=.4,labelspacing=.25,borderpad=0,borderaxespad=0)
     xmax=max(r['t90']-r['t10'] for r in selected)+4
     for k,r in enumerate(selected):
         m=mask(r['tau'],-3,xmax)
-        b.plot(r['tau'][m],r['delta'][m],color=COLORS[k],ls=LINES[k],lw=.85,marker=MARKERS[k],ms=2.8,mfc='white',mew=.7,markevery=max(1,sum(m)//13),label=rf'$u_{{0,\mathrm{{cmd}}}}={r["row"]["u_cmd_mean"]:.3f}$')
+        b.plot(r['tau'][m],r['delta'][m],color=COLORS[k],ls='-',lw=.85,marker=None,
+               label=rf'$u_{{0,\mathrm{{cmd}}}} = {r["row"]["u_cmd_mean"]:.3f}$')
     rep=next(r for r in selected if r['row']['nominal_reference_load_N']==20)
     b.axvspan(0,rep['t90']-rep['t10'],color='.95',zorder=-3)
     b.axvline(0,color='.65',ls=':',lw=.7)
@@ -178,17 +274,18 @@ def plot_A(groups,spread,selected):
     ys=np.concatenate([r['delta'][mask(r['tau'],-3,xmax)] for r in selected]+[[-5,5]])
     lo=min(ys);hi=max(ys);padding=(hi-lo)*.10
     b.set_ylim(lo-padding,hi+padding);b.set_xlim(-3,xmax)
-    b.yaxis.set_major_locator(MultipleLocator(5));b.xaxis.set_major_locator(MultipleLocator(1))
+    b.yaxis.set_major_locator(MultipleLocator(5));b.xaxis.set_major_locator(MultipleLocator(2))
     b.set_xlabel(r'$\tau=t-t_{10}$ (s)',labelpad=2)
     b.set_ylabel(r'转速相对变化 $\delta n$ (%)')
-    style.panel_label(b,'(b) 固定控制量，名义 1 s 加速',y=.97)
-    b.legend(loc='lower right',frameon=False,ncol=3,columnspacing=.75,handlelength=2.5,fontsize=7)
+    b.text(.035,.99,'(b)',transform=b.transAxes,ha='left',va='top',fontsize=fonts['panel'],fontweight='bold')
+    b.legend(loc='upper left',bbox_to_anchor=(.035,.915),frameon=False,ncol=1,
+             handlelength=1.1,handletextpad=.4,labelspacing=0,borderpad=0,borderaxespad=0)
     twin=b.twinx();m=mask(rep['ct']-rep['t10'],-3,xmax)
     twin.plot(rep['ct'][m]-rep['t10'],rep['v'][m],color='.64',ls='--',lw=.6,zorder=0)
     twin.set_ylim(-1,13);twin.yaxis.set_major_locator(MultipleLocator(5));twin.set_ylabel(r'来流速度 $V_\infty$ (m/s)',color='.45');twin.tick_params(axis='y',colors='.45')
     for ax in [a,b]: style.style_grid(ax)
-    fig.subplots_adjust(left=.105,right=.90,top=.982,bottom=.085,hspace=.33)
-    save(fig,'static_rpm_mapping_dynamic_inflow',[a,b,twin])
+    fig.subplots_adjust(left=.17,right=.83,top=.99,bottom=.15,hspace=.20)
+    save_figure_a(fig,[a,b,twin])
 
 def sensor_data():
     """Before/after from each compensated record; preserve separate-file audit.
@@ -274,4 +371,16 @@ def main():
     (OUT/'render_verification.json').write_text(json.dumps(geometry,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps(summary,ensure_ascii=False,indent=2))
 
-if __name__=='__main__':main()
+if __name__=='__main__':
+    if '--figure-a-only' in sys.argv:
+        # Reuse the exact native-data processing; leave sensor figures untouched.
+        OUT=ROOT/'output/figure7_single_column'
+        OUT.mkdir(parents=True,exist_ok=True)
+        groups,spread=static_data()
+        runs,selected,consistency=dynamic_data()
+        plot_A(groups,spread,selected)
+        (OUT/'render_verification.json').write_text(json.dumps(geometry,ensure_ascii=False,indent=2),encoding='utf-8')
+        (OUT/'analysis_summary.json').write_text(json.dumps(dict(static=spread,dynamic_inflow=consistency),ensure_ascii=False,indent=2),encoding='utf-8')
+        print(json.dumps(geometry,ensure_ascii=False,indent=2))
+    else:
+        main()

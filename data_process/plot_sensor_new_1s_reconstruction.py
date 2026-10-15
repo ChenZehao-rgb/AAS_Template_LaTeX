@@ -29,6 +29,8 @@ P.OUT = OUT
 SOURCE = ROOT / 'data/传感器补偿/补偿-rawdate显示限幅.ulg'
 G = R.C['N_per_g']
 manifest = []
+FIG8_SIZE_IN = (6.10, 3.10)
+FIG8_HEIGHT_RATIOS = (1, .7)
 
 
 def record(path, role):
@@ -111,7 +113,7 @@ def old_run(nom):
                 before_metric=metric(t,before,t10,t90),after_metric=metric(ft,after,t10,t90))
 
 
-def draw(ax,r,row,limits,ticks,standalone=False):
+def draw(ax,r,row,limits,ticks,standalone=False,compact=False):
     t,y=(r['t'],r['force']) if row==0 else (r['tf'],r['filtered'])
     m=P.mask(t,r['t10']-3,r['t90']+4)
     ax.plot(t[m]-r['t10'],y[m],color=P.ORANGE if row==0 else P.BLUE,lw=.85,
@@ -123,13 +125,52 @@ def draw(ax,r,row,limits,ticks,standalone=False):
     ax.xaxis.set_major_locator(MultipleLocator(1 if r['nominal']==1 else (2 if r['nominal']==5 else 4)))
     P.S.style_grid(ax)
     met=r['before_metric'] if row==0 else r['after_metric']
-    ax.text(.97,.08 if row==0 else .95,f'RMSE = {met["rmse_N"]:.2f} N',transform=ax.transAxes,
-            ha='right',va='bottom' if row==0 else 'top',fontsize=7.5)
+    rmse_bottom = row==0 or compact
+    ax.text(.97,.08 if rmse_bottom else .95,f'RMSE = {met["rmse_N"]:.2f} N',transform=ax.transAxes,
+            ha='right',va='bottom' if rmse_bottom else 'top',fontsize=7.5)
     if row==0:
         P.S.panel_label(ax, f'({chr(97+[1,5,10].index(r["nominal"]))}) {r["nominal"]} s',x=.035,y=.97)
         ax.tick_params(labelbottom=False)
     else:
         ax.set_xlabel(r'$\tau=t-t_{10}$ (s)',labelpad=2)
+
+
+def compensated_limits(runs):
+    """Use every plotted sample; expand the preferred range if ever needed."""
+    traces = [r['filtered'][P.mask(r['tf'], r['t10']-3, r['t90']+4)] for r in runs]
+    values = np.concatenate(traces)
+    if not np.isfinite(values).all():
+        raise ValueError('Nonfinite compensated plotting samples')
+    lo, hi = float(values.min()), float(values.max())
+    limits = (-2., 1.)
+    if lo < limits[0] or hi > limits[1]:
+        margin = max(.15, .05*(hi-lo))
+        limits = (min(-2., np.floor((lo-margin)*2)/2),
+                  max(1., np.ceil((hi+margin)*2)/2))
+    # Four common major ticks, always including the zero reference.
+    if limits == (-2., 1.):
+        ticks = np.arange(-2., 2.)
+    else:
+        ticks = np.unique(np.r_[np.linspace(*limits, 3), 0.])
+    return limits, ticks
+
+
+def figure8(runs):
+    """Current manuscript Fig. 8: shared y only by row, shared x by column."""
+    lower_limits, lower_ticks = compensated_limits(runs)
+    fig, aa = plt.subplots(2, 3, figsize=FIG8_SIZE_IN, sharey='row', sharex='col',
+                           gridspec_kw={'height_ratios': FIG8_HEIGHT_RATIOS})
+    for j, r in enumerate(runs):
+        for row in [0, 1]:
+            limits, ticks = ((-6., 4.), np.arange(-6., 5., 2.)) if row==0 else (lower_limits, lower_ticks)
+            draw(aa[row, j], r, row, limits, ticks, compact=True)
+            if j > 0:
+                aa[row, j].tick_params(labelleft=False)
+    # Two lines retain the existing font size within the shorter lower row.
+    aa[0, 0].set_ylabel('未补偿传感器输出\n'+r'$T_{m,i}$ (N)', labelpad=3)
+    aa[1, 0].set_ylabel('补偿后传感器输出\n'+r'$\hat{T}_{m,i}$ (N)', labelpad=3)
+    fig.subplots_adjust(left=.115, right=.99, top=.98, bottom=.12, wspace=.10, hspace=.08)
+    return fig, aa
 
 
 def main():
@@ -148,14 +189,7 @@ def main():
     aa[1].set_ylabel(r'离线补偿滤波输出 $\hat{T}$ (N)',labelpad=3)
     fig.subplots_adjust(left=.16,right=.98,top=.97,bottom=.105,hspace=.12)
     rendered=[P.save(fig,'motor_off_force_sensor_1s_reconstructed',list(aa),width_mm=80)]
-    fig,aa=plt.subplots(2,3,figsize=(6.10,3.60),sharey='row')
-    for j,r in enumerate(runs):
-        for row in [0,1]:
-            draw(aa[row,j],r,row,row_limits[row],row_ticks[row])
-            if j>0:aa[row,j].tick_params(labelleft=False)
-    aa[0,0].set_ylabel(r'未补偿输出 $T$ (N)',labelpad=3)
-    aa[1,0].set_ylabel(r'补偿后滤波输出 $\hat{T}$ (N)',labelpad=3)
-    fig.subplots_adjust(left=.095,right=.985,top=.975,bottom=.105,wspace=.10,hspace=.11)
+    fig,aa=figure8(runs)
     rendered.append(P.save(fig,'motor_off_force_sensor_compensation',list(aa.flat)))
     summary['limitations']=[
         'Offline source-formula reconstruction, not exact experimental firmware replay: actual module-start b0 and full-rate acceleration history were not logged.',
@@ -171,6 +205,8 @@ def main():
         original=DEPLOY/(stem+suffix)
         if original.exists() and not (backup/original.name).exists():shutil.copy2(original,backup/original.name)
         shutil.copy2(OUT/(stem+suffix),original)
+        if suffix in ['.pdf', '.png']:
+            shutil.copy2(OUT/(stem+suffix), ROOT/'Image'/(stem+suffix))
     for name,obj in [('analysis_summary.json',summary),('source_manifest.json',manifest),('render_verification.json',rendered)]:
         (OUT/name).write_text(json.dumps(obj,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps(summary,ensure_ascii=False,indent=2))

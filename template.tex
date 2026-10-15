@@ -126,7 +126,7 @@ $\mathcal{B}=\{O_b;\bm{x}_b,\bm{y}_b,\bm{z}_b\}$ 为前--右--下坐标系, 原�
 \vskip2mm
 {\small 图1\quad 四旋翼模型与机体/惯性坐标系定义
 \\
-Fig.\,1\quad Quadrotor model and definition of body/inertial frames}}
+Fig.\,1\quad Quadrotor model and definitions of the body and inertial coordinate frames}}
 \end{center}
 
 设第 $i$ 个旋翼($i=1,2,3,4$)的桨毂中心在机体系下的安装位置为常矢量
@@ -203,7 +203,7 @@ V_{t,i}=\left\|\left(\bm{I}_3-\bm{n}_i\bm{n}_i^{\mathrm{T}}\right)\bm{u}_i\right
 \vskip2mm
 {\small 图2\quad 旋翼坐标、叶素离散及局部来流与气动力分解
 \\
-Fig.\,2\quad Rotor coordinates, blade element discretization and decomposition of local inflow and aerodynamic forces}}
+Fig.\,2\quad Rotor coordinate system, blade element discretization, and decomposition of local inflow and aerodynamic forces}}
 \end{center}
 \begin{multicols}{2}%开始双栏显示
 \subsection{叶素气动力建模}
@@ -331,7 +331,7 @@ T_{d,i}=f_{map}(u_i)=c_a u_i^2+(1-c_a)u_i
 \vskip2mm
 {\small 图3\quad 四旋翼无人机控制架构;(a)总体控制架构;(b)传统升力开环控制架构;(c)升力闭环控制架构
 \\
-Fig.\,3\quad Control Architecture for Quadcopter UAVs; (a) Overall Control Architecture; (b) Conventional Open-Loop thrust Control Architecture; (c) Closed-Loop thrust Control Architecture}}
+Fig.\,3\quad Control architecture of a quadrotor UAV: (a) overall control architecture; (b) conventional open-loop thrust control; (c) closed-loop thrust control}}
 \end{center}
 \begin{multicols}{2}%开始双栏显示
 
@@ -342,9 +342,9 @@ Fig.\,3\quad Control Architecture for Quadcopter UAVs; (a) Overall Control Archi
 \centerline{\includegraphics[width=8cm]{Image/fig4b.pdf}}
 {\small (b)}
 \vskip2mm
-{\small 图4\quad 螺旋桨摄影测量、三维重建与截面提取过程;(a)螺旋桨三维重建;(b)截面提取
+{\small 图4\quad 螺旋桨摄影测量过程;(a)螺旋桨三维重建,(b)截面提取范围
 \\
-Fig.\,4\quad Photogrammetry, 3D reconstruction and cross-section extraction of the propeller;(a)3D reconstruction of the propeller;(b)Cross-section extraction}}
+Fig.\,4\quad Propeller photogrammetry;(a)3D reconstruction,(b)spanwise range for cross-section extraction}}
 \end{center}
 
 \section{实施}
@@ -404,7 +404,7 @@ U_T(\rho,\psi)&=\textcolor{green}{\Omega_i}\rho-\Omega_a(R_0-\rho\cos\psi)\sin\a
 \vskip2mm
 {\small 图6\quad 旋转悬臂式单旋翼测试平台;(a)整体结构;(b)旋翼单元
 \\
-Fig.\,6\quad Rotating cantilevered single-rotor test platform; (a) overall structure; (b) rotor unit}}
+Fig.\,6\quad Rotating cantilevered single-rotor test bench: (a) overall structure; (b) rotor unit}}
 \end{center}
 
 旋翼测试台基本参数如表1所示,测试台能构造的最大来流速度为10.2m/s,根据$\tau=J\dot{\omega}$,带负载能达到的最大角加速度$\dot{\omega}$为7.38\,rad/s$^{2}$,旋翼单元受到指向旋转轴的向心过载最大为7.1g,受到的面向来流的过载最大为1.1g.
@@ -463,7 +463,7 @@ Algorithm\,1\quad Offline generation of the thrust lookup table}
 
 2. 在线阶段依据期望升力与实时工况量$(\alpha_p,V_\infty)$反查所需转速$\Omega$;
 
-3. 在线查表给出期望升力到转速的前馈逆映射,而转速还需进一步转换为归一化电机控制量.\textcolor{blue}{图7(a)为固定台架上测试得到的控制量--转速拟合曲线,选择0-100\%油门之间的13个固定点位,重复4次;图7(b)为在旋转测试台上测试得到的旋翼转速变化,从静止状态1s加速到最大转台角速度,包含15N、20N、25N升力对应的三种固定控制量;实验表明,所测工况下,转速-控制量之间的关系基本一致,静态下四次测试的拟合曲线xxxx,动态测试下三种控制量的转速变化都不超过5\%.因此,影响升力的是实际升力与转速之间的关系,为使前馈项的转速输出能够发挥作用,需要标定转速-控制量之间的静态映射关系.使用图7(a)中的电机控制量和实际转速数据},拟合得到:
+3. 在线查表给出期望升力到转速的前馈逆映射,而转速还需进一步转换为归一化电机控制量.\textcolor{blue}{图7(a)给出了固定台架上测得的转速--控制量关系及其拟合曲线。在0--100\%油门范围内选取13个固定点位,重复进行4组测试.图7(b)给出了动态来流下的旋翼转速变化;选取零来流条件下分别对应15、20和25 N升力的三种固定控制量,使转台在1 s内由静止加速至最大角速度,并记录各控制量下的旋翼转速响应.结果表明,静态测试中四组数据的拟合曲线在所测转速范围内基本重合,具有较好的重复性;动态测试中,三种固定控制量下来流变化前后稳态平均转速的相对变化均不超过5\%.这表明,在所测工况范围内,转速–控制量映射对来流变化的敏感性较低,来流对升力的影响主要体现为升力--转速关系的变化.因此,采用静态标定的转速--控制量映射,将旋翼逆模型输出的前馈参考转速转换为电机控制量.利用图7(a)中的实测数据},拟合得到:
 \begin{equation}
 u_{\mathrm{ff}}=a\,\Omega^2+b\,\Omega+c
 \label{eq:rpm_calib}
@@ -475,8 +475,8 @@ u_{\mathrm{ff}}=a\,\Omega^2+b\,\Omega+c
 \begin{center}
 \vbox{\centering
 \includegraphics[width=7.5cm]{Image/static_rpm_mapping_dynamic_inflow.pdf}\\[1mm]
-{\small \textcolor{blue}{图7}\quad 固定台架测试和动态测试下转速控--制量变化关系.(a)为固定台架上油门量扫描结果;(b)为旋转测试台上固定控制量对应的旋翼转速变化.
-\\ Fig.\,7 \quad \textcolor{yellow}{Thrust coefficient agreement and relative-error distributions by disk angle of attack}}
+{\small \textcolor{blue}{图7}\quad 固定台架测试和动态测试下转速控--制量变化关系
+\\ Fig.\,7 \quad Relationship between rotor speed and motor control input in stationary and rotating test-bench experiments}
 }
 \end{center}
 
@@ -490,14 +490,14 @@ u_{\mathrm{ff}}=a\,\Omega^2+b\,\Omega+c
 \hat{T}_{m,i}=T_{m,i}-A\,a_z-B\,a_x
 \label{eq:sensor_calib}
 \end{equation}
-其中$\hat{T}_{m,i}$为补偿后的传感器测量值,单位为N;$A$=0.361、$B$=0.033,分别为传感器轴向和径向载荷的补偿系数,与传感器安装的载荷质量与安装误差有关,单位为kg;$a_z$和$a_x$分别为沿传感器轴向和径向的加速度值,通过测试台悬臂末端安装的飞控加速度计获取,并投影到传感器轴向和径向,单位为m/s².补偿前后的传感器测量数据如图7所示.}
+其中$\hat{T}_{m,i}$为补偿后的传感器测量值,单位为N;$A$=0.361、$B$=0.033,分别为传感器轴向和径向载荷的补偿系数,与传感器安装的载荷质量与安装误差有关,单位为kg;$a_z$和$a_x$分别为沿传感器轴向和径向的加速度值,通过测试台悬臂末端安装的飞控加速度计获取,并投影到传感器轴向和径向,单位为m/s².补偿前后的传感器测量数据如图8所示.}
 
 \end{multicols}
 \begin{center}
 \vbox{\centering
 \includegraphics[width=15.5cm]{Image/motor_off_force_sensor_compensation.pdf}\\[1mm]
-{\small 图8\quad 1s、5s、10s来流加速时间下的传感器补偿效果.上排为传感器原始测量值,下排为补偿后的传感器测量值.(a)--(c)分别对应1s、5s、10s来流加速时间.
-\\ Fig.\,8 \quad \textcolor{yellow}{Dynamic response under 15, 20, and 25\,N desired thrust with the 1\,s freestream-acceleration condition. The upper row shows measured thrust for all three methods; the lower row shows tracking errors for the two closed-loop methods (FB and FF+FB). (a)--(c) correspond to 15, 20, and 25\,N desired thrust, respectively.}}}
+{\small 图8\quad 1s、5s、10s来流加速时间下的传感器补偿效果.上排为传感器原始测量值,下排为补偿后的传感器测量值
+\\ Fig.\,8 \quad Sensor compensation results for freestream acceleration times of 1, 5, and 10 s. The upper and lower rows show uncompensated and compensated sensor outputs, respectively.}}
 \end{center}
 \begin{multicols}{2}
 
@@ -513,7 +513,7 @@ u_{\mathrm{ff}}=a\,\Omega^2+b\,\Omega+c
 \begin{center}
 \vbox{\centering{\small 表2\quad 旋翼测试台测试设置
 \\
-Table\,2 \quad Test settings of the rotor test bench} \vskip2mm
+Table\,2 \quad Experimental settings for the rotor test bench} \vskip2mm
 {\footnotesize\centering
 \begin{tabular}{ccc}
 \toprule
@@ -531,8 +531,8 @@ Table\,2 \quad Test settings of the rotor test bench} \vskip2mm
 \begin{center}
 \vbox{\centering
 \includegraphics[width=7.5cm]{Image/fig9_rotor_model_diagnostics.pdf}\\[1mm]
-{\small \textcolor{blue}{图9}\quad 升力系数一致性与攻角分区相对误差分布
-\\ Fig.\,9 \quad Thrust coefficient agreement and relative-error distributions by disk angle of attack}
+{\small \textcolor{blue}{图9}\quad 理论、实测升力系数一致性对比与攻角分区相对误差分布
+\\ Fig.\,9 \quad Comparison of predicted and measured thrust coefficients and relative error distributions at different rotor disk angles of attack}
 }
 \end{center}
 
@@ -542,7 +542,7 @@ Table\,2 \quad Test settings of the rotor test bench} \vskip2mm
 
 \begin{center}
 \vbox{\centering{\small 表3\quad 不同桨盘攻角下的旋翼升力模型误差统计
-\\ Table\,3 \quad Error statistics of the rotor lift model at different disk angles of attack}\vskip2mm
+\\ Table\,3 \quad Error statistics of the rotor thrust model at different rotor disk angles of attack}\vskip2mm
 {\scriptsize\centering
 \setlength{\tabcolsep}{3.5pt}
 \begin{tabular}{@{}crrr@{}}
@@ -569,7 +569,7 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxErr$_{\mathrm{norm}}$/\% & MAPE/\% \\
 \vbox{\centering
 \includegraphics[width=8cm,height=3.8cm]{Image/fig9_freestream_ramp.pdf}\\[1mm]
 {\small \textcolor{green}{图10}\quad 1、5、10 s来流加速时间曲线.
-\\ Fig.\,10 \quad Freestream-speed curves for the 1, 5, and 10\,s.}}
+\\ Fig.\,10 \quad Freestream speed profiles for acceleration times of 1, 5, and 10 s}}
 \end{center}
 
 \subsection{升力闭环控制效果验证}
@@ -588,13 +588,13 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxErr$_{\mathrm{norm}}$/\% & MAPE/\% \\
 \vbox{\centering
 \includegraphics[width=15.5cm]{Image/fig10_representative_response.pdf}\\[1mm]
 {\small \textcolor{green}{图11}\quad 15、20、25 N期望升力和1 s来流加速工况下的动态响应.上排为三种方法的实测升力,下排为两种闭环方法(FB、FF+FB)的跟踪误差.(a)--(c)分别对应15、20、25 N期望升力.
-\\ Fig.\,11 \quad Dynamic response under 15, 20, and 25\,N desired thrust with the 1\,s freestream-acceleration condition. The upper row shows measured thrust for all three methods; the lower row shows tracking errors for the two closed-loop methods (FB and FF+FB). (a)--(c) correspond to 15, 20, and 25\,N desired thrust, respectively.}}
+\\ Fig.\,11 \quad Dynamic responses at desired thrusts of 15, 20, and 25 N with a freestream acceleration time of 1 s. The upper row shows the measured thrust for all three methods, and the lower row shows the tracking errors for the two closed-loop methods (FB and FF+FB). Columns (a)–(c) correspond to desired thrusts of 15, 20, and 25 N, respectively.}}
 \end{center}
 \begin{multicols}{2}
 
 其中,反馈控制方案与复合控制方案采用相同的PID参数.试验覆盖15、20、25 N三中期望升力与1、5、10 s三种来流加速时间,共9个工况;同一工况下三种方法采用相同的目标升力阶跃指令、限幅及数据处理流程.
 
-\textcolor{green}{来流速度由转台角速度计算,即$V_\infty=\Omega_a R_0$.图10给出三种加速过程及时间对齐方式,根据中值滤波后的$V_\infty$,将其达到低、高平台速度增量10\%和90\%的时刻分别记为$t_{10}$和$t_{90}$,按各自的$t_{10}$对齐,同色小圆点标示各自的$t_{90}$;评价窗口统一取$[t_{10},t_{90}+3,\mathrm{s}]$,包含主要加速过程及其后的恢复阶段.图9和图10沿用这一对齐规则,图中的纵向阴影标示10\%—90\%加速段,水平阴影标示期望升力的±5\%误差带.以$T_e=T_d-T_m$定义升力跟踪误差.并采用对期望升力的归一化均方根误差评价控制效果.}
+\textcolor{green}{来流速度由转台角速度计算,即$V_\infty=\Omega_a R_0$.图10给出三种加速过程及时间对齐方式,根据中值滤波后的$V_\infty$,将其达到低、高平台速度增量10\%和90\%的时刻分别记为$t_{10}$和$t_{90}$,按各自的$t_{10}$对齐,同色小圆点标示各自的$t_{90}$;评价窗口统一取$[t_{10},t_{90}+3,\mathrm{s}]$,包含主要加速过程及其后的恢复阶段.图11和图12沿用这一对齐规则,图中的纵向阴影标示10\%—90\%加速段,水平阴影标示期望升力的±5\%误差带.以$T_e=T_d-T_m$定义升力跟踪误差.并采用对期望升力的归一化均方根误差评价控制效果.}
 
 图11比较1 s快速来流条件下不同期望升力的动态响应.三种期望升力下,固定控制量方案均随来流增强出现明显的升力下降,且来流稳定后仍不能恢复至目标值,表明零来流下的静态映射难以适应轴向来流变化.反馈控制能够恢复升力,但加速阶段存在较大的瞬态跌落,体现出依赖升力偏差建立补偿的响应局限.复合控制则减小了这一跌落,但在随后恢复过程中仍有一定超调.因此,前馈的作用主要体现为减轻来流变化过程中的升力偏离,而非完全消除瞬态误差.
 \end{multicols}
@@ -602,13 +602,13 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxErr$_{\mathrm{norm}}$/\% & MAPE/\% \\
 \vbox{\centering
 \includegraphics[width=14cm]{Image/fig10_ramp_time_response_20N.pdf}\\[1mm]
 {\small \textcolor{green}{图12}\quad 20 N期望升力和1、5、10 s来流加速工况下的动态响应.上排为三种方法的实测升力,下排为两种闭环方法(FB、FF+FB)的跟踪误差.(a)--(c)分别对应1、5、10 s加速时间.
-\\ Fig.\,12 \quad Dynamic response under 20\,N desired thrust with the 1, 5, and 10\,s freestream-acceleration conditions. The upper row shows measured thrust for all three methods; the lower row shows tracking errors for the two closed-loop methods (FB and FF+FB). (a)--(c) correspond to the 1, 5, and 10\,s acceleration times, respectively.}}
+\\ Fig.\,12 \quad Dynamic responses at a desired thrust of 20 N with freestream acceleration times of 1, 5, and 10 s. The upper row shows the measured thrust for all three methods, and the lower row shows the tracking errors for the two closed-loop methods (FB and FF+FB). Columns (a)–(c) correspond to acceleration times of 1, 5, and 10 s, respectively.}}
 \end{center}
 \begin{multicols}{2}
 
 \begin{center}
 \vbox{\centering{\small \textcolor{green}{表4}\quad 统一扰动窗口下9种期望升力--加速时间组合的归一化RMSE及降幅
-\\ Table\,4 \quad Normalized RMSE and reduction ratios for the 9 desired-thrust/acceleration-time combinations using a common disturbance-window definition}\vskip2mm
+\\ Table\,4 \quad Normalized RMSE and relative reductions for nine combinations of desired thrust and acceleration time}\vskip2mm
 {\scriptsize\centering
 \setlength{\tabcolsep}{1.8pt}%
 \begin{tabular}{@{}ccccccc@{}}
@@ -637,7 +637,7 @@ $T_d$/N & $t_{\mathrm{ramp}}$/s & Static/\% & FB/\% & FF+FB/\% & FB降幅/\% & F
 \centerline{\includegraphics[width=8cm,height=5.5cm]{Image/fig12_speed_error.pdf}}
 \vskip2mm
 {\small 图13\quad 三种控制方法归一化绝对误差随来流速度的变化
-\\ Fig.\,13 \quad Normalized absolute tracking error of the three control methods over the freestream-speed sweep}}
+\\ Fig.\,13 \quad Normalized absolute tracking errors of the three control methods as a function of freestream speed}}
 \end{center}
 
 
@@ -645,14 +645,14 @@ $T_d$/N & $t_{\mathrm{ramp}}$/s & Static/\% & FB/\% & FF+FB/\% & FB降幅/\% & F
 
 为解释前馈的补偿过程,图14以20 N/1 s工况为例,选取反馈控制试验和复合控制试验,依次给出控制输出及转速响应.两次试验分别以自身来流的$t_{10}$对齐.随着来流增大,旋翼模型给出的前馈参考转速上升,并经式~(\ref{eq:rpm_calib})静态映射直接提高前馈控制量.复合控制的反馈项在加速阶段提供正向修正,随后随升力超调转为负向修正,体现了反馈对剩余偏差的补偿作用.反馈控制则由PID根据已产生的升力偏差建立全部控制输出.
 
-图11(a)和表4显示该工况的升力NRMSE由9.06\%降至3.87\%.降低57.3\%.控制量分解、实测转速和升力误差共同支持以下解释:模型前馈利用当前来流信息直接建立补偿,升力反馈进一步修正模型失配与动态偏差,从而减轻反馈补偿建立过程中产生的瞬态升力损失.
+图11(b)和表4显示该工况的升力NRMSE由9.06\%降至3.87\%.降低57.3\%.控制量分解、实测转速和升力误差共同支持以下解释:模型前馈利用当前来流信息直接建立补偿,升力反馈进一步修正模型失配与动态偏差,从而减轻反馈补偿建立过程中产生的瞬态升力损失.
 
 \begin{center}
 \vbox{
 \centerline{\includegraphics[width=8cm]{Image/fig13_feedforward_mechanism.pdf}}
 \vskip2mm
 {\small 图14\quad 20 N期望升力、1 s来流加速工况下的升力控制方法响应过程:(a)两种方法的总控制输出及复合控制的前馈、反馈分量;(b)两种方法的实测转速与复合控制的前馈参考转速.
-\\ Fig.\,14 \quad Feedforward compensation at a desired thrust of 20 N with a 1 s inflow acceleration time: (a) total control outputs and the feedforward and feedback components of combined control; (b) measured rotor speeds and the feedforward rotor-speed reference.}
+\\ Fig.\,14 \quad Thrust control responses at a desired thrust of 20 N with a freestream acceleration time of 1 s: (a) total control outputs of FB and FF+FB, together with the feedforward and feedback components of FF+FB; (b) measured rotor speeds of FB and FF+FB and the feedforward rotor-speed reference of FF+FB}
 }
 \end{center}
 

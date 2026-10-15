@@ -1,0 +1,71 @@
+{
+  "source": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\补偿-rawdate显示限幅.ulg",
+  "formula": "T_hat=(sensor2-b0+36.839*ay(t-0.030)-3.332*ax(t-0.030))*0.00980665",
+  "formula_provenance": "User confirmed this formula in the current conversation",
+  "b0_g": -17.0,
+  "b0_method": "first 20 logged sensor2 samples, same bias for both traces; module-start bias is not logged",
+  "t10_s": 283.063521,
+  "t90_s": 283.903229,
+  "actual_10_90_s": 0.8397080000000301,
+  "inflow_low_m_s": 0.083301717415452,
+  "inflow_high_m_s": 10.099026918411255,
+  "filter_q_std": 5.0,
+  "filter_r_std": 0.05000000074505806,
+  "clipping": "none, before or after filtering",
+  "firmware_sha": "1ab74a37e23c38ed4e91182d7c90374d202b00a5",
+  "visible_logged_raw_zero_samples": 481,
+  "visible_logged_raw_samples": 785,
+  "visible_unclipped_raw_range_N": [
+    -2.200222091334683,
+    0.9416714710050782
+  ],
+  "before_raw": {
+    "samples": 384,
+    "rmse_N": 2.5970927714895287,
+    "max_abs_N": 4.1972462,
+    "mean_bias_N": 1.1244958666666667
+  },
+  "before_matched_filter": {
+    "samples": 384,
+    "rmse_N": 2.688425491531858,
+    "max_abs_N": 4.491899206579264,
+    "mean_bias_N": 1.1022012581669698
+  },
+  "after_unclipped_raw": {
+    "samples": 384,
+    "rmse_N": 0.5220557915232917,
+    "max_abs_N": 2.200222091334683,
+    "mean_bias_N": -0.16437730990142954
+  },
+  "after_unclipped_filtered": {
+    "samples": 384,
+    "rmse_N": 0.41248093628415544,
+    "max_abs_N": 1.3797335429732778,
+    "mean_bias_N": -0.16741965294257724
+  },
+  "startup_dropouts": [
+    {
+      "timestamp_s": 260.9059,
+      "duration_ms": 90
+    },
+    {
+      "timestamp_s": 260.995736,
+      "duration_ms": 65
+    }
+  ],
+  "plot_window_s": [
+    280.063521,
+    287.903229
+  ],
+  "evaluation_window_s": [
+    283.063521,
+    286.903229
+  ],
+  "limitations": [
+    "Offline source-formula reconstruction, not exact experimental firmware replay: actual module-start b0 and full-rate acceleration history were not logged.",
+    "The formula was confirmed by the user; it does not exactly reproduce the unclipped logged channel. No coefficient or time shift fitted to reduce residuals.",
+    "1s uses one shared first20 bias and 0.00980665 N/g; original 5s/10s retain their previous uncentered 0.0098 N/unit convention.",
+    "Top row raw versus bottom row filtered is retained from original layout; matched-filter metrics are also exported.",
+    "All raw samples are retained without force clipping. Acceleration synchronization uses latest available sample at or before t-30ms, no linear extrapolation."
+  ]
+}

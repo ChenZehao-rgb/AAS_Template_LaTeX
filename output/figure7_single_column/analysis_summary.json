@@ -1,0 +1,29 @@
+{
+  "static": {
+    "Dmax_pct": 4.197739995989233,
+    "u_at_Dmax": 0.268,
+    "common_u": [
+      0.187769231,
+      0.899959184
+    ],
+    "interpretation": "four sweeps in two cycles, not four independent test repetitions",
+    "method": "piecewise linear n(u), no extrapolation, common interval; union of all knots plus dense sampling; adjacent duplicate plateau means averaged equally because sample counts unavailable"
+  },
+  "dynamic_inflow": {
+    "selected_files": [
+      "7-15-1s加速-静态.ulg",
+      "8-20-1s加速-静态.ulg",
+      "9-25-1s加速-静态.ulg"
+    ],
+    "max_pairwise_aligned_smoothed_v_difference_m_s": 0.2648802165852473,
+    "actual_10_90_span_range_s": [
+      0.8060150000000021,
+      0.8197940000000017
+    ],
+    "high_plateau_range_m_s": [
+      10.124305725097656,
+      10.188745498657227
+    ],
+    "representative_file": "8-20-1s加速-静态.ulg"
+  }
+}

@@ -17,7 +17,7 @@
 | 无限幅补偿，未滤波 | 0.5221 | 2.2002 |
 | 无限幅补偿，滤波后 | 0.4125 | 1.3797 |
 
-图中沿用“上：原始未补偿，下：补偿后滤波”的布局，图示两行的 RMSE 差异同时包含滤波影响。完整 CSV 另含相同滤波下的前后输出。5 s/10 s 的原始曲线保持原数据处理方式（0.0098 N/unit、无额外零偏），上下排纵轴均恢复为 −6 至 4 N。按用户要求删除图内“离线重建（无限幅）”标注。1 s 使用源码 0.00980665 N/g 及共用零偏，处理差异已保留在记录中。
+图中沿用“上：原始未补偿，下：补偿后滤波”的布局，图示两行的 RMSE 差异同时包含滤波影响。完整 CSV 另含相同滤波下的前后输出。5 s/10 s 的原始曲线保持原数据处理方式（0.0098 N/unit、无额外零偏）。独立1 s图仍使用 −6 至 4 N；当前论文图8上排保持 −6 至 4 N，下排三幅图统一为 −2 至 1 N，上下排高度比为1:0.7。按用户要求删除图内“离线重建（无限幅）”标注。1 s 使用源码 0.00980665 N/g 及共用零偏，处理差异已保留在记录中。
 
 - `motor_off_force_sensor_1s_reconstructed.pdf/.png`：单独图 1(a)。
 - `motor_off_force_sensor_compensation.pdf/.png`：替换 (a) 后的完整三列图。
@@ -31,3 +31,5 @@
 校验：`python data_process/verify_sensor_new_1s_reconstruction.py`。
 
 完整图已同步至 `output/deployment_sensor_figures/` 同名文件；旧图片备份在该目录的 `before_new_true_1s/`。旧 `plot_deployment_sensor_figures.py` 和该目录原有分析 JSON/CSV 属于原先图的历史计算，本次图的当前依据是本目录的记录与上述新脚本。
+
+当前图8的紧凑排版、完整曲线极值和RMSE不变核对见 `output/figure8_compact/README_zh.md` 与 `verification.json`。
