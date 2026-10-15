@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "horizontal_centering": "full visible ink including tick labels and axis titles",
+  "PNG_outer_margins_pixels": [
+    74,
+    75
+  ],
+  "PDF_outer_margins_pixels_at_600dpi": [
+    68,
+    77
+  ],
+  "PNG_dpi": 600,
+  "panel_borders_aligned": true,
+  "vertical_positions_unchanged": true,
+  "protected_data_table_other_figures": 40,
+  "visual_review": "centered vector PDF inspected; y-axis titles fully visible; data, fonts and legends unchanged",
+  "full_manuscript_recompiled": false
+}

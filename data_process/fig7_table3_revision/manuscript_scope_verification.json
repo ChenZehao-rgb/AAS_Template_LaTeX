@@ -1,0 +1,10 @@
+{
+  "allowed_edits": [
+    "Figure 7 caption block",
+    "Table 3 inline block"
+  ],
+  "outside_blocks_sha256": "1c4a683ff8ebdbbeb02a25053567e8c0819dc65cac6179cc6fc27e08ab0b6fa2",
+  "current_source_sha256": "1e5293709c03e934bed38d8449459ae413263e03d364be8d291732a187cc9fe3",
+  "outside_blocks_byte_identical": true,
+  "paper_recompiled": false
+}

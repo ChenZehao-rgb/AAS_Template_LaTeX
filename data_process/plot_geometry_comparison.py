@@ -186,7 +186,7 @@ def main() -> None:
             color=DARK,
             linewidth=1.7,
             linestyle=(0, (4.0, 2.5)),
-            label="参考值(carrol[18])",
+            label="参考值(Carrol[18])",
             zorder=2,
         )
         axis.plot(

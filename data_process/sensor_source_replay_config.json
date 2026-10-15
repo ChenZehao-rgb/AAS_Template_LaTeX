@@ -1,0 +1,31 @@
+{
+  "output_dir": "output/sensor_source_replay",
+  "source_snapshot_dir": "output/sensor_offline_1s/source_snapshot",
+  "provided_source_path": "\\\\wsl.localhost\\Ubuntu-20.04\\home\\sia\\PX4-Autopilot_tfc\\src\\modules\\thrust_feedback_control\\thrust_feedback_control_bemt.cpp",
+  "provided_source_git_head": "015cf70a21990440a9638f23e0d8bd9334dac9e5",
+  "provided_source_worktree_status": "clean for module and filter files at read time",
+  "files": [
+    {"nominal_ramp_s": 1, "path": "data/传感器补偿/未补偿-1s加速-无转速.ulg"},
+    {"nominal_ramp_s": 5, "path": "data/传感器补偿/未补偿-5s加速-无转速测试.ulg"},
+    {"nominal_ramp_s": 10, "path": "data/传感器补偿/未补偿-10s加速-无转速测试.ulg"}
+  ],
+  "N_per_g": 0.00980665,
+  "bias_init_logged_samples": 20,
+  "bias_scope": "first20 samples available in each log; actual module-start samples are not guaranteed recorded. Same frozen b0 applied before/after, no independent force recentering.",
+  "parasitic_coeff_ay_g_per_m_s2": -36.839,
+  "parasitic_coeff_ax_g_per_m_s2": 3.332,
+  "fixed_accel_delay_s": 0.030,
+  "accel_sample_rule": "latest logged sample with timestamp_sample <= native force timestamp - 0.030s; require published timestamp <= force timestamp; startup fallback to oldest available sample, matching source rule on available logs",
+  "gravity_bias_handling": "raw vehicle_acceleration x,y as in source; no z axis, no extra acceleration baseline subtraction or attitude gravity correction",
+  "paper_relation": "a_z=-a_y(t-0.03), a_x=a_x(t-0.03); T=(sensor2-b0)*N_per_g. Source effective A=36.839*N_per_g, B=3.332*N_per_g, approximately manuscript0.361/0.033kg.",
+  "paper_A_kg": 0.361,
+  "paper_B_kg": 0.033,
+  "plot_filter": "same source BFS1 two-state Kalman algorithm applied to both before/after on identical native force timestamps over full log; initial state0, covarianceI; per-log TFC_SD_ES/TFC_SD_ME",
+  "filter_dt_limits_s": [0.001, 0.050],
+  "first_filter_dt_s": 0.001,
+  "inflow_arm_length_m": 1.5,
+  "evaluation_window": "[own t10, own t90+3s]",
+  "plot_window": "[-3s, own t90-t10+4s]",
+  "export_dpi": 600,
+  "status": "offline application of provided source to recorded samples, not bit-exact replay of experimental firmware nor independent validation"
+}

@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "native_event_rows_verified": 9,
+  "unaltered_native_rpm_samples_per_trial": [
+    340,
+    340
+  ],
+  "main_panel_curve_counts": [
+    4,
+    3
+  ],
+  "acceleration_shading_tau_s": [
+    0.0,
+    0.7910029999999892
+  ],
+  "existing_event_csv_unchanged": true,
+  "data_and_statistics_code_unchanged": true,
+  "shared_time_axes": true,
+  "raw_log_hashes_verified": true,
+  "script_hash_verified": true,
+  "negative_feedback_visible": true
+}

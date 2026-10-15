@@ -1,0 +1,65 @@
+﻿def plot_mechanism(runs: list[Run]) -> None:
+    """Manuscript Fig. 12: compact controller-output and native-RPM comparison.
+
+    Presentation only: mechanism_data retains all original alignment, native
+    samples, and event calculations; events remain exported but are not drawn.
+    """
+    signals, events, audits, xmax = mechanism_data(runs)
+    ff = signals["ff_fb"]["run"]
+    ramp_end_tau = ff.t90_s - ff.t10_s
+    reference_color = "#222222"
+    feedback_color = COLORS["static"]  # independently identifiable teal
+    long_dash = (0, (7, 3))
+    fig, (ax_control, ax_rpm) = plt.subplots(
+        2, 1, figsize=(3.45, 3.35), sharex=True,
+        gridspec_kw={"hspace": 0.10})
+    for method in ("ff_fb", "fb"):
+        run = signals[method]["run"]
+        mask = (run.tau_s >= -2.0) & (run.tau_s <= xmax)
+        label = method.upper().replace("_", "+")
+        ax_control.plot(run.tau_s[mask], run.total_out[mask],
+                        color=COLORS[method], lw=0.85,
+                        label=label + "总输出", zorder=3)
+        tau, rpm = signals[method]["rpm_tau"], signals[method]["rpm"]
+        mask = (tau >= -2.0) & (tau <= xmax)
+        ax_rpm.plot(tau[mask], rpm[mask], color=COLORS[method], lw=0.85,
+                    label=label + "实测", zorder=3)
+    mask = (ff.tau_s >= -2.0) & (ff.tau_s <= xmax)
+    # Draw the independent dark reference last to preserve its dashed trace
+    # where it coincides with measured or total-output curves.
+    ax_control.plot(ff.tau_s[mask], ff.feedforward_out[mask],
+                    color=reference_color, ls=long_dash, lw=0.95,
+                    label="前馈分量", zorder=5)
+    ax_control.plot(ff.tau_s[mask], ff.feedback_out[mask],
+                    color=feedback_color, ls="-", lw=0.70,
+                    label="反馈分量", zorder=4)
+    ax_control.axhline(0, color="0.4", lw=0.5, zorder=1)
+    ax_rpm.plot(ff.tau_s[mask], ff.model_rpm[mask],
+                color=reference_color, ls=long_dash, lw=0.85,
+                label="前馈参考", zorder=5)
+    for ax, label in zip((ax_control, ax_rpm), ("(a) 控制输出", "(b) 转速响应")):
+        ax.set_xlim(-2.0, xmax)
+        # Same acceleration-segment meaning/style as Fig. 9/10, with one
+        # shared boundary from the FF+FB trial; this is not the full window.
+        ax.axvspan(0.0, ramp_end_tau, color="0.95", zorder=-3)
+        ax.axvline(0.0, color=COLORS["neutral"], ls=":", lw=0.7, zorder=1)
+        style_grid(ax)
+        ax.text(0.025, 0.96, label, transform=ax.transAxes,
+                ha="left", va="top", fontsize=8.5)
+        ax.xaxis.set_major_locator(MultipleLocator(1.0))
+    ax_control.set_ylim(-0.10, 1.10)
+    ax_control.set_ylabel("归一化控制量")
+    ax_control.yaxis.set_major_locator(MultipleLocator(0.2))
+    ax_control.tick_params(labelbottom=False)
+    ax_rpm.set_ylim(3900, 6100)
+    ax_rpm.set_ylabel("转速 (rpm)")
+    ax_rpm.set_xlabel(r"$\tau=t-t_{10}$ (s)", labelpad=3)
+    ax_rpm.yaxis.set_major_locator(MultipleLocator(500))
+    # The middle band is empty in panel (a); the lower right is empty in (b).
+    ax_control.legend(loc="center", bbox_to_anchor=(0.52, 0.34), ncol=2,
+                      frameon=False, handlelength=2.3, columnspacing=0.85,
+                      handletextpad=0.5, borderaxespad=0.2, labelspacing=0.25)
+    ax_rpm.legend(loc="lower right", frameon=False, handlelength=2.3,
+                  handletextpad=0.5, borderaxespad=0.35, labelspacing=0.25)
+    fig.subplots_adjust(left=0.20, right=0.985, bottom=0.15, top=0.985,
+                        hspace=0.10)

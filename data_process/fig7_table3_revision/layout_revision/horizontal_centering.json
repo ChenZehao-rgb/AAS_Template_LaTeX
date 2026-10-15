@@ -1,0 +1,9 @@
+{
+  "content_includes": "axes frames, tick labels, axis titles, legends and panel labels",
+  "translation_mm": -1.1120769193046585,
+  "centering_basis": "full-content bounds followed by actual rendered ink, including font side bearings",
+  "outer_margin_left_mm": 3.154997176736307,
+  "outer_margin_right_mm": 3.1549971767363076,
+  "panel_borders_aligned": true,
+  "vertical_positions_unchanged": true
+}

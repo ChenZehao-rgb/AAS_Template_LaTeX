@@ -1,0 +1,10 @@
+{
+  "status": "VISUALLY_CHECKED",
+  "surfaces": [
+    "600dpi Figure 7 PNG",
+    "Poppler-rendered vector Figure 7 PDF",
+    "XeLaTeX Table 3 preview",
+    "XeLaTeX Figure 7 plus manuscript caption preview"
+  ],
+  "findings": "No clipped labels, missing glyphs, hidden extreme errors, or shaded overlap. Caption/table logs have no missing-character or overfull-box warnings. Full manuscript was not recompiled."
+}

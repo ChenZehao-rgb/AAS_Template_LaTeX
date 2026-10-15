@@ -1,0 +1,713 @@
+/****************************************************************************
+ *
+ *   Copyright (C) 2015 Mark Charlebois. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ * 3. Neither the name PX4 nor the names of its contributors may be
+ *    used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+ * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ ****************************************************************************/
+
+#include "thrust_feedback_control.hpp"
+#include "bet_inverse_solver.hpp"
+
+#include <cstring>
+
+px4::AppState ThrustFeedbackControl::appState;
+
+namespace
+{
+
+constexpr int kMotorCount = 1;
+constexpr float kGramForceToNewton = 9.80665e-3f;
+constexpr float kDefaultControlDt = 0.01f;
+constexpr float kMinControlDt = 0.001f;
+constexpr float kMaxControlDt = 0.05f;
+constexpr float kBetLengthDefaultM = 1.5f;
+constexpr float kBetLengthMinM = 0.5f;
+constexpr float kBetLengthMaxM = 2.0f;
+constexpr uint64_t kBetWarnIntervalUs = 1000000;
+// 只有 1 号电机装了 AS5600 转速传感器，其余电机只能用映射开环
+constexpr int kRpmSensorMotorIndex = 0;
+// 寄生力标定公式 F_parasitic,g = b0 - 36.839*ay(t-0.03) + 3.332*ax(t-0.03)
+constexpr uint64_t kParasiticAccelDelayUs = 30000;   // 加速度取 30ms 之前的数据
+constexpr float kParasiticCoeffAy = -36.839f;        // ay 系数 [g/(m/s^2)]
+constexpr float kParasiticCoeffAx = 3.332f;          // ax 系数 [g/(m/s^2)]
+constexpr int kSensorBiasInitSamples = 20;           // 上电后用于估计 b0 的样本数
+
+struct PiState {
+	float integral{0.f};
+	uint64_t last_timestamp{0};
+
+	void reset()
+	{
+		integral = 0.f;
+		last_timestamp = 0;
+	}
+};
+// kg to N conversion, with NaN/Inf protection
+float grams_to_newtons(float grams)
+{
+	return PX4_ISFINITE(grams) ? grams * kGramForceToNewton : 0.f;
+}
+// 0-1限幅
+float clean_normalized_control(float raw)
+{
+	if (!PX4_ISFINITE(raw)) {
+		return 0.f;
+	}
+
+	return math::constrain(raw, 0.f, 1.f);
+}
+// 限幅力值，防止NaN/Inf
+float clean_force_n(float force_n, float max_force_n)
+{
+	if (!PX4_ISFINITE(force_n)) {
+		return 0.f;
+	}
+
+	const float upper_limit = PX4_ISFINITE(max_force_n) ? fmaxf(max_force_n, 0.f) : 0.f;
+	return math::constrain(force_n, -upper_limit, upper_limit);
+}
+
+float clean_bet_length_m(float length_m)
+{
+	return math::constrain(PX4_ISFINITE(length_m) ? length_m : kBetLengthDefaultM,
+			       kBetLengthMinM, kBetLengthMaxM);
+}
+
+float clean_yaw_rate_rad_s(float yaw_rate_rad_s)
+{
+	if (!PX4_ISFINITE(yaw_rate_rad_s)) {
+		return 0.f;
+	}
+
+	return yaw_rate_rad_s;
+}
+// 电机转速-控制量映射
+float rpm_to_control_ff(float rpm, int motor_index)
+{
+    // u = 0.00000003 rpm^2 + 0.00002263 rpm - 0.03261596
+	return 0.000000026972f * rpm * rpm + 0.00001829f * rpm - 0.03718f;
+}
+
+const char *bet_status_string(thrust_feedback_control::bet::BetRpmStatus status)
+{
+	using thrust_feedback_control::bet::BetRpmStatus;
+
+	switch (status) {
+	case BetRpmStatus::Ok:
+		return "ok";
+
+	case BetRpmStatus::InvalidInput:
+		return "invalid_input";
+
+	case BetRpmStatus::OutOfTableRange:
+		return "out_of_table_range";
+
+	case BetRpmStatus::AboveRpmLimit:
+		return "above_rpm_limit";
+
+	case BetRpmStatus::NonMonotonicTable:
+		return "non_monotonic_table";
+
+	case BetRpmStatus::ResidualFallback:
+		return "residual_fallback";
+	}
+
+	return "unknown";
+}
+// 每秒只打印一次警告
+void warn_bet_status_once_per_second(uint64_t now, int motor_index, thrust_feedback_control::bet::BetRpmStatus status,
+				     float desired_lift_n, float freestream_m_s, float alpha_deg)
+{
+	static uint64_t last_warn_us = 0;
+
+	if (now - last_warn_us < kBetWarnIntervalUs) {
+		return;
+	}
+
+	last_warn_us = now;
+	PX4_WARN("TFC BET motor %d status=%s lift=%.3fN V=%.3fm/s alpha=%.2fdeg",
+		 motor_index + 1, bet_status_string(status), (double)desired_lift_n, (double)freestream_m_s,
+		 (double)alpha_deg);
+}
+
+float control_dt_s(PiState &state, uint64_t now)
+{
+	if (state.last_timestamp == 0) {
+		state.last_timestamp = now;
+		return kDefaultControlDt;
+	}
+
+	const float dt = math::constrain((now - state.last_timestamp) * 1e-6f, kMinControlDt, kMaxControlDt);
+	state.last_timestamp = now;
+	return dt;
+}
+// PI控制器更新
+float update_pi(PiState &state, float error_n, float kp, float ki, float lim_i, float dt_s)
+{
+	if (!PX4_ISFINITE(error_n) || !PX4_ISFINITE(kp) || !PX4_ISFINITE(ki) || !PX4_ISFINITE(lim_i)) {
+		state.reset();
+		return 0.f;
+	}
+
+	const float i_limit = fmaxf(lim_i, 0.f);
+	state.integral += error_n * dt_s;
+
+	if (fabsf(ki) > 1e-6f && i_limit > 0.f) {
+		const float integral_limit = i_limit / fabsf(ki);
+		state.integral = math::constrain(state.integral, -integral_limit, integral_limit);
+
+	} else {
+		state.integral = 0.f;
+	}
+
+	const float p_out = kp * error_n;
+	const float i_out = math::constrain(ki * state.integral, -i_limit, i_limit);
+	return p_out + i_out;
+}
+
+// 转速环 PI：输出为归一化控制量的修正量，带钳位抗饱和（条件积分）
+float update_rpm_pi(PiState &state, float error_rpm, float kp, float ki, float lim, float dt_s)
+{
+	if (!PX4_ISFINITE(error_rpm) || !PX4_ISFINITE(kp) || !PX4_ISFINITE(ki) || !PX4_ISFINITE(lim)) {
+		state.reset();
+		return 0.f;
+	}
+
+	const float out_limit = fmaxf(lim, 0.f);
+	const float p_out = kp * error_rpm;
+
+	if (fabsf(ki) > 1e-9f) {
+		const float candidate_integral = state.integral + error_rpm * dt_s;
+		const float candidate_out = p_out + ki * candidate_integral;
+
+		// 只有输出未饱和、或者本次积分是在把输出拉回限幅内时才继续积分
+		if (fabsf(candidate_out) < out_limit || candidate_out * error_rpm <= 0.f) {
+			state.integral = candidate_integral;
+		}
+
+	} else {
+		state.integral = 0.f;
+	}
+
+	return math::constrain(p_out + ki * state.integral, -out_limit, out_limit);
+}
+
+void warn_rpm_stale_once_per_second(uint64_t now, float age_s)
+{
+	static uint64_t last_warn_us = 0;
+
+	if (now - last_warn_us < kBetWarnIntervalUs) {
+		return;
+	}
+
+	last_warn_us = now;
+	PX4_WARN("TFC rpm measurement stale (%.3fs), falling back to rpm->control map", (double)age_s);
+}
+
+void reset_vector4(matrix::Vector<float, 4> &values)
+{
+	for (int i = 0; i < kMotorCount; ++i) {
+		values(i) = 0.f;
+	}
+}
+
+void reset_pi_states(PiState states[kMotorCount])
+{
+	for (int i = 0; i < kMotorCount; ++i) {
+		states[i].reset();
+	}
+}
+
+} // namespace
+
+// 每次有新的 vehicle_acceleration 数据时压入环形缓存，供延迟取值使用
+void ThrustFeedbackControl::update_accel_history()
+{
+	if (!_vehicle_acceleration_sub.update(&_vehicle_acceleration)) {
+		return;
+	}
+
+	const float accel_x = _vehicle_acceleration.xyz[0];
+	const float accel_y = _vehicle_acceleration.xyz[1];
+
+	if (!PX4_ISFINITE(accel_x) || !PX4_ISFINITE(accel_y)) {
+		return;
+	}
+
+	uint64_t sample_time = _vehicle_acceleration.timestamp_sample;
+
+	if (sample_time == 0) {
+		sample_time = _vehicle_acceleration.timestamp;
+	}
+
+	if (sample_time == 0) {
+		sample_time = hrt_absolute_time();
+	}
+
+	_accel_history[_accel_history_head] = AccelSample{sample_time, accel_x, accel_y};
+	_accel_history_head = (_accel_history_head + 1) % kAccelHistorySize;
+
+	if (_accel_history_count < kAccelHistorySize) {
+		_accel_history_count++;
+	}
+}
+
+// 取 now_us - 30ms 时刻的加速度：选取时间戳不晚于目标时刻的最新样本
+bool ThrustFeedbackControl::get_delayed_accel(uint64_t now_us, float &accel_x, float &accel_y) const
+{
+	if (_accel_history_count == 0) {
+		return false;
+	}
+
+	const uint64_t target = (now_us > kParasiticAccelDelayUs) ? (now_us - kParasiticAccelDelayUs) : 0;
+
+	const AccelSample *best = nullptr;
+	const AccelSample *oldest = nullptr;
+
+	for (int i = 0; i < _accel_history_count; i++) {
+		// 从最新往回遍历
+		const int index = (_accel_history_head - 1 - i + kAccelHistorySize * 2) % kAccelHistorySize;
+		const AccelSample &sample = _accel_history[index];
+		oldest = &sample;
+
+		if (sample.timestamp <= target) {
+			best = &sample;
+			break;
+		}
+	}
+
+	// 缓存还没积累到 30ms 时退化为使用最旧的样本
+	if (best == nullptr) {
+		best = oldest;
+	}
+
+	if (best == nullptr) {
+		return false;
+	}
+
+	accel_x = best->x;
+	accel_y = best->y;
+	return true;
+}
+
+// 上电（模块启动）后的传感器初值 b0，取最初若干个样本的平均值，只标定一次
+void ThrustFeedbackControl::update_sensor_bias(float sensor_raw_g)
+{
+	if (_sensor_bias_valid || !PX4_ISFINITE(sensor_raw_g)) {
+		return;
+	}
+
+	_sensor_bias_sum_g += sensor_raw_g;
+	_sensor_bias_samples++;
+
+	if (_sensor_bias_samples >= kSensorBiasInitSamples) {
+		_sensor_bias_g = _sensor_bias_sum_g / static_cast<float>(_sensor_bias_samples);
+		_sensor_bias_valid = true;
+		PX4_INFO("thrust sensor bias b0 = %.2f g", static_cast<double>(_sensor_bias_g));
+	}
+}
+
+// F_parasitic,g = b0 - 36.839*ay(t-0.03) + 3.332*ax(t-0.03)，单位 g
+float ThrustFeedbackControl::compute_parasitic_force_g(uint64_t now_us) const
+{
+	// b0 尚未标定完成时先用当前累计均值，避免开机瞬间补偿跳变
+	float bias_g = _sensor_bias_g;
+
+	if (!_sensor_bias_valid) {
+		bias_g = (_sensor_bias_samples > 0) ? (_sensor_bias_sum_g / static_cast<float>(_sensor_bias_samples)) : 0.f;
+	}
+
+	float accel_x = 0.f;
+	float accel_y = 0.f;
+
+	if (!get_delayed_accel(now_us, accel_x, accel_y)) {
+		return bias_g;
+	}
+
+	const float parasitic_g = bias_g + kParasiticCoeffAy * accel_y + kParasiticCoeffAx * accel_x;
+	return PX4_ISFINITE(parasitic_g) ? parasitic_g : bias_g;
+}
+
+void ThrustFeedbackControl::parameters_update()
+{
+	if (_parameter_update_sub.updated()) {
+		parameter_update_s param_update;
+		_parameter_update_sub.copy(&param_update);
+		updateParams();
+	}
+}
+
+int ThrustFeedbackControl::main()
+{
+	appState.setRunning(true);
+
+	const int thrustdata_sub_fd = orb_subscribe(ORB_ID(pressure_force_sensor));
+	orb_set_interval(thrustdata_sub_fd, 5);
+
+	const int thrustdesireddata_sub_fd = orb_subscribe(ORB_ID(actuator_motors));
+	orb_set_interval(thrustdesireddata_sub_fd, 5);
+
+	px4_pollfd_struct_t fds[] = {
+		{ .fd = thrustdata_sub_fd, .events = POLLIN },
+		{ .fd = thrustdesireddata_sub_fd, .events = POLLIN },
+	};
+
+	int error_counter = 0;
+	pressure_force_sensor_s sensordata{};
+	actuator_motors_s thrustdesireddata{};
+	PiState pi_states[kMotorCount]{};
+	PiState rpm_pi_states[kMotorCount]{};
+	bool sensor_updated = false;
+	bool desired_updated = false;
+	float max_thrust_grams = 1000 * _param_tfc_thrust_max.get();
+	reset_vector4(_thrust_desired);
+	reset_vector4(_thrust_measure);
+	reset_vector4(_control_output);
+	reset_vector4(_total_output);
+	reset_vector4(_iolc_u_ff);
+
+	while (appState.isRunning()) {
+		parameters_update();
+
+		if (_vehicle_status_sub.update(&_vehicle_status)) {
+			_armed = (_vehicle_status.arming_state == vehicle_status_s::ARMING_STATE_ARMED);
+		}
+
+		update_accel_history();
+
+		if (_mcs_sub.update(&_mcs)) {
+			const float normalized_throttle = clean_normalized_control((_mcs.throttle + 1.f) * 0.5f);
+			_force_from_rc = clean_force_n(grams_to_newtons(normalized_throttle * max_thrust_grams), grams_to_newtons(max_thrust_grams));
+		}
+
+		const int poll_ret = px4_poll(fds, 2, 1000);
+
+		if (poll_ret == 0) {
+			PX4_ERR("Got no data within a second");
+
+		} else if (poll_ret < 0) {
+			if (error_counter < 10 || error_counter % 50 == 0) {
+				PX4_ERR("ERROR RETURN VALUE FROM POLL(): %d", poll_ret);
+			}
+
+			error_counter++;
+
+		} else {
+			if (fds[0].revents & POLLIN) {
+				sensor_updated = true;
+				orb_copy(ORB_ID(pressure_force_sensor), thrustdata_sub_fd, &sensordata);
+
+				thrustdata.timestamp = hrt_absolute_time();
+				static uint64_t last_sensor_timestamp = thrustdata.timestamp;
+
+				// 寄生力标定：F_parasitic,g = b0 - 36.839*ay(t-0.03) + 3.332*ax(t-0.03)
+				// b0 为上电初值，加速度取 30ms 之前的数据；实际拉力 = 传感器读数 - 寄生力
+				const float sensor_raw_g = static_cast<float>(sensordata.sensor2);
+				update_sensor_bias(sensor_raw_g);
+				const float parasitic_force_g = compute_parasitic_force_g(thrustdata.timestamp);
+
+				thrustdata.thrust_raw_data_1 = grams_to_newtons(sensor_raw_g - parasitic_force_g);
+				// thrustdata.thrust_raw_data_2 = grams_to_newtons(static_cast<float>(sensordata.sensor2)
+				// 			       + _param_sensor2_bias1.get() + _param_sensor2_bias2.get());
+				// thrustdata.thrust_raw_data_3 = grams_to_newtons(static_cast<float>(sensordata.sensor3)
+				// 			       + _param_sensor3_bias1.get() + _param_sensor3_bias2.get());
+				// thrustdata.thrust_raw_data_4 = grams_to_newtons(static_cast<float>(sensordata.sensor4)
+							//        + _param_sensor4_bias1.get() + _param_sensor4_bias2.get());
+
+				const float max_force_n = grams_to_newtons(max_thrust_grams);
+				thrustdata.thrust_raw_data_1 = clean_force_n(thrustdata.thrust_raw_data_1, max_force_n);
+				thrustdata.thrust_raw_data_2 = clean_force_n(thrustdata.thrust_raw_data_2, max_force_n);
+				thrustdata.thrust_raw_data_3 = clean_force_n(thrustdata.thrust_raw_data_3, max_force_n);
+				thrustdata.thrust_raw_data_4 = clean_force_n(thrustdata.thrust_raw_data_4, max_force_n);
+
+				const float dt = math::constrain((thrustdata.timestamp - last_sensor_timestamp) * 1e-6f,
+								 kMinControlDt, kMaxControlDt);
+
+				thrustdata.thrust_kalman_filter_data_1 = clean_force_n(
+						thrust_kalman_filter.thrust_kalman_filter_BFS1(dt, thrustdata.thrust_raw_data_1), max_force_n);
+				thrustdata.thrust_kalman_filter_data_2 = clean_force_n(
+						thrust_kalman_filter.thrust_kalman_filter_BFS2(dt, thrustdata.thrust_raw_data_2), max_force_n);
+				thrustdata.thrust_kalman_filter_data_3 = clean_force_n(
+						thrust_kalman_filter.thrust_kalman_filter_BFS3(dt, thrustdata.thrust_raw_data_3), max_force_n);
+				thrustdata.thrust_kalman_filter_data_4 = clean_force_n(
+						thrust_kalman_filter.thrust_kalman_filter_BFS4(dt, thrustdata.thrust_raw_data_4), max_force_n);
+
+				last_sensor_timestamp = thrustdata.timestamp;
+				_thrustdata_pub.publish(thrustdata);
+			}
+
+			if (fds[1].revents & POLLIN) {
+				desired_updated = true;
+				orb_copy(ORB_ID(actuator_motors), thrustdesireddata_sub_fd, &thrustdesireddata);
+
+				const uint64_t now = hrt_absolute_time();
+				const float max_force_n = fmaxf(grams_to_newtons(max_thrust_grams), 0.f);
+				thrustdesireddata.timestamp = now;
+
+				thrustcontrol.timestamp = now;
+				thrustcontrol.timestamp_sample = thrustdesireddata.timestamp_sample;
+				thrustcontrol.reversible_flags = thrustdesireddata.reversible_flags;
+				std::memcpy(thrustcontrol.control, thrustdesireddata.control, sizeof(thrustcontrol.control));
+
+				// _thrust_desired(0) = clean_force_n(_force_from_rc, max_force_n);
+				_thrust_desired(0) = _param_tfc_des_thrust.get();
+				_thrust_desired(1) = clean_force_n(clean_normalized_control(thrustdesireddata.control[1]) * max_force_n, max_force_n);
+				_thrust_desired(2) = clean_force_n(clean_normalized_control(thrustdesireddata.control[2]) * max_force_n, max_force_n);
+				_thrust_desired(3) = clean_force_n(clean_normalized_control(thrustdesireddata.control[3]) * max_force_n, max_force_n);
+			}
+		}
+
+		_vehicle_angular_velocity_sub.update(&_vehicle_angular_velocity);
+		_rpm_sub.update(&_rpm);
+
+		if (!_armed) {
+			sensor_updated = false;
+			desired_updated = false;
+			reset_pi_states(pi_states);
+			reset_pi_states(rpm_pi_states);
+			reset_vector4(_control_output);
+			reset_vector4(_total_output);
+			reset_vector4(_iolc_u_ff);
+			px4_usleep(1000);
+			continue;
+		}
+
+		if (sensor_updated && desired_updated) {
+			sensor_updated = false;
+			desired_updated = false;
+
+			if (_param_tfc_use_filtered_thrust.get() > 0.5f) {
+				_thrust_measure(0) = thrustdata.thrust_kalman_filter_data_1;
+				_thrust_measure(1) = thrustdata.thrust_kalman_filter_data_2;
+				_thrust_measure(2) = thrustdata.thrust_kalman_filter_data_3;
+				_thrust_measure(3) = thrustdata.thrust_kalman_filter_data_4;
+
+			} else {
+				_thrust_measure(0) = thrustdata.thrust_raw_data_1;
+				_thrust_measure(1) = thrustdata.thrust_raw_data_2;
+				_thrust_measure(2) = thrustdata.thrust_raw_data_3;
+				_thrust_measure(3) = thrustdata.thrust_raw_data_4;
+			}
+
+			const uint64_t now = hrt_absolute_time();
+			const float bet_yaw_rate_rad_s = clean_yaw_rate_rad_s(_vehicle_angular_velocity.xyz[2]);
+			const float bet_length_m = clean_bet_length_m(_param_tfc_bet_len_m.get());
+			const float bet_freestream_m_s = fabsf(bet_yaw_rate_rad_s) * bet_length_m;
+			const float bet_alpha_deg = _param_tfc_bet_a_deg.get();
+			const float kp = _param_tfc_pid_kp.get();
+			const float ki = _param_tfc_pid_ki.get();
+			const float lim_i = _param_tfc_pid_lim_i.get();
+
+			// 转速闭环：仅在使用模型前馈的控制模式(1/4)下生效
+			const int ctl_mode = _param_tfc_ctl_mode.get();
+			const bool mode_uses_model_ff = (ctl_mode == 1) || (ctl_mode == 4);
+			// 只有本模块真正接管电机输出时才闭环，否则积分会对着不响应的转速累积
+			const bool output_engaged = (_param_tfc_start.get() > 0.5f) && (_param_tfc_start.get() < 1.5f);
+			const bool rpm_loop_enabled = (_param_tfc_rpm_mode.get() == 1) && mode_uses_model_ff && output_engaged;
+			const float rpm_timeout_s = math::constrain(_param_tfc_rpm_tout.get(), 0.02f, 2.f);
+			const float rpm_age_s = (_rpm.timestamp > 0 && now >= _rpm.timestamp)
+						? (now - _rpm.timestamp) * 1e-6f : INFINITY;
+			const float rpm_raw_measurement = (_param_tfc_rpm_fil.get() != 0) ? _rpm.rpm_estimate : _rpm.rpm_raw;
+			// 传感器只测转速大小，方向由 AS5600_DIR 决定，这里取绝对值与 BET 模型(正转速)对齐
+			const float rpm_measurement = PX4_ISFINITE(rpm_raw_measurement) ? fabsf(rpm_raw_measurement) : 0.f;
+			const bool rpm_measurement_valid = PX4_ISFINITE(rpm_raw_measurement) && (rpm_age_s < rpm_timeout_s);
+
+			float rpm_ff[kMotorCount] = {};
+			float rpm_meas[kMotorCount] = {};
+			float rpm_error[kMotorCount] = {};
+			float rpm_loop_out[kMotorCount] = {};
+			float rpm_map_out[kMotorCount] = {};
+			uint8_t rpm_loop_active[kMotorCount] = {};
+			float bet_achieved_lift_n[kMotorCount] = {};
+			int bet_status[kMotorCount] = {};
+			int bet_iterations[kMotorCount] = {};
+			float dt_s[kMotorCount] = {};
+			float thrust_error[kMotorCount] = {};
+			float feedback_out[kMotorCount] = {};
+			uint32_t bet_lookup_time_us[kMotorCount] = {};
+
+			for (int i = 0; i < kMotorCount; ++i) {
+				_thrust_desired(i) = clean_force_n(_thrust_desired(i), grams_to_newtons(max_thrust_grams));
+				_thrust_measure(i) = clean_force_n(_thrust_measure(i), grams_to_newtons(max_thrust_grams));
+
+				if (_thrust_desired(i) <= 1e-5f) {
+					pi_states[i].reset();
+					rpm_pi_states[i].reset();
+					_iolc_u_ff(i) = 0.f;
+					_control_output(i) = 0.f;
+					_total_output(i) = 0.f;
+					thrust_error[i] = -_thrust_measure(i);
+					continue;
+				}
+				// 记录查表耗时
+				const uint64_t lookup_start_us = hrt_absolute_time();
+				const thrust_feedback_control::bet::BetRpmSolution bet_solution =
+					_param_tfc_bet_res_en.get() != 0
+					? thrust_feedback_control::bet::lookup_corrected_rpm_for_lift_n(
+						_thrust_desired(i), bet_freestream_m_s, bet_alpha_deg,
+						_param_tfc_bet_res_scl.get())
+					: thrust_feedback_control::bet::lookup_rpm_for_lift_n(
+						_thrust_desired(i), bet_freestream_m_s, bet_alpha_deg);
+				const uint64_t lookup_time_us = hrt_absolute_time() - lookup_start_us;
+				bet_lookup_time_us[i] = static_cast<uint32_t>(lookup_time_us);
+				bet_achieved_lift_n[i] = bet_solution.achieved_lift_n;
+				bet_status[i] = static_cast<int>(bet_solution.status);
+				bet_iterations[i] = bet_solution.iterations;
+
+				if (bet_solution.status == thrust_feedback_control::bet::BetRpmStatus::Ok) {
+					rpm_ff[i] = bet_solution.rpm;
+
+				} else if (bet_solution.status == thrust_feedback_control::bet::BetRpmStatus::OutOfTableRange) {
+					rpm_ff[i] = bet_solution.rpm;
+					warn_bet_status_once_per_second(now, i, bet_solution.status, _thrust_desired(i),
+								bet_freestream_m_s, bet_alpha_deg);
+
+				} else if (bet_solution.status == thrust_feedback_control::bet::BetRpmStatus::ResidualFallback) {
+					rpm_ff[i] = bet_solution.rpm;
+					warn_bet_status_once_per_second(now, i, bet_solution.status, _thrust_desired(i),
+								bet_freestream_m_s, bet_alpha_deg);
+
+				} else if (bet_solution.status == thrust_feedback_control::bet::BetRpmStatus::AboveRpmLimit) {
+					rpm_ff[i] = thrust_feedback_control::bet::kBetMaxRpm;
+					warn_bet_status_once_per_second(now, i, bet_solution.status, _thrust_desired(i),
+									bet_freestream_m_s, bet_alpha_deg);
+
+				} else {
+					rpm_ff[i] = 0.f;
+					warn_bet_status_once_per_second(now, i, bet_solution.status, _thrust_desired(i),
+									bet_freestream_m_s, bet_alpha_deg);
+				}
+
+				thrust_error[i] = _thrust_desired(i) - _thrust_measure(i);
+				dt_s[i] = control_dt_s(pi_states[i], now);
+				feedback_out[i] = update_pi(pi_states[i], thrust_error[i], kp, ki, lim_i, dt_s[i]);
+
+				// 转速环：静态映射作为基准前馈，PI 只补映射误差(电压/温度/桨叶差异)
+				rpm_map_out[i] = math::constrain(rpm_to_control_ff(rpm_ff[i], i), 0.f, 1.f);
+				float u_ff_from_rpm = rpm_map_out[i];
+
+				if (rpm_loop_enabled && i == kRpmSensorMotorIndex) {
+					if (rpm_measurement_valid) {
+						rpm_meas[i] = rpm_measurement;
+						rpm_error[i] = rpm_ff[i] - rpm_meas[i];
+						rpm_loop_out[i] = update_rpm_pi(rpm_pi_states[i], rpm_error[i],
+										_param_tfc_rpm_kp.get(), _param_tfc_rpm_ki.get(),
+										_param_tfc_rpm_lim.get(), dt_s[i]);
+						u_ff_from_rpm = math::constrain(rpm_map_out[i] + rpm_loop_out[i], 0.f, 1.f);
+						rpm_loop_active[i] = 1;
+
+					} else {
+						// 转速数据超时：退回纯映射，清积分避免复位时跳变
+						rpm_pi_states[i].reset();
+						warn_rpm_stale_once_per_second(now, rpm_age_s);
+					}
+
+				} else {
+					rpm_pi_states[i].reset();
+				}
+
+				// _control_output(i) = feedback_out[i]; // 注释以关闭反馈
+				if(ctl_mode == 1){
+					// 前馈控制
+					_iolc_u_ff(i) = u_ff_from_rpm;
+					_control_output(i) = 0.f;
+				}else if(ctl_mode == 2){
+					// 反馈控制
+					_iolc_u_ff(i) = 0.f;
+					_control_output(i) = feedback_out[i];
+				}else if(ctl_mode == 3){
+					// 固定前馈+反馈控制
+					_iolc_u_ff(i) = 0.517f; // 固定前馈值
+					_control_output(i) = feedback_out[i];
+				}
+				else if(ctl_mode == 4){
+					// 前馈+反馈控制
+					_iolc_u_ff(i) = u_ff_from_rpm;
+					_control_output(i) = feedback_out[i];
+				}
+				_total_output(i) = math::constrain(_iolc_u_ff(i) + _control_output(i), 0.f, 1.f);
+			}
+
+			thrustcontroldata.bet_freestream_m_s = bet_freestream_m_s;
+			thrustcontroldata.bet_alpha_deg = bet_alpha_deg;
+			thrustcontroldata.bet_yaw_rate_rad_s = bet_yaw_rate_rad_s;
+			thrustcontroldata.bet_length_m = bet_length_m;
+
+			for (int i = 0; i < kMotorCount; ++i) {
+				thrustcontroldata.bet_achieved_lift_n[i] = bet_achieved_lift_n[i];
+				thrustcontroldata.motor_speed[i] = rpm_ff[i];
+				thrustcontroldata.bet_status[i] = bet_status[i];
+				thrustcontroldata.bet_iterations[i] = bet_iterations[i];
+				thrustcontroldata.deta_t[i] = dt_s[i];
+				thrustcontroldata.thrust_error[i] = thrust_error[i];
+				thrustcontroldata.thrust_desired[i] = _thrust_desired(i);
+				thrustcontroldata.thrust_feedback_out[i] = feedback_out[i];
+				thrustcontroldata.thrust_feedforward_out[i] = _iolc_u_ff(i);
+				thrustcontroldata.thrust_control_out[i] = _total_output(i);
+				thrustcontroldata.bet_lookup_time_us[i] = bet_lookup_time_us[i];
+				thrustcontroldata.motor_speed_meas[i] = rpm_meas[i];
+				thrustcontroldata.motor_speed_error[i] = rpm_error[i];
+				thrustcontroldata.rpm_loop_out[i] = rpm_loop_out[i];
+				thrustcontroldata.rpm_map_out[i] = rpm_map_out[i];
+				thrustcontroldata.rpm_loop_active[i] = rpm_loop_active[i];
+			}
+
+			thrustcontroldata.kp = kp;
+			thrustcontroldata.ki = ki;
+			thrustcontroldata.kd = _param_tfc_pid_kd.get();
+			thrustcontroldata.thrust_start = _param_tfc_start.get();
+
+			thrustcontroldata.timestamp = now;
+			_thrustcontroldata_pub.publish(thrustcontroldata);
+
+			if(_thrust_desired(0) >13.0f && _thrust_desired(0) < 17.0f){
+				thrustcontrol.control[0] = 0.408f; // 15N 对应的归一化控制量
+			}
+			else if(_thrust_desired(0) > 17.0f && _thrust_desired(0) < 22.0f){
+				thrustcontrol.control[0] = 0.530f; // 20N 对应的归一化控制量
+			}
+			else if(_thrust_desired(0) > 22.0f && _thrust_desired(0) < 27.0f){
+				thrustcontrol.control[0] = 0.641f; // 25N 对应的归一化控制量
+			}
+
+			if (thrustcontroldata.thrust_start > 0.5f && thrustcontroldata.thrust_start < 1.5f) {
+				for (int i = 0; i < kMotorCount; ++i) {
+					thrustcontrol.control[i] = thrustcontroldata.thrust_control_out[i];
+				}
+			}
+
+			thrustcontrol.timestamp = hrt_absolute_time();
+			_thrustcontrol_pub.publish(thrustcontrol);
+		}
+
+		px4_usleep(1000);
+	}
+
+	return 0;
+}

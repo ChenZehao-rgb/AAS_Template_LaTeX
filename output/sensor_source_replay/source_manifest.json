@@ -1,0 +1,92 @@
+[
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data_process\\sensor_source_replay_config.json",
+    "role": "frozen source coefficients, delay, bias and matched-filter settings",
+    "sha256": "40648988de16471870c243bc29f48fc2d3b6bd8cd47b2c34467ea8438d0f4711",
+    "bytes": 2289
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data_process\\plot_sensor_source_replay.py",
+    "role": "source-replay implementation",
+    "sha256": "38618ef8185704af8a034eac11d741bc7fad19035bbf84977b02c0f0f3bc7c7e",
+    "bytes": 9172
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data_process\\plot_sensor_offline_1s.py",
+    "role": "common drawing helpers",
+    "sha256": "891bedc27b7d1eca1a319d27adaa301bdf4dec3151912b7445c1d8cfe6924338",
+    "bytes": 11845
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\升力闭环测试\\analyze_closed_loop.py",
+    "role": "existing plotting style and ramp detector",
+    "sha256": "a73c4a77a51e40b468840c4a15a8d660ac4812a8dcaf6ee3097f1179f8ed10b5",
+    "bytes": 80479
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\output\\sensor_source_replay\\source_snapshot\\1ab74a37_thrust_feedback_control_bemt.cpp",
+    "role": "provided source or firmware-SHA history evidence",
+    "sha256": "b63f5a43e4df23279d51b7df267d2db7971d354f2ae6d4ea18dd8474bbb66373",
+    "bytes": 22850
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\output\\sensor_source_replay\\source_snapshot\\1ab74a37_thrust_kalman_filter.cpp",
+    "role": "provided source or firmware-SHA history evidence",
+    "sha256": "38cbd29799e56f88aaf11a5ef02ff26ca5ce9bcce2f56e980f484abc06f80220",
+    "bytes": 19548
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\output\\sensor_source_replay\\source_snapshot\\c774e3c4_thrust_feedback_control_bemt.cpp",
+    "role": "provided source or firmware-SHA history evidence",
+    "sha256": "ed5967bef78dec13eeb63f88f82d1b02bb616fa6a3361936bdcdc4e053f38833",
+    "bytes": 18139
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\output\\sensor_source_replay\\source_snapshot\\c774e3c4_thrust_kalman_filter.cpp",
+    "role": "provided source or firmware-SHA history evidence",
+    "sha256": "38cbd29799e56f88aaf11a5ef02ff26ca5ce9bcce2f56e980f484abc06f80220",
+    "bytes": 19548
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\output\\sensor_source_replay\\source_snapshot\\thrust_feedback_control.hpp",
+    "role": "provided source or firmware-SHA history evidence",
+    "sha256": "02cfb775bce13c68e00cb62860d1c1c460c2deefab4ad12c1df6a1e31e1da740",
+    "bytes": 11946
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\output\\sensor_source_replay\\source_snapshot\\thrust_feedback_control_bemt.cpp",
+    "role": "provided source or firmware-SHA history evidence",
+    "sha256": "ebdf71c6d5e6df6a8246bb3539188ae9b3350c4229cd1ae96449c82ab1350106",
+    "bytes": 25848
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\output\\sensor_source_replay\\source_snapshot\\thrust_kalman_filter.cpp",
+    "role": "provided source or firmware-SHA history evidence",
+    "sha256": "27eeb87cdb7f770245e9337e0fdf5c8cbd68cb67c899a71bb98c1f8a8d4868d1",
+    "bytes": 18903
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\output\\sensor_source_replay\\source_snapshot\\thrust_kalman_filter.hpp",
+    "role": "provided source or firmware-SHA history evidence",
+    "sha256": "888a8e4fa397577c61787ae53c329322b2d31f81780fcdacb74035591bedade1",
+    "bytes": 8374
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\未补偿-1s加速-无转速.ulg",
+    "role": "uncompensated native input for source-based offline reconstruction",
+    "sha256": "1ddba47623497513e95461a68f686fc5a68bed2d055e6a9b44148b90199bfc8c",
+    "bytes": 2908417
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\未补偿-5s加速-无转速测试.ulg",
+    "role": "uncompensated native input for source-based offline reconstruction",
+    "sha256": "ca322cdd9f68c08fa36bde73ca56eb9201eb1bbdff9869d98dfb991711ace5f8",
+    "bytes": 3181028
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\未补偿-10s加速-无转速测试.ulg",
+    "role": "uncompensated native input for source-based offline reconstruction",
+    "sha256": "62c53790defdff2f6c80a92600292aa0fe3827d35a0f31364042ec13553a6ced",
+    "bytes": 3082486
+  }
+]

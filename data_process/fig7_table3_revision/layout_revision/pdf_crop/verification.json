@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "PDF_export": {
+    "bbox_inches": "tight",
+    "pad_inches": 0.02
+  },
+  "old_page_cm": [
+    7.499999788072374,
+    12.999999991522897
+  ],
+  "new_page_cm": [
+    6.974551133049859,
+    12.254654659695095
+  ],
+  "all_text_positions_differ_only_by_page_translation": true,
+  "fonts_and_sizes_unchanged": true,
+  "vector_drawing_count_unchanged": true,
+  "protected_data_table_other_figures_unchanged": 40,
+  "visual_review": "Cropped PDF render inspected; both panel labels, legends, ticks and all axis titles complete."
+}

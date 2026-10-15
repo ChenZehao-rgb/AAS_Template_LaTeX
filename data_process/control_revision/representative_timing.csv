@@ -1,0 +1,4 @@
+﻿signal,baseline_median,plateau_median,t50_tau_s,interpretation
+freestream,0.18952244520187378,10.1901216506958,0.312027999999998,amplitude_event_time_not_phase_or_computation_delay
+model_rpm,4029.990234375,5290.24169921875,0.37309200000001397,amplitude_event_time_not_phase_or_computation_delay
+measured_rpm,4170.3255343948495,5153.515534055572,0.3000539999999887,amplitude_event_time_not_phase_or_computation_delay

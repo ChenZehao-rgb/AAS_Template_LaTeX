@@ -1,0 +1,73 @@
+{
+  "formula": "T_hat = T - A*a_z - B*a_x",
+  "A_kg": 0.361,
+  "B_kg": 0.033,
+  "axis_confirmation": "User explicitly confirmed positive xyz[1] for sensor-axis a_z and positive xyz[0] for radial a_x in this turn.",
+  "baseline_z_m_s2": 0.03592508126050234,
+  "baseline_x_m_s2": 0.2765257453918457,
+  "baseline_start_s": 167.097667,
+  "baseline_end_s": 169.597667,
+  "acc_time_field": "timestamp_sample",
+  "median_native_acc_sampling_interval_s": 0.04999100000000567,
+  "median_publish_minus_sample_s": 0.00040500000000065484,
+  "t10_s": 170.097667,
+  "t90_s": 170.895018,
+  "actual_10_90_s": 0.7973509999999919,
+  "evaluation_window_s": [
+    170.097667,
+    173.895018
+  ],
+  "before": {
+    "file": "未补偿-1s加速-无转速.ulg",
+    "nominal_ramp_s": 1,
+    "signal": "before_raw_converted",
+    "t10_s": 170.097667,
+    "t90_s": 170.895018,
+    "actual_10_90_s": 0.7973509999999919,
+    "evaluation_start_s": 170.097667,
+    "evaluation_end_s": 173.895018,
+    "samples": 379,
+    "rmse_N": 2.3053480961751216,
+    "max_abs_N": 5.7036,
+    "mean_bias_N": 0.19049234828496053
+  },
+  "after": {
+    "file": "未补偿-1s加速-无转速.ulg",
+    "nominal_ramp_s": 1,
+    "signal": "after_offline_eq23_raw",
+    "t10_s": 170.097667,
+    "t90_s": 170.895018,
+    "actual_10_90_s": 0.7973509999999919,
+    "evaluation_start_s": 170.097667,
+    "evaluation_end_s": 173.895018,
+    "samples": 379,
+    "rmse_N": 3.9046860314123855,
+    "max_abs_N": 10.336916486482828,
+    "mean_bias_N": -2.037403230855576
+  },
+  "before_peak": {
+    "tau_s": 0.13616300000001047,
+    "T_N": -5.7036
+  },
+  "after_peak": {
+    "tau_s": 0.13616300000001047,
+    "T_hat_N": -10.336916486482828
+  },
+  "motor_state": {
+    "pwm_min_us": 1000.0,
+    "pwm_max_us": 1000.0,
+    "rpm_samples": 390,
+    "nonzero_rpm_samples": 208,
+    "rpm_min": -1250.8712158203125,
+    "rpm_max": 0.0
+  },
+  "conditional_force_units": "Retain previous project-workbook 9.8/1000 convention; this ULog's firmware conversion remains unverified. No affine calibration transferred.",
+  "processing": {
+    "force_zero": "No offline force recentering, before or after. Both retain the sensor2 baseline.",
+    "acc_zero": "Subtract each selected acceleration axis's own pre-disturbance mean, using timestamp_sample. Removes static specific-force offset/gravity component under fixed mounting; no time-varying attitude gravity correction or data-derived sign selection.",
+    "filter": "none for both offline1s signals",
+    "synchronization": "Linear interpolation of acceleration at native force timestamps; no extrapolation and no fitted time shift."
+  },
+  "result_improves_rmse": false,
+  "independent_validation_status": "Unknown coefficient provenance; offline application to provided data, not actual online recorded output"
+}

@@ -1,0 +1,6 @@
+{
+  "data\\旋转测试数据汇总表_升力标定实验残差.xlsx": "2ede3b0731064d9b914c558736e810c980d0bda8027303f62b8e0e5a6d293482",
+  "data\\理论-实验对比结果.xlsx": "9adb6c09f403ec92e2845b77c789380b927fa8c6c6d9632424b154fbb7372708",
+  "data_process\\plot_theory_experiment_comparison.py": "60b3a891882d7aa3131f5810a6962f09a3456535739f0d07c7fbf5a474dc40c5",
+  "data_process\\plot_rotor_model_validation.py": "4de851512435d678e9c62b64938b01e0137b2012f0a916058c13f07f4a7509ad"
+}

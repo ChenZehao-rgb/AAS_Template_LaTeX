@@ -1,0 +1,25 @@
+{
+  "checks": {
+    "sources_unchanged": true,
+    "all_native_force_samples_preserved": true,
+    "shared_bias_first20_verified": true,
+    "unclipped_formula_verified": true,
+    "source_delay_sample_selection_verified": true,
+    "true_1s_ramp": true,
+    "negative_values_present_before_and_after_filter": true,
+    "rmse_recomputed": true,
+    "all_fonts_embedded": true,
+    "all_figures_vector": true,
+    "requested_annotation_removed": true,
+    "restored_common_y_range": true,
+    "all_1s_plotted_samples_inside_axes": true,
+    "deployed_matches_.pdf": true,
+    "deployed_matches_.png": true,
+    "deployed_matches__pdf_check.png": true,
+    "deployed_matches__155mm_preview.png": true
+  },
+  "all_pass": true,
+  "formula_max_abs_difference_N": 1.3535395027020058e-11,
+  "visual_review": "Standalone and combined previews inspected: full traces visible, labels readable, no overlap.",
+  "qualification": "User-confirmed offline formula with first20 logged bias; not exact recovery of module startup states."
+}

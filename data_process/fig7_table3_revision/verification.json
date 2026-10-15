@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "independent_source_recalculation": "all 231 CT pairs; all eight new/legacy table rows",
+  "threshold_counts": {
+    "5_percent": 144,
+    "10_percent": 197,
+    "N": 231
+  },
+  "protected_inputs_and_archive": "SHA256 unchanged",
+  "manuscript": "outside Figure 7 caption / Table 3 byte-identical",
+  "vector_pdf": "one page, no embedded images",
+  "limitation": "This validates frozen-pair arithmetic, not upstream density/rpm/noise consistency."
+}

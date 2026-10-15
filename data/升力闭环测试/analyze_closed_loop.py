@@ -8,6 +8,8 @@ tracking metrics, and generates publication-oriented summary figures.
 from __future__ import annotations
 
 import csv
+import argparse
+import hashlib
 import json
 import math
 import re
@@ -21,6 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
+from matplotlib.ticker import MultipleLocator
 from pyulog import ULog
 from scipy.ndimage import median_filter
 
@@ -57,6 +60,7 @@ COLORS = {
 }
 MARKERS = {"ff_fb": "o", "fb": "s", "static": "^"}
 METHOD_ORDER = ("static", "fb", "ff_fb")
+CLOSED_LOOP_METHODS = ("fb", "ff_fb")
 
 
 @dataclass
@@ -583,53 +587,65 @@ def _sparse_style(color: str, marker: str, stride: int) -> dict:
 
 
 def plot_freestream_ramp(runs: list[Run]) -> None:
-    """Standalone, single-column freestream-speed ramp curve.
+    """Manuscript Figure 8: 20 N FF+FB inflow, aligned at each run's t10.
 
-    Split out of plot_representative() so it can run alongside the body text in
-    one column, rather than eating full-width figure space for a curve whose
-    only job is to show the ramp shape used in fig10. Shares fig10's x-axis
-    range so the two figures read on the same time scale.
+    Retain the existing median-filtered measured-speed signal and 1 s style.
+    Time stays in seconds; each small dot marks that run's own t90. These
+    markers do not change the evaluation window [t10, t90 + 3 s].
     """
-    target_levels = (15, 20, 25)
-    by_target = {target_n: representative_runs(runs, target_n=target_n, ramp_s=1) for target_n in target_levels}
-    ramp_end = max(run.t90_s - run.t10_s for selected in by_target.values() for run in selected.values())
-    xlim = (-2.0, ramp_end + 4.0)  # matches plot_representative()'s x-axis range
-    reference = by_target[20]["ff_fb"]
+    ramp_levels = (1, 5, 10)
+    references = {
+        ramp_s: representative_runs(runs, target_n=20, ramp_s=ramp_s)["ff_fb"]
+        for ramp_s in ramp_levels
+    }
+    ramp_end = max(run.t90_s - run.t10_s for run in references.values())
+    xlim = (-2.0, ramp_end + 4.0)
+    ramp_styles = {
+        1: (COLORS["ff_fb"], "-"),
+        5: (COLORS["fb"], "--"),
+        10: (COLORS["static"], "-."),
+    }
 
     fig = plt.figure(figsize=(3.4, 1.6))
     ax = fig.add_subplot(111)
 
-    mask = (reference.tau_s >= xlim[0]) & (reference.tau_s <= xlim[1])
-    ax.plot(
-        reference.tau_s[mask],
-        reference.freestream_smooth_m_s[mask],
-        color=COLORS["ff_fb"],
-        linewidth=1.6,
-        zorder=2,
-    )
-    ax.axvspan(0.0, ramp_end, color="0.92", zorder=-3)
+    for ramp_s, reference in references.items():
+        color, linestyle = ramp_styles[ramp_s]
+        mask = (reference.tau_s >= xlim[0]) & (reference.tau_s <= xlim[1])
+        ax.plot(reference.tau_s[mask], reference.freestream_smooth_m_s[mask],
+                color=color, linestyle=linestyle, linewidth=1.6,
+                zorder=2, label=f"{ramp_s} s")
+        end_tau = reference.t90_s - reference.t10_s
+        index90 = int(np.argmin(np.abs(reference.tau_s - end_tau)))
+        ax.plot(reference.tau_s[index90], reference.freestream_smooth_m_s[index90],
+                marker="o", markersize=3.4, color=color, linestyle="none", zorder=3)
     ax.axvline(0.0, color=COLORS["neutral"], linestyle=":", linewidth=0.8, zorder=1)
     style_grid(ax)
     ax.set_xlim(*xlim)
-    ax.set_xlabel("时间 (s)")
+    ax.set_xlabel(r"$\tau=t-t_{10}$ (s)")
     ax.set_ylabel("来流速度 V∞ (m/s)")
     ymin, ymax = ax.get_ylim()
     ax.set_ylim(ymin, ymax + 0.12 * (ymax - ymin))
 
-    # Label lives inside the axes (not as a title in the margin above) so the
-    # figure crops tightly when it sits in a single text column.
-    ax.text(
-        ramp_end / 2,
-        ax.get_ylim()[1] - 0.04 * (ax.get_ylim()[1] - ax.get_ylim()[0]),
-        "10%–90% 加速段",
-        ha="center",
-        va="top",
-        fontsize=7,
-        color="0.35",
-    )
+    ax.legend(loc="lower right", frameon=False, handlelength=1.9)
 
     fig.subplots_adjust(left=0.20, right=0.97, top=0.95, bottom=0.28)
     save_figure(fig, "fig9_freestream_ramp")
+
+
+def set_closed_loop_error_limits(axes: list[plt.Axes]) -> None:
+    """Use all displayed closed-loop samples, with shared limits and headroom.
+
+    Include the existing tolerance bands and zero line; no percentile trimming
+    or processing of signals is performed here.
+    """
+    lower = min(axis.dataLim.ymin for axis in axes)
+    upper = max(axis.dataLim.ymax for axis in axes)
+    padding = 0.08 * max(upper - lower, 1.0)
+    limits = (math.floor((lower - padding) * 2) / 2,
+              math.ceil((upper + padding) * 2) / 2)
+    for axis in axes:
+        axis.set_ylim(*limits)
 
 
 def plot_representative(runs: list[Run]) -> None:
@@ -653,7 +669,8 @@ def plot_representative(runs: list[Run]) -> None:
             n_visible = int(np.count_nonzero(mask))
             style = _sparse_style(COLORS[method], MARKERS[method], max(1, n_visible // 12))
             ax_t.plot(run.tau_s[mask], run.measured_n[mask], linewidth=1.1, **style)
-            ax_e.plot(run.tau_s[mask], run.error_n[mask], linewidth=1.0, **style)
+            if method in CLOSED_LOOP_METHODS:
+                ax_e.plot(run.tau_s[mask], run.error_n[mask], linewidth=1.0, **style)
         ax_t.axhline(target_n, color=COLORS["target"], linestyle="--", linewidth=0.9, zorder=1)
         ax_e.axhline(0.0, color=COLORS["target"], linewidth=0.6, zorder=1)
         tolerance_n = 0.05 * target_n
@@ -664,6 +681,7 @@ def plot_representative(runs: list[Run]) -> None:
             style_grid(axis)
         ax_e.set_xlabel("时间 (s)")
         panel_label(ax_t, f"({chr(ord('a') + col)}) $T_c$ = {target_n} N", x=0.06, y=0.95)
+    set_closed_loop_error_limits(error_axes)
     thrust_axes[0].set_ylabel("升力 Tm (N)")
     error_axes[0].set_ylabel("误差 eT = Tc − Tm (N)")
     for axis in thrust_axes + error_axes:
@@ -710,30 +728,13 @@ def plot_representative_ramp_times(
     vary the freestream-acceleration time (1/5/10 s) at a fixed desired
     thrust instead of varying desired thrust at a fixed 1 s ramp.
 
-    The evaluation window drawn on each panel follows the manuscript's fig10
-    convention (10%-90% ramp + 3 s) only for the 1 s column, matching that
-    figure exactly. The 5 s and 10 s columns instead use the full 0%-100%
-    ramp span (immediate acceleration onset to plateau) + 3 s, since those
-    slower ramps are better characterized by their full transient than by an
-    interior 10%-90% slice.
+    Every panel uses the same 10%-90% ramp alignment as trial_metrics().
+    The shaded acceleration span ends at the 90% crossing; the RMSE window
+    additionally includes the following 3 s, for every nominal ramp time.
     """
     by_ramp = {
         ramp_s: representative_runs(runs, target_n=target_n, ramp_s=ramp_s) for ramp_s in ramp_levels
     }
-
-    # For the 5 s/10 s columns, recompute each run's own 0%-100% ramp span:
-    # Run only stores the 10%-90% crossings (t10_s/t90_s), and re-zeroing tau
-    # at each run's own onset mirrors how tau_s is already re-zeroed at each
-    # run's own t10_s for the 1 s column.
-    full_ramp: dict[Path, tuple[np.ndarray, float]] = {}
-    for ramp_s in ramp_levels:
-        if ramp_s == 1:
-            continue
-        for run in by_ramp[ramp_s].values():
-            _, t0, t100, _, _ = detect_ramp_thresholds(
-                run.timestamp_s, run.freestream_m_s, run.sampling_hz, 0.0, 1.0
-            )
-            full_ramp[run.path] = (run.timestamp_s - t0, t100 - t0)
 
     fig = plt.figure(figsize=(7.16, 4.85))
     grid = fig.add_gridspec(2, 3, height_ratios=(1.0, 1.0), hspace=0.16, wspace=0.36)
@@ -743,12 +744,8 @@ def plot_representative_ramp_times(
     for col, ramp_s in enumerate(ramp_levels):
         selected = by_ramp[ramp_s]
         ax_t, ax_e = thrust_axes[col], error_axes[col]
-        if ramp_s == 1:
-            tau_by_method = {method: run.tau_s for method, run in selected.items()}
-            ramp_end = max(run.t90_s - run.t10_s for run in selected.values())
-        else:
-            tau_by_method = {method: full_ramp[run.path][0] for method, run in selected.items()}
-            ramp_end = max(full_ramp[run.path][1] for run in selected.values())
+        tau_by_method = {method: run.tau_s for method, run in selected.items()}
+        ramp_end = max(run.t90_s - run.t10_s for run in selected.values())
         xlim = (-2.0, ramp_end + 4.0)
 
         for method in METHOD_ORDER:
@@ -758,7 +755,8 @@ def plot_representative_ramp_times(
             n_visible = int(np.count_nonzero(mask))
             style = _sparse_style(COLORS[method], MARKERS[method], max(1, n_visible // 12))
             ax_t.plot(tau[mask], run.measured_n[mask], linewidth=1.1, **style)
-            ax_e.plot(tau[mask], run.error_n[mask], linewidth=1.0, **style)
+            if method in CLOSED_LOOP_METHODS:
+                ax_e.plot(tau[mask], run.error_n[mask], linewidth=1.0, **style)
         ax_t.axhline(target_n, color=COLORS["target"], linestyle="--", linewidth=0.9, zorder=1)
         ax_e.axhline(0.0, color=COLORS["target"], linewidth=0.6, zorder=1)
         tolerance_n = 0.05 * target_n
@@ -770,6 +768,7 @@ def plot_representative_ramp_times(
             axis.set_xlim(*xlim)
         ax_e.set_xlabel("时间 (s)")
         panel_label(ax_t, f"({chr(ord('a') + col)}) $t_{{\\mathrm{{ramp}}}}$ = {ramp_s} s", x=0.06, y=0.95)
+    set_closed_loop_error_limits(error_axes)
     thrust_axes[0].set_ylabel("升力 Tm (N)")
     error_axes[0].set_ylabel("误差 eT = Tc − Tm (N)")
     for axis in thrust_axes:
@@ -805,6 +804,11 @@ def plot_representative_ramp_times(
     )
     fig.subplots_adjust(left=0.075, right=0.98, top=0.905, bottom=0.10, hspace=0.16, wspace=0.36)
     save_figure(fig, f"fig14_ramp_time_response_{target_n}N")
+    # The manuscript uses the Figure 10 filename; keep both names in sync.
+    if IMAGE_DIR.is_dir():
+        (IMAGE_DIR / f"fig10_ramp_time_response_{target_n}N.pdf").write_bytes(
+            (OUTPUT_DIR / f"fig14_ramp_time_response_{target_n}N.pdf").read_bytes()
+        )
 
 
 def condition_matrix(
@@ -987,95 +991,189 @@ def plot_speed_error(runs: list[Run]) -> None:
     save_figure(fig, "fig12_speed_error")
 
 
-def plot_mechanism(runs: list[Run]) -> None:
-    """Sized to sit in one column of the two-column layout (native width close
-    to the printed column width, so text is not shrunk by \\includegraphics)."""
-    ff = representative_runs(runs)["ff_fb"]
-    ramp_end_tau = ff.t90_s - ff.t10_s
-    mask = (ff.tau_s >= -2.0) & (ff.tau_s <= ramp_end_tau + 4.0)
-    n_visible = int(np.count_nonzero(mask))
-    stride = max(1, n_visible // 9)
+def mechanism_data(runs: list[Run]) -> tuple[dict, list[dict], list[dict], float]:
+    """Native RPM samples, common amplitude-event rules, and signal-stage audit.
 
-    def curve(axis: plt.Axes, values: np.ndarray, color: str, marker: str, label: str, **kwargs) -> None:
-        axis.plot(
-            ff.tau_s[mask],
-            values[mask],
-            color=color,
-            marker=marker,
-            markevery=stride,
-            markersize=2.8,
-            markerfacecolor="white",
-            markeredgecolor=color,
-            markeredgewidth=0.6,
-            linewidth=1.05,
-            label=label,
-            **kwargs,
-        )
-
-    fig, axes = plt.subplots(2, 1, figsize=(3.35, 4.1), sharex=True, gridspec_kw={"hspace": 0.16})
-    curve(axes[0], ff.model_rpm, COLORS["ff_fb"], "o", "模型转速")
-    curve(axes[1], ff.feedforward_out, COLORS["ff_fb"], "o", "前馈")
-
-    curve(axes[0], ff.measured_rpm, COLORS["fb"], "s", "编码器转速")
-    curve(axes[1], ff.feedback_out, COLORS["fb"], "s", "反馈")
-
-    axes[1].plot(
-        ff.tau_s[mask],
-        ff.total_out[mask],
-        color=COLORS["target"],
-        linestyle="--",
-        linewidth=0.9,
-        label="总量",
-        zorder=3,
-    )
-
-    # Freestream speed on a secondary axis lets panel (a) show the
-    # feedforward rpm command rising in step with the disturbance it is
-    # compensating for, without the reader having to cross-reference the
-    # freestream-ramp figure.
-    freestream_axis = axes[0].twinx()
-    freestream_axis.plot(
-        ff.tau_s[mask],
-        ff.freestream_smooth_m_s[mask],
-        color=COLORS["neutral"],
-        linestyle="--",
-        linewidth=0.8,
-        zorder=0,
-        label="来流速度",
-    )
-    freestream_axis.set_ylabel("来流速度 (m/s)", color=COLORS["neutral"], fontsize=8)
-    freestream_axis.tick_params(axis="y", colors=COLORS["neutral"], labelsize=7)
-    freestream_axis.spines["right"].set_color(COLORS["neutral"])
-    freestream_axis.grid(False)
-
-    axes[0].set_ylabel("转速 (rpm)")
-    axes[1].set_ylabel("控制量")
-    axes[1].set_xlabel("时间 (s)")
-
-    legend_kwargs = {
-        0: {"loc": "lower right"},
-        1: {"loc": "upper left", "bbox_to_anchor": (0.01, 0.88)},
+    The original inflow-based t10 is the ONLY origin; event times never shift
+    or stretch a signal. No new filtering, rejection, or RPM interpolation.
+    """
+    selected = {
+        method: next(r for r in runs if r.target_n == 20 and r.nominal_ramp_s == 1
+                     and r.method == method)
+        for method in ("ff_fb", "fb")
     }
-    for index, axis in enumerate(axes):
-        axis.axvspan(0.0, ramp_end_tau, color="0.95", zorder=-3)
-        axis.axvline(0.0, color=COLORS["neutral"], linestyle=":", linewidth=0.7, zorder=1)
-        style_grid(axis)
-    handles_a, labels_a = axes[0].get_legend_handles_labels()
-    handles_fs, labels_fs = freestream_axis.get_legend_handles_labels()
-    axes[0].legend(
-        handles_a + handles_fs,
-        labels_a + labels_fs,
-        frameon=False,
-        ncol=1,
-        handlelength=1.4,
-        fontsize=6.5,
-        **legend_kwargs[0],
-    )
-    axes[1].legend(frameon=False, ncol=1, handlelength=1.4, fontsize=6.5, **legend_kwargs[1])
-    panel_label(axes[0], "(a)")
-    panel_label(axes[1], "(b)")
-    fig.subplots_adjust(left=0.22, right=0.84, top=0.97, bottom=0.11, hspace=0.16)
+    xmax = max(r.t90_s - r.t10_s for r in selected.values()) + 4.0
+    signals, events, audits = {}, [], []
+    for method, run in selected.items():
+        ulog = ULog(str(run.path))
+        rpm = topic(ulog, "rpm")
+        rpm_tau = np.asarray(rpm["timestamp"], dtype=float) / 1e6 - run.t10_s
+        rpm_values = -np.asarray(rpm["rpm_raw"], dtype=float)
+        control = topic(ulog, "thrust_control_data")
+        mask = (run.tau_s >= -2.0) & (run.tau_s <= xmax)
+        residual = run.total_out - run.feedforward_out - run.feedback_out
+        # Compare one controller-stage field in both trials, never PWM against
+        # normalized components. Equality is verified only for this window.
+        if not np.allclose(residual[mask], 0.0, atol=1e-6, rtol=0):
+            raise ValueError(f"Unresolved total/component stage mismatch: {run.path.name}")
+        signals[method] = dict(run=run, rpm_tau=rpm_tau, rpm=rpm_values)
+        definitions = [("measured_rpm", rpm_tau, rpm_values)]
+        if method == "ff_fb":
+            definitions.append(("feedforward_reference_rpm", run.tau_s, run.model_rpm))
+        for name, tau, values in definitions:
+            baseline = (tau >= -2.0) & (tau <= -0.5)
+            plateau = ((tau >= run.t90_s - run.t10_s + 2.0)
+                       & (tau <= run.t90_s - run.t10_s + 3.0))
+            low, high = float(np.median(values[baseline])), float(np.median(values[plateau]))
+            if not high > low:
+                raise ValueError(f"No positive RPM increment: {run.path.name}, {name}")
+            for fraction in (0.2, 0.5, 0.8):
+                threshold = low + fraction * (high - low)
+                # First observed crossing after inflow t10; report the actual
+                # sample time (no sub-sample interpolation or smoothing).
+                index = np.flatnonzero((tau >= 0.0)
+                                       & (tau <= run.t90_s - run.t10_s + 3.0)
+                                       & (values >= threshold))[0]
+                events.append(dict(log=run.path.name, method=method, signal=name,
+                                   fraction=fraction, baseline_rpm=low, plateau_rpm=high,
+                                   threshold_rpm=threshold, event_tau_s=float(tau[index]),
+                                   event_observed_rpm=float(values[index]),
+                                   interpretation="amplitude_event_not_tracking_error_or_delay"))
+        rawmask = (rpm_tau >= -2.0) & (rpm_tau <= xmax)
+        ids = np.flatnonzero(rawmask)
+        # Preserve the complete raw sequence. Record large steps as observations,
+        # without claiming a diagnosed sensor fault or removing the samples.
+        jumps = []
+        for i in ids[1:]:
+            step = float(rpm_values[i] - rpm_values[i - 1])
+            if abs(step) >= 500:
+                jumps.append(dict(tau_s=float(rpm_tau[i]), rpm=float(rpm_values[i]),
+                                  step_rpm=step, retained=True))
+        audits.append(dict(
+            log=run.path.name, sha256=hashlib.sha256(run.path.read_bytes()).hexdigest(),
+            method=method, firmware=ulog.msg_info_dict.get("ver_sw"),
+            t10_s=run.t10_s, t90_s=run.t90_s, tau_window_s=[-2.0, xmax],
+            inflow_low_m_s=run.baseline_low_m_s, inflow_high_m_s=run.plateau_high_m_s,
+            total_field="thrust_control_data.thrust_control_out[0]",
+            component_fields=["thrust_feedforward_out[0]", "thrust_feedback_out[0]"],
+            unit="dimensionless normalized controller command; no rescaling",
+            stage="logged controller summation node, upstream of final PWM/ESC output",
+            sum_residual_max_abs=float(np.max(np.abs(residual[mask]))),
+            total_range=[float(np.min(run.total_out[mask])), float(np.max(run.total_out[mask]))],
+            feedback_range=[float(np.min(run.feedback_out[mask])), float(np.max(run.feedback_out[mask]))],
+            feedforward_range=[float(np.min(run.feedforward_out[mask])), float(np.max(run.feedforward_out[mask]))],
+            pid={key: np.unique(control[key][mask]).tolist() for key in ("kp", "ki", "kd")},
+            rpm_loop_active=np.unique(control["rpm_loop_active[0]"][mask]).tolist(),
+            rpm_source="rpm.rpm_raw, sign reversed to positive rotor speed, native timestamps",
+            rpm_samples_plotted=int(np.count_nonzero(rawmask)), rpm_samples_removed=0,
+            rpm_steps_at_least_500_rpm=jumps,
+            limitation="Firmware source unavailable here: exact internal limiter ordering is not asserted. "
+                       "Window sum equality is not a general post-limit identity. "
+                       "Logged PWM fields are zero and are not used as applied outputs.",
+        ))
+    return signals, events, audits, xmax
+
+
+def plot_mechanism(runs: list[Run]) -> None:
+    """Manuscript Fig. 12: compact controller-output and native-RPM comparison.
+
+    Presentation only: mechanism_data retains all original alignment, native
+    samples, and event calculations; events remain exported but are not drawn.
+    """
+    signals, events, audits, xmax = mechanism_data(runs)
+    ff = signals["ff_fb"]["run"]
+    ramp_end_tau = ff.t90_s - ff.t10_s
+    reference_color = "#222222"
+    feedback_color = COLORS["static"]  # independently identifiable teal
+    long_dash = (0, (7, 3))
+    fig, (ax_control, ax_rpm) = plt.subplots(
+        2, 1, figsize=(3.45, 3.35), sharex=True,
+        gridspec_kw={"hspace": 0.10})
+    for method in ("ff_fb", "fb"):
+        run = signals[method]["run"]
+        mask = (run.tau_s >= -2.0) & (run.tau_s <= xmax)
+        label = method.upper().replace("_", "+")
+        ax_control.plot(run.tau_s[mask], run.total_out[mask],
+                        color=COLORS[method], lw=0.85,
+                        label=label + "总输出", zorder=3)
+        tau, rpm = signals[method]["rpm_tau"], signals[method]["rpm"]
+        mask = (tau >= -2.0) & (tau <= xmax)
+        ax_rpm.plot(tau[mask], rpm[mask], color=COLORS[method], lw=0.85,
+                    label=label + "实测", zorder=3)
+    mask = (ff.tau_s >= -2.0) & (ff.tau_s <= xmax)
+    # Draw the independent dark reference last to preserve its dashed trace
+    # where it coincides with measured or total-output curves.
+    ax_control.plot(ff.tau_s[mask], ff.feedforward_out[mask],
+                    color=reference_color, ls=long_dash, lw=0.95,
+                    label="前馈分量", zorder=5)
+    ax_control.plot(ff.tau_s[mask], ff.feedback_out[mask],
+                    color=feedback_color, ls="-", lw=0.70,
+                    label="反馈分量", zorder=4)
+    ax_control.axhline(0, color="0.4", lw=0.5, zorder=1)
+    ax_rpm.plot(ff.tau_s[mask], ff.model_rpm[mask],
+                color=reference_color, ls=long_dash, lw=0.85,
+                label="前馈参考", zorder=5)
+    for ax, label in zip((ax_control, ax_rpm), ("(a) 控制输出", "(b) 转速响应")):
+        ax.set_xlim(-2.0, xmax)
+        # Same acceleration-segment meaning/style as Fig. 9/10, with one
+        # shared boundary from the FF+FB trial; this is not the full window.
+        ax.axvspan(0.0, ramp_end_tau, color="0.95", zorder=-3)
+        ax.axvline(0.0, color=COLORS["neutral"], ls=":", lw=0.7, zorder=1)
+        style_grid(ax)
+        ax.text(0.025, 0.96, label, transform=ax.transAxes,
+                ha="left", va="top", fontsize=8.5)
+        ax.xaxis.set_major_locator(MultipleLocator(1.0))
+    ax_control.set_ylim(-0.10, 1.10)
+    ax_control.set_ylabel("归一化控制量")
+    ax_control.yaxis.set_major_locator(MultipleLocator(0.2))
+    ax_control.tick_params(labelbottom=False)
+    ax_rpm.set_ylim(3900, 6100)
+    ax_rpm.set_ylabel("转速 (rpm)")
+    ax_rpm.set_xlabel(r"$\tau=t-t_{10}$ (s)", labelpad=3)
+    ax_rpm.yaxis.set_major_locator(MultipleLocator(500))
+    # The middle band is empty in panel (a); the upper right is empty in (b),
+    # clear of the retained isolated FB speed drop near tau=2.8 s.
+    ax_control.legend(loc="center", bbox_to_anchor=(0.52, 0.34), ncol=2,
+                      frameon=False, handlelength=2.3, columnspacing=0.85,
+                      handletextpad=0.5, borderaxespad=0.2, labelspacing=0.25)
+    ax_rpm.legend(loc="upper right", frameon=False, handlelength=2.3,
+                  handletextpad=0.5, borderaxespad=0.35, labelspacing=0.25)
+    fig.subplots_adjust(left=0.20, right=0.985, bottom=0.15, top=0.985,
+                        hspace=0.10)
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    write_csv(OUTPUT_DIR / "fig12_rpm_events.csv", events)
+    audit = dict(figure="Manuscript Figure 12", trials=audits,
+                 source_script_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                 alignment="Each trial tau=t-own_inflow_t10; inherited 0.35 s median detector only for alignment. "
+                           "Displayed RPM is unfiltered; no event alignment or time scaling. Inflow is not displayed.",
+                 event_rule="First native sample at/after own inflow t10 crossing 20/50/80% of own "
+                            "median RPM increment: baseline tau [-2,-0.5] s; "
+                            "plateau [t90+2,t90+3] s. Reference uses the identical rule.",
+                 quality_rule="No finite native RPM samples removed. Large steps recorded, not diagnosed as faults.",
+                 colors={m: COLORS[m] for m in ("ff_fb", "fb")})
+    audit["presentation"] = dict(
+        main_panels=["controller_outputs", "rotor_speeds"],
+        acceleration_shading_tau_s=[0.0, ramp_end_tau],
+        acceleration_shading_trial="ff_fb", acceleration_shading_gray="0.95",
+        evaluation_window="[t10, t90+3 s], distinct from 10%-90% acceleration shading",
+        feedforward_reference_color=reference_color, feedback_component_color=feedback_color,
+        events_displayed=False, events_preserved_in_csv=True, export_png_dpi=400)
+    audit["figure_table_trace"] = dict(
+        source_data=[{"file": str(signals[m]["run"].path), "sha256": a["sha256"]}
+                     for m, a in zip(("ff_fb", "fb"), audits)],
+        transformation={"script": str(Path(__file__).resolve()),
+                        "hash": audit["source_script_sha256"]},
+        caption_claim="Controller summation-node outputs and components, "
+                      "measured and feedforward-reference RPM for the two 20 N/1 s trials.",
+        supported_manuscript_claims=["At the 50% own-platform-increment event, FF+FB measured "
+                                     "RPM crosses about 0.14 s before FB measured RPM."],
+        limitations=["One trial per method; first crossings retain sensor fluctuations.",
+                     "Own-platform amplitude events are not phase/transport delay estimates.",
+                     "Exact firmware limiter ordering cannot be established from these logs alone."])
+    (OUTPUT_DIR / "fig12_signal_audit.json").write_text(
+        json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     save_figure(fig, "fig13_feedforward_mechanism")
+
 
 
 def write_text_summary(
@@ -1523,12 +1621,33 @@ def write_report_artifact(
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--figure12-only", action="store_true",
+                        help="Regenerate only manuscript Figure 12 and its signal audit.")
+    parser.add_argument("--figures8-10-only", action="store_true",
+                        help="Regenerate manuscript Figures 8-10 without writing metrics or other figures.")
+    args = parser.parse_args()
+    if args.figure12_only and args.figures8_10_only:
+        parser.error("Choose only one figure-only mode.")
     configure_plotting()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     paths = sorted(DATA_DIR.glob("*.ulg"), key=lambda item: int(item.name.split("-")[0]))
     if not paths:
         raise FileNotFoundError(f"No ULog files found in {DATA_DIR}")
+    if args.figure12_only:
+        paths = [p for p in paths if parse_filename(p)[1:3] == (20, 1)
+                 and parse_filename(p)[3] in ("ff_fb", "fb")]
+        runs = [load_run(path) for path in paths]
+        plot_mechanism(runs)
+        print(f"Updated manuscript Figure 12 and audit: {OUTPUT_DIR}")
+        return
     runs = [load_run(path) for path in paths]
+    if args.figures8_10_only:
+        plot_freestream_ramp(runs)
+        plot_representative(runs)
+        plot_representative_ramp_times(runs)
+        print(f"Updated manuscript Figures 8-10: {OUTPUT_DIR}")
+        return
     trial_rows = [trial_metrics(run) for run in runs]
     condition_rows = aggregate_conditions(trial_rows)
     comparison_rows = comparison_conditions(condition_rows)

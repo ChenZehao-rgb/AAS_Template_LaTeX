@@ -1,0 +1,48 @@
+{
+  "static": {
+    "Dmax_pct": 4.197739995989233,
+    "u_at_Dmax": 0.268,
+    "common_u": [
+      0.187769231,
+      0.899959184
+    ],
+    "interpretation": "four sweeps in two cycles, not four independent test repetitions",
+    "method": "piecewise linear n(u), no extrapolation, common interval; union of all knots plus dense sampling; adjacent duplicate plateau means averaged equally because sample counts unavailable"
+  },
+  "dynamic_inflow": {
+    "selected_files": [
+      "7-15-1s加速-静态.ulg",
+      "8-20-1s加速-静态.ulg",
+      "9-25-1s加速-静态.ulg"
+    ],
+    "max_pairwise_aligned_smoothed_v_difference_m_s": 0.2648802165852473,
+    "actual_10_90_span_range_s": [
+      0.8060150000000021,
+      0.8197940000000017
+    ],
+    "high_plateau_range_m_s": [
+      10.124305725097656,
+      10.188745498657227
+    ],
+    "representative_file": "8-20-1s加速-静态.ulg"
+  },
+  "sensor_conversion": {
+    "N_per_sensor_unit": 0.0098,
+    "offset_sensor_units": 0.0,
+    "status": "project gram-force conversion convention, 9.8/1000; application to these ULogs not firmware-verified, user requested direct data plotting",
+    "evidence": "data/旋转测试数据汇总表_升力标定实验残差.xlsx: 3000rpm!H3 uses sensor2 reading differences times 9.8/1000; 升力标定计算!B6=9.8, B7=1000. The separate affine correction in that workbook is model-dataset-specific and is NOT silently transferred to these ULogs. No extra zero offset is applied here."
+  },
+  "sensor_main_files": [
+    "已补偿--1s加速-无转速测试.ulg",
+    "已补偿--5s加速-无转速测试.ulg",
+    "已补偿-10s加速-无转速测试.ulg"
+  ],
+  "limitations": [
+    "CSV plateau extraction cannot be re-audited without native static logs",
+    "Static CSV normalized command node is not recoverable from the two columns; u_cal and u_cmd are distinct labels",
+    "Nominal 1s compensated log actually has 4.083s 10-90% acceleration",
+    "Sensor-coordinate projection, gravity removal, zeroing, online filter and coefficient provenance are not source-verified at user direction",
+    "Before-raw versus after-filtered display is not an isolated compensation-only or filter-matched validation",
+    "Motor-off files contain sparse nonzero encoder readings despite fixed disarmed PWM; no RPM outliers removed or strict zero invented"
+  ]
+}

@@ -28,6 +28,8 @@ Outputs
 Image/fig9_rotor_model_diagnostics.{pdf,png}
 data_process/model_validation_metrics.csv
 data_process/model_validation_metrics_by_angle.csv
+data_process/model_validation_binned_residuals.csv
+data_process/model_validation_binned_residuals_by_angle.csv
 data_process/model_validation_table.tex
 data_process/model_validation_summary.json
 """
@@ -168,6 +170,55 @@ def regression_stats(curves: pd.DataFrame) -> dict[str, float | int]:
         "within_0_0005_fraction": float(np.mean(np.abs(residual) <= 0.0005)),
         "within_0_001_fraction": float(np.mean(np.abs(residual) <= 0.001)),
     }
+
+
+def binned_residuals(curves: pd.DataFrame) -> pd.DataFrame:
+    """Residuals of the binned means: experiment minus theory.
+
+    Each row is one operating point, not an independent experimental repeat.
+    Relative residuals use the matched theoretical C_T, unlike Table 3's
+    normalization by the theoretical hover coefficient.
+    """
+    columns = ["rpm_nom", "alpha_deg", "J", "C_T_exp", "C_T_theory"]
+    result = curves[columns].copy()
+    if result.empty or not np.isfinite(result.to_numpy(dtype=float)).all():
+        raise ValueError("Binned residuals require nonempty, finite operating-point data.")
+    if (result["C_T_theory"] <= 0).any():
+        raise ValueError("Relative residuals require positive theoretical C_T.")
+    if not result["alpha_deg"].isin(ANGLE_LEVELS).all():
+        raise ValueError("Unexpected disk angle in binned curves.")
+    if not result["rpm_nom"].isin(RPM_LEVELS).all():
+        raise ValueError("Unexpected rotational speed in binned curves.")
+    result["residual"] = result["C_T_exp"] - result["C_T_theory"]
+    result["relative_residual_pct"] = 100 * result["residual"] / result["C_T_theory"]
+    return result
+
+
+def build_binned_residual_metrics(residuals: pd.DataFrame) -> pd.DataFrame:
+    """Describe the same per-angle distributions displayed in Figure 7(b)."""
+    rows = []
+    for angle, group in residuals.groupby("alpha_deg", sort=True):
+        residual = group["residual"]
+        q1, median, q3 = residual.quantile([0.25, 0.5, 0.75])
+        iqr = q3 - q1
+        in_fences = residual.between(q1 - 1.5 * iqr, q3 + 1.5 * iqr)
+        rows.append({
+            "alpha_deg": int(angle),
+            "n_binned_points": int(len(group)),
+            "residual_mean": float(residual.mean()),
+            "residual_q1": float(q1),
+            "residual_median": float(median),
+            "residual_q3": float(q3),
+            "residual_iqr": float(iqr),
+            "whisker_low": float(residual.loc[in_fences].min()),
+            "whisker_high": float(residual.loc[in_fences].max()),
+            "negative_count": int((residual < 0).sum()),
+            "negative_fraction": float((residual < 0).mean()),
+            "within_0_0005_fraction": float((residual.abs() <= 0.0005).mean()),
+            "relative_residual_median_pct": float(group["relative_residual_pct"].median()),
+            "median_abs_relative_residual_pct": float(group["relative_residual_pct"].abs().median()),
+        })
+    return pd.DataFrame(rows)
 
 
 def _pooled_point_stats(points: pd.DataFrame) -> dict[str, float | int]:
@@ -404,8 +455,12 @@ def plot_comparison(curves: pd.DataFrame, image_dir: Path) -> None:
 def plot_diagnostics(
     curves: pd.DataFrame, regression: dict[str, float | int], image_dir: Path
 ) -> None:
-    """Generate the theory-experiment parity plot."""
-    fig, parity_ax = plt.subplots(figsize=(3.6, 3.15))
+    """Parity and per-angle residual distributions of the same binned points."""
+    residuals = binned_residuals(curves)
+    fig = plt.figure(figsize=(3.6, 6.0))
+    gs = fig.add_gridspec(2, 1, height_ratios=[1.4, 1.0], hspace=0.20)
+    parity_ax = fig.add_subplot(gs[0])
+    residual_ax = fig.add_subplot(gs[1])
 
     for rpm in RPM_LEVELS:
         subset = curves.loc[curves["rpm_nom"] == rpm]
@@ -453,7 +508,47 @@ def plot_diagnostics(
         bbox={"facecolor": "white", "edgecolor": "0.75", "linewidth": 0.5, "alpha": 0.9},
     )
 
-    fig.subplots_adjust(left=0.17, right=0.97, top=0.96, bottom=0.17)
+    parity_ax.set_title("(a)", loc="left", fontweight="bold")
+
+    # Scale only the displayed ordinate; exported residuals remain in C_T units.
+    values = [
+        1000 * residuals.loc[residuals["alpha_deg"] == angle, "residual"].to_numpy()
+        for angle in ANGLE_LEVELS
+    ]
+    residual_ax.axhspan(-0.5, 0.5, color="0.93", zorder=0)
+    residual_ax.axhline(0, color="0.25", lw=0.85, linestyle="--", zorder=1)
+    for threshold in (-0.5, 0.5):
+        residual_ax.axhline(threshold, color="0.65", lw=0.55, linestyle=":", zorder=1)
+    residual_ax.boxplot(
+        values, positions=np.arange(len(ANGLE_LEVELS)), widths=0.65,
+        patch_artist=True, whis=1.5, showfliers=False,
+        boxprops={"facecolor": "#DFEAF0", "edgecolor": "0.3", "linewidth": 0.7},
+        medianprops={"color": "0.1", "linewidth": 1.3},
+        whiskerprops={"color": "0.3", "linewidth": 0.7},
+        capprops={"color": "0.3", "linewidth": 0.7},
+    )
+    # Show every point, including boxplot outliers. Fixed offsets distinguish
+    # rpm series without implying another quantitative horizontal variable.
+    for position, angle in enumerate(ANGLE_LEVELS):
+        for rpm, offset in zip(RPM_LEVELS, (-0.19, 0, 0.19)):
+            group = residuals.loc[
+                (residuals["alpha_deg"] == angle) & (residuals["rpm_nom"] == rpm)
+            ].sort_values("J")
+            residual_ax.scatter(
+                np.full(len(group), position + offset), 1000 * group["residual"],
+                s=10, marker=RPM_MARKERS[rpm], facecolors="none",
+                edgecolors=RPM_COLORS[rpm], linewidths=0.55, alpha=0.8, zorder=3,
+            )
+    residual_ax.set_xticks(np.arange(len(ANGLE_LEVELS)), labels=ANGLE_LEVELS)
+    residual_ax.set_xlabel(r"桨盘攻角 $\alpha_p$ ($^\circ$)", fontfamily=CJK_FONT_FAMILY)
+    residual_ax.set_ylabel(r"$\delta C_T$ ($\times10^{-3}$)")
+    residual_ax.set_title("(b)", loc="left", fontweight="bold")
+    residual_ax.text(
+        0.98, 0.96, "33 points per angle", transform=residual_ax.transAxes,
+        ha="right", va="top", fontsize=7,
+    )
+    residual_ax.grid(axis="y", color="0.88", linewidth=0.45, linestyle=":", zorder=0)
+    fig.subplots_adjust(left=0.19, right=0.97, top=0.96, bottom=0.085)
     _save_figure(fig, image_dir / "fig9_rotor_model_diagnostics")
 
 
@@ -464,6 +559,7 @@ def write_outputs(
     regression: dict[str, float | int],
     repeatability: dict[str, float],
     output_dir: Path,
+    workbook_path: Path = DEFAULT_WORKBOOK,
 ) -> None:
     """Write auditable numeric summaries and the LaTeX table body."""
     point_metrics.to_csv(output_dir / "model_validation_metrics.csv", index=False, encoding="utf-8-sig")
@@ -473,10 +569,21 @@ def write_outputs(
     sheets["curves"].to_csv(
         output_dir / "model_validation_four_branch_mean.csv", index=False, encoding="utf-8-sig"
     )
+    residuals = binned_residuals(sheets["curves"])
+    binned_metrics = build_binned_residual_metrics(residuals)
+    residuals.to_csv(
+        output_dir / "model_validation_binned_residuals.csv", index=False, encoding="utf-8-sig"
+    )
+    binned_metrics.to_csv(
+        output_dir / "model_validation_binned_residuals_by_angle.csv", index=False, encoding="utf-8-sig"
+    )
 
     overall = point_metrics.loc[point_metrics["group"] == "Overall"].iloc[0]
     summary = {
-        "source_workbook": str(DEFAULT_WORKBOOK.relative_to(ROOT)),
+        "source_workbook": str(
+            workbook_path.resolve().relative_to(ROOT)
+            if workbook_path.resolve().is_relative_to(ROOT) else workbook_path.resolve()
+        ),
         "n_conditions": int(len(sheets["summary"])),
         "n_curve_points": int(len(sheets["curves"])),
         "n_raw_samples": int(len(sheets["points"])),
@@ -499,6 +606,15 @@ def write_outputs(
             for row in angle_metrics.to_dict(orient="records")
         ],
         "regression_on_binned_curves": regression,
+        "binned_residual_distribution": {
+            "source_sheet": "分档曲线_可直接作图",
+            "population": "One binned mean per operating point; all three rpm levels pooled per angle",
+            "residual_definition": "C_T_exp - C_T_theory; negative means theoretical overprediction",
+            "relative_residual_definition": "100 * residual / C_T_theory",
+            "boxplot": "Q1 to Q3, median, whiskers to data within 1.5 IQR; all points overlaid",
+            "median_abs_relative_residual_pct": float(residuals["relative_residual_pct"].abs().median()),
+            "by_angle": binned_metrics.to_dict(orient="records"),
+        },
         "repeatability": repeatability,
     }
     (output_dir / "model_validation_summary.json").write_text(
@@ -560,7 +676,7 @@ def main() -> None:
     repeatability = repeatability_stats(sheets["hysteresis"])
 
     plot_diagnostics(sheets["curves"], regression, image_dir)
-    write_outputs(sheets, point_metrics, angle_metrics, regression, repeatability, output_dir)
+    write_outputs(sheets, point_metrics, angle_metrics, regression, repeatability, output_dir, workbook_path)
 
     print(point_metrics.to_string(index=False))
     print(angle_metrics.to_string(index=False))

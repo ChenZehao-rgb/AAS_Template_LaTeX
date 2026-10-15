@@ -1,0 +1,35 @@
+{
+  "output_dir": "output/deployment_sensor_figures",
+  "static_csv": "data/rpm_normalized.csv",
+  "static_groups": [
+    {"id": "up_1", "label": "上沿 1", "csv_rows_1based": [1, 17]},
+    {"id": "down_1", "label": "下沿 1", "csv_rows_1based": [17, 30]},
+    {"id": "up_2", "label": "上沿 2", "csv_rows_1based": [31, 46]},
+    {"id": "down_2", "label": "下沿 2", "csv_rows_1based": [46, 59]}
+  ],
+  "static_group_provenance": "User confirmed two ascending and two descending sweeps; turning point shared by adjacent sweeps. CSV rows count data rows, excluding header.",
+  "static_u_node_status": "unconfirmed: CSV contains only control_normalized and rpm_mean",
+  "static_point_cluster_tolerance_u": 0.002,
+  "static_fit_include_stopped": false,
+  "dynamic_dir": "D:/1-phd_data/3-research_data/quadrotor/0 paper/2-高机动测试台/实验数据/旋转台测试/升力模型+闭环控制/20260822",
+  "sensor_dir": "data/传感器补偿",
+  "main_dynamic_nominal_ramp_s": 1,
+  "baseline_relative_t10_s": [-3.0, -0.5],
+  "disturbance_window": "[t10, t90 + 3 s]",
+  "plateau_relative_t90_s": [2.0, 3.0],
+  "plot_relative_bounds": "[-3 s, own (t90-t10)+4 s]; dynamic main uses maximum end across selected trials",
+  "inflow_detection": "Reuse analyze_closed_loop.detect_ramp: 0.35 s median, low=median first 5 s, high=median upper decile, sustained 90% crossing 0.25 s; last 10% crossing before that",
+  "dynamic_rpm_source": "rpm.rpm_raw (mechanical AS5600 encoder per manuscript), reverse sign, native timestamps, no smoothing or trimming",
+  "dynamic_u_source": "thrust_control.control[0], final commanded normalized value; separately audit actuator_outputs multi_id=0 output[0] PWM",
+  "sensor_A_kg": 0.361,
+  "sensor_B_kg": 0.033,
+  "sensor_conversion": {
+    "N_per_sensor_unit": 0.0098,
+    "offset_sensor_units": 0.0,
+    "status": "project gram-force conversion convention, 9.8/1000; application to these ULogs not firmware-verified, user requested direct data plotting",
+    "evidence": "data/旋转测试数据汇总表_升力标定实验残差.xlsx: 3000rpm!H3 uses sensor2 reading differences times 9.8/1000; 升力标定计算!B6=9.8, B7=1000. The separate affine correction in that workbook is model-dataset-specific and is NOT silently transferred to these ULogs. No extra zero offset is applied here."
+  },
+  "sensor_same_record_priority": true,
+  "sensor_nominal_1s_filename_issue": "已补偿--1s has measured 10-90% span 4.083 s, essentially same as 5s. Do not call it 1s without clarification.",
+  "export": {"png_dpi": 600, "pdf_fonttype": 42, "padding_inch": 0.03}
+}

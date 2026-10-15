@@ -1,0 +1,42 @@
+[
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\补偿-rawdate显示限幅.ulg",
+    "role": "new true 1s source log",
+    "sha256": "4a74ccf38a7cbd326de1e7c2bc125abf177ede5725a908d043044f7cf2ef7d45"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data_process\\plot_sensor_new_1s_reconstruction.py",
+    "role": "reconstruction and rendering",
+    "sha256": "ce768637d270e07ee983f0aa50cbbc537c4a67df483fd0578515abf785e16123"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data_process\\plot_sensor_source_replay.py",
+    "role": "fixed delay and Kalman helpers",
+    "sha256": "38618ef8185704af8a034eac11d741bc7fad19035bbf84977b02c0f0f3bc7c7e"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data_process\\sensor_source_replay_config.json",
+    "role": "frozen source formula and filter settings",
+    "sha256": "40648988de16471870c243bc29f48fc2d3b6bd8cd47b2c34467ea8438d0f4711"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\升力闭环测试\\analyze_closed_loop.py",
+    "role": "existing chart style and inflow detector",
+    "sha256": "a73c4a77a51e40b468840c4a15a8d660ac4812a8dcaf6ee3097f1179f8ed10b5"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\output\\sensor_offline_1s\\source_snapshot\\thrust_feedback_control_bemt.cpp",
+    "role": "provided source formula snapshot",
+    "sha256": "ebdf71c6d5e6df6a8246bb3539188ae9b3350c4229cd1ae96449c82ab1350106"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\已补偿--5s加速-无转速测试.ulg",
+    "role": "preserved 5s/10s original online comparison",
+    "sha256": "26e916cfd4898be66d9453447cd7e0b8f726944bd5a1a6858940644f751bf4b2"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\已补偿-10s加速-无转速测试.ulg",
+    "role": "preserved 5s/10s original online comparison",
+    "sha256": "756e83a96b284de1825408bdf0e22dc06f1d1be0fd65efdda955b73cbf4671cd"
+  }
+]

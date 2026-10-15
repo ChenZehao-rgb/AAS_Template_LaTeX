@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "input": "unchanged condition_details.csv; cached CT and signed relative errors",
+  "N": 231,
+  "conditions_per_angle": 33,
+  "data_table_other_figure_files_hash_unchanged": 40,
+  "manuscript": "only Figure 7 caption replaced; Table 3 and all remaining bytes unchanged",
+  "panel_a": "no percentage annotation; rpm legend and reference-line legend retained",
+  "panel_b": "7 boxes computed from all data; no raw scatter or flier artists; full axis range retained",
+  "canvas_size_cm": [
+    7.5,
+    13.0
+  ],
+  "PDF_page_boundary": "tight bbox, pad_inches=0.02; internal layout unchanged",
+  "PNG_dpi": 600,
+  "statistics_recomputed": false,
+  "full_paper_recompiled": false
+}

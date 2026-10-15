@@ -1,0 +1,30 @@
+{
+  "checks": {
+    "all_used_sources_match_recorded_sha256": true,
+    "A_primary_axes_left_right_aligned": true,
+    "B_all_six_y_limits_and_ticks_identical": true,
+    "B_paired_x_ranges_identical": true,
+    "all_pdf_fonts_embedded": true,
+    "PDFs_are_vector_without_raster_image_objects": true,
+    "pdf_contains_expected_chinese": true,
+    "headline_static_spread_recomputed": true,
+    "all_9_dynamic_trials_included": true,
+    "main_dynamic_native_metrics_independently_recomputed": true,
+    "no_whole_process_below_5percent_claim": true,
+    "all_B_native_visible_data_inside_common_y_limits_and_RMSE_recomputed": true,
+    "manuscript_and_existing_fig8_12_files_unchanged": true
+  },
+  "all_automated_checks_pass": true,
+  "maximum_native_dynamic_metric_difference": 4.069633519065974e-12,
+  "static_Dmax_recomputed_pct": 4.197739995989233,
+  "methodology_limits": {
+    "static_native_stable_segment_reextraction": "UNAVAILABLE: CSV only contains exported means; user confirmed four sweeps",
+    "static_and_dynamic_control_node_equivalence": "UNCONFIRMED: distinct labels u_cal/u_cmd retained",
+    "true_1s_compensation_pair": "UNAVAILABLE: compensated file-labeled1s has 4.083s acceleration",
+    "filter_matched_compensation_effect": "UNAVAILABLE: online filter implementation absent, raw vs online-filtered display disclosed",
+    "equation23_coordinate_gravity_bias_and_coeff_provenance": "UNVERIFIED: user instructed direct provided-data plotting without source investigation",
+    "sensor2_conversion_for_these_ULogs": "CONDITIONAL: 0.0098 N/unit from project workbook convention, not these firmware versions",
+    "strictly_zero_mechanical_rpm": "UNCONFIRMED: fixed1000us PWM with sparse nonzero encoder samples",
+    "visual_review": "performed on PDF renders and 155mm previews; see README and final delivery"
+  }
+}

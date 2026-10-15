@@ -1,0 +1,17 @@
+{
+  "template.tex": "3ebc68b1b5782a94a3ae8810787ee736a973e02979e87da0e154dbd3320d073e",
+  "data/旋转测试数据汇总表_升力标定实验残差.xlsx": "2ede3b0731064d9b914c558736e810c980d0bda8027303f62b8e0e5a6d293482",
+  "data/理论-实验对比结果.xlsx": "9adb6c09f403ec92e2845b77c789380b927fa8c6c6d9632424b154fbb7372708",
+  "data_process/plot_theory_experiment_comparison.py": "60b3a891882d7aa3131f5810a6962f09a3456535739f0d07c7fbf5a474dc40c5",
+  "data_process/plot_rotor_model_validation.py": "4de851512435d678e9c62b64938b01e0137b2012f0a916058c13f07f4a7509ad",
+  "data_process/model_validation_binned_residuals.csv": "b32b0c7e9129cd333bdb25b0022d5ecbb5d60f91555bd140e649d8a8fdf65184",
+  "data_process/model_validation_binned_residuals_by_angle.csv": "54eb4c14589b1e04c93679ad97d27217e7623fdd8b36d5fc5f0291db368768f1",
+  "data_process/model_validation_four_branch_mean.csv": "ffa8b954fe4db6038667e342c5b31c9aafeff5b2a6c4eaeae7f915d24761000d",
+  "data_process/model_validation_metrics.csv": "c0d359baa808d424fb691ced0a2da43b3f67e8a092a6bab3411fc3e944677693",
+  "data_process/model_validation_metrics_by_angle.csv": "f15b225e49d0ceaf827fed8594b3bb7733f564a273fed7206f2fe60d3b1f7e16",
+  "data_process/model_validation_summary.json": "286c4c49942693de00086dc16ffbe0c2f1fed9723e7df772dfff54c2948569e1",
+  "data_process/model_validation_table copy.tex": "6c5563df0380e86149b62e6909f01a0e0e174f224cbab10cd9c6ac02a576daba",
+  "data_process/model_validation_table.tex": "1e01fe92298654e83c751f36b943d6dec64773659c513d3457c5150d3bfe8fc9",
+  "Image/fig9_rotor_model_diagnostics.pdf": "b99f9b16a25dbde259cfb3a1786e362c79b4a2c2308e6bd7ebd99e9f5f8caa5b",
+  "Image/fig9_rotor_model_diagnostics.png": "903c20a0dadbd328eea0fab4c4c87e5aca9ec48e245817ba642f705acb632a1f"
+}

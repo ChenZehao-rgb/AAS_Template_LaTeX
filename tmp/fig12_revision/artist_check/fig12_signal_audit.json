@@ -1,0 +1,199 @@
+{
+  "figure": "Manuscript Figure 12",
+  "trials": [
+    {
+      "log": "11-20N-1s加速-前馈+反馈-轴向.ulg",
+      "sha256": "4f93034a671685f7efa04722620a65c471f9351857aac50ddbfccfa6062f8fb1",
+      "method": "ff_fb",
+      "firmware": "1ab74a37e23c38ed4e91182d7c90374d202b00a5",
+      "t10_s": 142.586749,
+      "t90_s": 143.377752,
+      "tau_window_s": [
+        -2.0,
+        4.80484899999999
+      ],
+      "inflow_low_m_s": 0.1948271244764328,
+      "inflow_high_m_s": 10.210609436035156,
+      "total_field": "thrust_control_data.thrust_control_out[0]",
+      "component_fields": [
+        "thrust_feedforward_out[0]",
+        "thrust_feedback_out[0]"
+      ],
+      "unit": "dimensionless normalized controller command; no rescaling",
+      "stage": "logged controller summation node, upstream of final PWM/ESC output",
+      "sum_residual_max_abs": 2.9802322387695312e-08,
+      "total_range": [
+        0.5112059712409973,
+        0.8895182013511658
+      ],
+      "feedback_range": [
+        -0.057092346251010895,
+        0.13702914118766785
+      ],
+      "feedforward_range": [
+        0.4737894535064697,
+        0.8144346475601196
+      ],
+      "pid": {
+        "kp": [
+          0.02500000037252903
+        ],
+        "ki": [
+          0.05000000074505806
+        ],
+        "kd": [
+          0.003000000026077032
+        ]
+      },
+      "rpm_loop_active": [
+        0
+      ],
+      "rpm_source": "rpm.rpm_raw, sign reversed to positive rotor speed, native timestamps",
+      "rpm_samples_plotted": 340,
+      "rpm_samples_removed": 0,
+      "rpm_steps_at_least_500_rpm": [],
+      "limitation": "Firmware source unavailable here: exact internal limiter ordering is not asserted. Window sum equality is not a general post-limit identity. Logged PWM fields are zero and are not used as applied outputs."
+    },
+    {
+      "log": "12-20N-1s加速-反馈-轴向.ulg",
+      "sha256": "66ccc2506269a62c26ca8531715595bb65de291c76cce155ee797083a8b8c30b",
+      "method": "fb",
+      "firmware": "1ab74a37e23c38ed4e91182d7c90374d202b00a5",
+      "t10_s": 234.12898,
+      "t90_s": 234.933829,
+      "tau_window_s": [
+        -2.0,
+        4.80484899999999
+      ],
+      "inflow_low_m_s": 0.190897598862648,
+      "inflow_high_m_s": 10.21536636352539,
+      "total_field": "thrust_control_data.thrust_control_out[0]",
+      "component_fields": [
+        "thrust_feedforward_out[0]",
+        "thrust_feedback_out[0]"
+      ],
+      "unit": "dimensionless normalized controller command; no rescaling",
+      "stage": "logged controller summation node, upstream of final PWM/ESC output",
+      "sum_residual_max_abs": 0.0,
+      "total_range": [
+        0.5048721432685852,
+        0.8362309336662292
+      ],
+      "feedback_range": [
+        0.5048721432685852,
+        0.8362309336662292
+      ],
+      "feedforward_range": [
+        0.0,
+        0.0
+      ],
+      "pid": {
+        "kp": [
+          0.02500000037252903
+        ],
+        "ki": [
+          0.05000000074505806
+        ],
+        "kd": [
+          0.003000000026077032
+        ]
+      },
+      "rpm_loop_active": [
+        0
+      ],
+      "rpm_source": "rpm.rpm_raw, sign reversed to positive rotor speed, native timestamps",
+      "rpm_samples_plotted": 340,
+      "rpm_samples_removed": 0,
+      "rpm_steps_at_least_500_rpm": [
+        {
+          "tau_s": 0.7548959999999738,
+          "rpm": 5133.3662109375,
+          "step_rpm": 540.35107421875,
+          "retained": true
+        },
+        {
+          "tau_s": 0.7948439999999835,
+          "rpm": 5681.77783203125,
+          "step_rpm": 800.93017578125,
+          "retained": true
+        },
+        {
+          "tau_s": 0.8149200000000008,
+          "rpm": 5168.4501953125,
+          "step_rpm": -513.32763671875,
+          "retained": true
+        },
+        {
+          "tau_s": 0.9349459999999965,
+          "rpm": 4781.78857421875,
+          "step_rpm": -623.4140625,
+          "retained": true
+        },
+        {
+          "tau_s": 2.795585999999986,
+          "rpm": 4489.86376953125,
+          "step_rpm": -528.6865234375,
+          "retained": true
+        },
+        {
+          "tau_s": 2.8148269999999798,
+          "rpm": 5125.4853515625,
+          "step_rpm": 635.62158203125,
+          "retained": true
+        }
+      ],
+      "limitation": "Firmware source unavailable here: exact internal limiter ordering is not asserted. Window sum equality is not a general post-limit identity. Logged PWM fields are zero and are not used as applied outputs."
+    }
+  ],
+  "source_script_sha256": "c93ee31aee8bbb77b95ff5a09eb150dbcf2b1225b9ef22a8e04e612c9fa8c923",
+  "alignment": "Each trial tau=t-own_inflow_t10; inherited 0.35 s median detector only for alignment. Displayed RPM is unfiltered; no event alignment or time scaling. Inflow is not displayed.",
+  "event_rule": "First native sample at/after own inflow t10 crossing 20/50/80% of own median RPM increment: baseline tau [-2,-0.5] s; plateau [t90+2,t90+3] s. Reference uses the identical rule.",
+  "quality_rule": "No finite native RPM samples removed. Large steps recorded, not diagnosed as faults.",
+  "colors": {
+    "ff_fb": "#0077BB",
+    "fb": "#EE7733"
+  },
+  "presentation": {
+    "main_panels": [
+      "controller_outputs",
+      "rotor_speeds"
+    ],
+    "acceleration_shading_tau_s": [
+      0.0,
+      0.7910029999999892
+    ],
+    "acceleration_shading_trial": "ff_fb",
+    "acceleration_shading_gray": "0.95",
+    "evaluation_window": "[t10, t90+3 s], distinct from 10%-90% acceleration shading",
+    "feedforward_reference_color": "#222222",
+    "feedback_component_color": "#009988",
+    "events_displayed": false,
+    "events_preserved_in_csv": true,
+    "export_png_dpi": 400
+  },
+  "figure_table_trace": {
+    "source_data": [
+      {
+        "file": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\升力闭环测试\\90度攻角-纯轴向来流\\11-20N-1s加速-前馈+反馈-轴向.ulg",
+        "sha256": "4f93034a671685f7efa04722620a65c471f9351857aac50ddbfccfa6062f8fb1"
+      },
+      {
+        "file": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\升力闭环测试\\90度攻角-纯轴向来流\\12-20N-1s加速-反馈-轴向.ulg",
+        "sha256": "66ccc2506269a62c26ca8531715595bb65de291c76cce155ee797083a8b8c30b"
+      }
+    ],
+    "transformation": {
+      "script": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\升力闭环测试\\analyze_closed_loop.py",
+      "hash": "c93ee31aee8bbb77b95ff5a09eb150dbcf2b1225b9ef22a8e04e612c9fa8c923"
+    },
+    "caption_claim": "Controller summation-node outputs and components, measured and feedforward-reference RPM for the two 20 N/1 s trials.",
+    "supported_manuscript_claims": [
+      "At the 50% own-platform-increment event, FF+FB measured RPM crosses about 0.14 s before FB measured RPM."
+    ],
+    "limitations": [
+      "One trial per method; first crossings retain sensor fluctuations.",
+      "Own-platform amplitude events are not phase/transport delay estimates.",
+      "Exact firmware limiter ordering cannot be established from these logs alone."
+    ]
+  }
+}

@@ -1,0 +1,116 @@
+[
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\升力闭环测试\\analyze_closed_loop.py",
+    "role": "latest plotting style and inflow detector for figures 8-12",
+    "bytes": 80479,
+    "sha256": "a73c4a77a51e40b468840c4a15a8d660ac4812a8dcaf6ee3097f1179f8ed10b5"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data_process\\deployment_sensor_figures_config.json",
+    "role": "selection and processing configuration",
+    "bytes": 2595,
+    "sha256": "509abfa4a8d9e5096b7239f065e64b99e6731f23f83801e1994bcef9b0fdfd93"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\旋转测试数据汇总表_升力标定实验残差.xlsx",
+    "role": "evidence for project gram-force unit convention, not proof of these ULogs calibration",
+    "bytes": 665901,
+    "sha256": "2ede3b0731064d9b914c558736e810c980d0bda8027303f62b8e0e5a6d293482"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\rpm_normalized.csv",
+    "role": "four user-confirmed sweeps of exported plateau means",
+    "bytes": 1202,
+    "sha256": "a5aeaecdc30e6b46146d8c1580cf1b186fe108f2a6cd0dc26b38cff70ed512c8"
+  },
+  {
+    "path": "D:\\1-phd_data\\3-research_data\\quadrotor\\0 paper\\2-高机动测试台\\实验数据\\旋转台测试\\升力模型+闭环控制\\20260822\\1-15-10s加速-静态.ulg",
+    "role": "fixed final command dynamic inflow",
+    "bytes": 4016765,
+    "sha256": "8808a52580c2bb7305c0c5b4abd4bca6aeff1b3e605f7294c1767aca7633de6a"
+  },
+  {
+    "path": "D:\\1-phd_data\\3-research_data\\quadrotor\\0 paper\\2-高机动测试台\\实验数据\\旋转台测试\\升力模型+闭环控制\\20260822\\2-20-10s加速-静态.ulg",
+    "role": "fixed final command dynamic inflow",
+    "bytes": 4063652,
+    "sha256": "0bf4b884bc87bcd4b17547cc84c8082f7bae1b62f09ed8edeacf4c736ce3af4b"
+  },
+  {
+    "path": "D:\\1-phd_data\\3-research_data\\quadrotor\\0 paper\\2-高机动测试台\\实验数据\\旋转台测试\\升力模型+闭环控制\\20260822\\3-25-10s加速-静态.ulg",
+    "role": "fixed final command dynamic inflow",
+    "bytes": 3892788,
+    "sha256": "dc0d2a1a80d3554fa289b1a77e25daee26f10b3145ee9ba0b3d2af5e7d9bd98e"
+  },
+  {
+    "path": "D:\\1-phd_data\\3-research_data\\quadrotor\\0 paper\\2-高机动测试台\\实验数据\\旋转台测试\\升力模型+闭环控制\\20260822\\4-15-5s加速-静态.ulg",
+    "role": "fixed final command dynamic inflow",
+    "bytes": 3877121,
+    "sha256": "da27056d73dae41c1c13b3f086e3e2bfc67e3f1b9af71f447b42820d446f7961"
+  },
+  {
+    "path": "D:\\1-phd_data\\3-research_data\\quadrotor\\0 paper\\2-高机动测试台\\实验数据\\旋转台测试\\升力模型+闭环控制\\20260822\\5-20-5s加速-静态.ulg",
+    "role": "fixed final command dynamic inflow",
+    "bytes": 3838456,
+    "sha256": "f0b360d0272170e9868d3a748dc77e7af046d5c1214d31e20a38a561bd9348ed"
+  },
+  {
+    "path": "D:\\1-phd_data\\3-research_data\\quadrotor\\0 paper\\2-高机动测试台\\实验数据\\旋转台测试\\升力模型+闭环控制\\20260822\\6-25-5s加速-静态.ulg",
+    "role": "fixed final command dynamic inflow",
+    "bytes": 3932411,
+    "sha256": "9c2fd0315411aa6442b10503ce415135ed72ce9587d0af2f76e3ce3062fee6b1"
+  },
+  {
+    "path": "D:\\1-phd_data\\3-research_data\\quadrotor\\0 paper\\2-高机动测试台\\实验数据\\旋转台测试\\升力模型+闭环控制\\20260822\\7-15-1s加速-静态.ulg",
+    "role": "fixed final command dynamic inflow",
+    "bytes": 3883985,
+    "sha256": "80c3743d123490d67c1bce25ffc5e6d8e0648a64f1167c34b07ed6ea6cefb87e"
+  },
+  {
+    "path": "D:\\1-phd_data\\3-research_data\\quadrotor\\0 paper\\2-高机动测试台\\实验数据\\旋转台测试\\升力模型+闭环控制\\20260822\\8-20-1s加速-静态.ulg",
+    "role": "fixed final command dynamic inflow",
+    "bytes": 3742922,
+    "sha256": "685b64e41801d56e092162d36fc18240057f873c49ec2005577ad471b0229cc5"
+  },
+  {
+    "path": "D:\\1-phd_data\\3-research_data\\quadrotor\\0 paper\\2-高机动测试台\\实验数据\\旋转台测试\\升力模型+闭环控制\\20260822\\9-25-1s加速-静态.ulg",
+    "role": "fixed final command dynamic inflow",
+    "bytes": 3420851,
+    "sha256": "e646e83fa2e233cb2d66fb5dee17556b6ea8c4470cc979e5b2808b67bb3bd2cc"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\已补偿--1s加速-无转速测试.ulg",
+    "role": "sensor motor-off file inventory and paired-channel analysis",
+    "bytes": 3626252,
+    "sha256": "b2101badc4c3d6d0972e00a07f4aac9a766ac2a2c801dea887137079c9c28a91"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\已补偿--5s加速-无转速测试.ulg",
+    "role": "sensor motor-off file inventory and paired-channel analysis",
+    "bytes": 3164858,
+    "sha256": "26e916cfd4898be66d9453447cd7e0b8f726944bd5a1a6858940644f751bf4b2"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\已补偿-10s加速-无转速测试.ulg",
+    "role": "sensor motor-off file inventory and paired-channel analysis",
+    "bytes": 3566632,
+    "sha256": "756e83a96b284de1825408bdf0e22dc06f1d1be0fd65efdda955b73cbf4671cd"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\未补偿-10s加速-无转速测试.ulg",
+    "role": "sensor motor-off file inventory and paired-channel analysis",
+    "bytes": 3082486,
+    "sha256": "62c53790defdff2f6c80a92600292aa0fe3827d35a0f31364042ec13553a6ced"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\未补偿-1s加速-无转速.ulg",
+    "role": "sensor motor-off file inventory and paired-channel analysis",
+    "bytes": 2908417,
+    "sha256": "1ddba47623497513e95461a68f686fc5a68bed2d055e6a9b44148b90199bfc8c"
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\未补偿-5s加速-无转速测试.ulg",
+    "role": "sensor motor-off file inventory and paired-channel analysis",
+    "bytes": 3181028,
+    "sha256": "ca322cdd9f68c08fa36bde73ca56eb9201eb1bbdff9869d98dfb991711ace5f8"
+  }
+]

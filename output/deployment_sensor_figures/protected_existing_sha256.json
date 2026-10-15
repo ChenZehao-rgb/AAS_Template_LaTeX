@@ -1,0 +1,10 @@
+{
+  "template.tex": "1c5efda5f58f89fdb33f7d87f2abb6d84bf07e8bd6b74435cec8eed29a9843dd",
+  "template.pdf": "5aba216d130127ccd66b3e03237378355023f73cce0227e3e42cb7f778bbb4fa",
+  "Image/fig9_freestream_ramp.pdf": "7430683067a40af716a7386b9b89c2d7090e4b874e4faa973f7879a5ea1682ad",
+  "Image/fig10_representative_response.pdf": "a6b5517fcfe21502a3ae3a47e246664702f5f1f64915af19911476c8a412807f",
+  "Image/fig10_ramp_time_response_20N.pdf": "acdc1798802093015cb7700c80b03a4c1668a779b5d0f41e835ab322cb8c6657",
+  "Image/fig12_speed_error.pdf": "c523ebc139ed686e778025cb1b5713dac758b43c1f431bd143e3cc37b809d3f1",
+  "Image/fig13_feedforward_mechanism.pdf": "a0522ecafc3153297c1bfa7da40114b34d222fe10a4604905c9802324c6a6509",
+  "data/升力闭环测试/analyze_closed_loop.py": "a73c4a77a51e40b468840c4a15a8d660ac4812a8dcaf6ee3097f1179f8ed10b5"
+}

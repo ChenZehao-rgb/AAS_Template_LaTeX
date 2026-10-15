@@ -1,0 +1,90 @@
+{
+  "source_formula_N": "T_hat=(sensor2-b0+36.839*ay(t-0.03)-3.332*ax(t-0.03))*0.00980665",
+  "effective_A_kg": 0.36126717934999997,
+  "effective_B_kg": 0.032675757799999997,
+  "paper_axis_relation": "a_z=-a_y, a_x=+a_x; both delayed by source fixed30ms",
+  "provided_source_git_head": "015cf70a21990440a9638f23e0d8bd9334dac9e5",
+  "trials": [
+    {
+      "nominal_ramp_s": 1,
+      "file": "未补偿-1s加速-无转速.ulg",
+      "firmware_git_sha": "c774e3c4a5db9df658d1455ebf68ad1060dd322c",
+      "b0_g": -10.0,
+      "b0_scope": "first20 samples available in each log; actual module-start samples are not guaranteed recorded. Same frozen b0 applied before/after, no independent force recentering.",
+      "t10_s": 170.097667,
+      "t90_s": 170.895018,
+      "actual_10_90_s": 0.7973509999999919,
+      "q_std": 5.0,
+      "r_std": 0.05000000074505806,
+      "force_limit_N": 39.2266,
+      "clipped_before_full_log": 0,
+      "clipped_after_full_log": 0,
+      "median_native_acc_interval_s": 0.04999100000000567,
+      "effective_accel_age_min_s": 0.030005000000016935,
+      "effective_accel_age_max_s": 0.08674399999998172,
+      "accel_unavailable_in_plot": 0,
+      "pwm_values_us": [
+        1000.0
+      ],
+      "nonzero_rpm_samples": 208,
+      "rpm_samples": 390,
+      "v_low_m_s": 0.012319415342062712,
+      "v_high_m_s": 10.013855695724487
+    },
+    {
+      "nominal_ramp_s": 5,
+      "file": "未补偿-5s加速-无转速测试.ulg",
+      "firmware_git_sha": "c774e3c4a5db9df658d1455ebf68ad1060dd322c",
+      "b0_g": -13.0,
+      "b0_scope": "first20 samples available in each log; actual module-start samples are not guaranteed recorded. Same frozen b0 applied before/after, no independent force recentering.",
+      "t10_s": 54.123987,
+      "t90_s": 58.16199,
+      "actual_10_90_s": 4.038003000000003,
+      "q_std": 5.0,
+      "r_std": 0.05000000074505806,
+      "force_limit_N": 39.2266,
+      "clipped_before_full_log": 0,
+      "clipped_after_full_log": 0,
+      "median_native_acc_interval_s": 0.049990999999998564,
+      "effective_accel_age_min_s": 0.030022000000002436,
+      "effective_accel_age_max_s": 0.08420199999999767,
+      "accel_unavailable_in_plot": 0,
+      "pwm_values_us": [
+        1000.0
+      ],
+      "nonzero_rpm_samples": 60,
+      "rpm_samples": 552,
+      "v_low_m_s": 0.0848630927503109,
+      "v_high_m_s": 10.041208863258362
+    },
+    {
+      "nominal_ramp_s": 10,
+      "file": "未补偿-10s加速-无转速测试.ulg",
+      "firmware_git_sha": "c774e3c4a5db9df658d1455ebf68ad1060dd322c",
+      "b0_g": -12.0,
+      "b0_scope": "first20 samples available in each log; actual module-start samples are not guaranteed recorded. Same frozen b0 applied before/after, no independent force recentering.",
+      "t10_s": 178.143496,
+      "t90_s": 186.239762,
+      "actual_10_90_s": 8.096266000000014,
+      "q_std": 5.0,
+      "r_std": 0.05000000074505806,
+      "force_limit_N": 39.2266,
+      "clipped_before_full_log": 0,
+      "clipped_after_full_log": 0,
+      "median_native_acc_interval_s": 0.049992000000003145,
+      "effective_accel_age_min_s": 0.030040999999982887,
+      "effective_accel_age_max_s": 0.08996199999998566,
+      "accel_unavailable_in_plot": 0,
+      "pwm_values_us": [
+        1000.0
+      ],
+      "nonzero_rpm_samples": 2,
+      "rpm_samples": 755,
+      "v_low_m_s": 0.05055594351142645,
+      "v_high_m_s": 10.095193862915039
+    }
+  ],
+  "plot_filter": "same source BFS1 two-state Kalman algorithm applied to both before/after on identical native force timestamps over full log; initial state0, covarianceI; per-log TFC_SD_ES/TFC_SD_ME",
+  "status": "offline application of provided source to recorded samples, not bit-exact replay of experimental firmware nor independent validation",
+  "history_warning": "ULog ver_sw1ab74a37 maps to committed source with +TFC_LOAD_M_KG*ay only and nonnegative force clipping; provided current source uses two-axis delayed parasitic compensation. Thus current source is not proven to be exact experimental firmware. No new graph is described as logged online output or independent validation."
+}

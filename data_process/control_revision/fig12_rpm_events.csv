@@ -1,0 +1,10 @@
+﻿log,method,signal,fraction,baseline_rpm,plateau_rpm,threshold_rpm,event_tau_s,event_observed_rpm,interpretation
+11-20N-1s加速-前馈+反馈-轴向.ulg,ff_fb,measured_rpm,0.2,4172.8828125,5148.095458984375,4367.925341796875,0.07688400000000684,4421.17529296875,amplitude_event_not_tracking_error_or_delay
+11-20N-1s加速-前馈+反馈-轴向.ulg,ff_fb,measured_rpm,0.5,4172.8828125,5148.095458984375,4660.4891357421875,0.27686800000000744,4662.330078125,amplitude_event_not_tracking_error_or_delay
+11-20N-1s加速-前馈+反馈-轴向.ulg,ff_fb,measured_rpm,0.8,4172.8828125,5148.095458984375,4953.0529296875,0.4568969999999979,5008.09130859375,amplitude_event_not_tracking_error_or_delay
+11-20N-1s加速-前馈+反馈-轴向.ulg,ff_fb,feedforward_reference_rpm,0.2,4029.990234375,5290.24169921875,4282.04052734375,0.13000400000001378,4283.85693359375,amplitude_event_not_tracking_error_or_delay
+11-20N-1s加速-前馈+反馈-轴向.ulg,ff_fb,feedforward_reference_rpm,0.5,4029.990234375,5290.24169921875,4660.115966796875,0.37309200000001397,4666.16064453125,amplitude_event_not_tracking_error_or_delay
+11-20N-1s加速-前馈+反馈-轴向.ulg,ff_fb,feedforward_reference_rpm,0.8,4029.990234375,5290.24169921875,5038.19140625,0.6199400000000139,5058.88916015625,amplitude_event_not_tracking_error_or_delay
+12-20N-1s加速-反馈-轴向.ulg,fb,measured_rpm,0.2,4207.7783203125,5118.68310546875,4389.95927734375,0.17463199999997414,4470.45556640625,amplitude_event_not_tracking_error_or_delay
+12-20N-1s加速-反馈-轴向.ulg,fb,measured_rpm,0.5,4207.7783203125,5118.68310546875,4663.230712890625,0.4146379999999965,4685.744140625,amplitude_event_not_tracking_error_or_delay
+12-20N-1s加速-反馈-轴向.ulg,fb,measured_rpm,0.8,4207.7783203125,5118.68310546875,4936.5021484375,0.4346299999999985,4940.99169921875,amplitude_event_not_tracking_error_or_delay

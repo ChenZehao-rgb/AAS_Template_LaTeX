@@ -1,0 +1,28 @@
+{
+  "checks": {
+    "source_constants_match_frozen_configuration": true,
+    "source_and_raw_inputs_sha256_unchanged": true,
+    "1s_all_native_display_samples_retained": true,
+    "5s_all_native_display_samples_retained": true,
+    "10s_all_native_display_samples_retained": true,
+    "direct_historical_sample_formula_and_scalar_filter_recomputed": true,
+    "all_trials_no_force_clipping_or_missing_accel_in_display": true,
+    "all_six_y_limits_ticks_identical": true,
+    "paired_x_ranges_identical": true,
+    "all_fonts_embedded": true,
+    "PDFs_vector_no_raster_objects": true,
+    "Chinese_math_labels_present": true,
+    "PNG_export_is_600dpi": true,
+    "all_visible_values_inside_axis_limits": true,
+    "original_manuscript_fig8_12_unchanged": true
+  },
+  "all_automated_checks_pass": true,
+  "largest_independent_numeric_difference": 4.999556324492005e-12,
+  "visual_review": "Final PDF renders and155mm/80mm previews inspected; labels complete, no overlap, common y scale. Raw native fluctuation statistics retained separately.",
+  "limits": [
+    "b0 uses first20 logged samples, not guaranteed original module-start samples",
+    "logged IMU approximately20Hz; unlogged runtime samples and scheduling unavailable",
+    "current source differs from committed version indicated in historical ULog; not bit-exact original firmware replay",
+    "coefficient calibration provenance unknown; not independent validation"
+  ]
+}

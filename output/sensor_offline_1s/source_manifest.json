@@ -1,0 +1,38 @@
+[
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data_process\\sensor_offline_1s_config.json",
+    "role": "explicit user-confirmed axis mapping and fixed processing configuration",
+    "sha256": "24f0dc5895714d476ffdf91fc6350b89ac120ae4a0c1e7589a727f70e7bf742d",
+    "bytes": 2145
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data_process\\plot_sensor_offline_1s.py",
+    "role": "offline calculation and plot implementation",
+    "sha256": "cbb0727ad12f6559cb4fab90a769e21c9f70534490fdbaa7f2a6d46829a0c0cf",
+    "bytes": 11775
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\升力闭环测试\\analyze_closed_loop.py",
+    "role": "existing plot style and inflow detector",
+    "sha256": "a73c4a77a51e40b468840c4a15a8d660ac4812a8dcaf6ee3097f1179f8ed10b5",
+    "bytes": 80479
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\未补偿-1s加速-无转速.ulg",
+    "role": "real1s offline reconstruction input",
+    "sha256": "1ddba47623497513e95461a68f686fc5a68bed2d055e6a9b44148b90199bfc8c",
+    "bytes": 2908417
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\已补偿--5s加速-无转速测试.ulg",
+    "role": "preserved online comparison column",
+    "sha256": "26e916cfd4898be66d9453447cd7e0b8f726944bd5a1a6858940644f751bf4b2",
+    "bytes": 3164858
+  },
+  {
+    "path": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\传感器补偿\\已补偿-10s加速-无转速测试.ulg",
+    "role": "preserved online comparison column",
+    "sha256": "756e83a96b284de1825408bdf0e22dc06f1d1be0fd65efdda955b73cbf4671cd",
+    "bytes": 3566632
+  }
+]

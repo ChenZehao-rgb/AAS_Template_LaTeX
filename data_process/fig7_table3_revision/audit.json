@@ -1,0 +1,225 @@
+{
+  "source_workbook": "data\\理论-实验对比结果.xlsx",
+  "source_sheet": "分档曲线_可直接作图",
+  "N_expected": 231,
+  "N_actual": 231,
+  "counts_by_angle": {
+    "0": 33,
+    "15": 33,
+    "30": 33,
+    "45": 33,
+    "60": 33,
+    "75": 33,
+    "90": 33
+  },
+  "counts_by_rpm_angle": [
+    {
+      "rpm": 3000,
+      "angle": 0,
+      "N": 11
+    },
+    {
+      "rpm": 3000,
+      "angle": 15,
+      "N": 11
+    },
+    {
+      "rpm": 3000,
+      "angle": 30,
+      "N": 11
+    },
+    {
+      "rpm": 3000,
+      "angle": 45,
+      "N": 11
+    },
+    {
+      "rpm": 3000,
+      "angle": 60,
+      "N": 11
+    },
+    {
+      "rpm": 3000,
+      "angle": 75,
+      "N": 11
+    },
+    {
+      "rpm": 3000,
+      "angle": 90,
+      "N": 11
+    },
+    {
+      "rpm": 4000,
+      "angle": 0,
+      "N": 11
+    },
+    {
+      "rpm": 4000,
+      "angle": 15,
+      "N": 11
+    },
+    {
+      "rpm": 4000,
+      "angle": 30,
+      "N": 11
+    },
+    {
+      "rpm": 4000,
+      "angle": 45,
+      "N": 11
+    },
+    {
+      "rpm": 4000,
+      "angle": 60,
+      "N": 11
+    },
+    {
+      "rpm": 4000,
+      "angle": 75,
+      "N": 11
+    },
+    {
+      "rpm": 4000,
+      "angle": 90,
+      "N": 11
+    },
+    {
+      "rpm": 5000,
+      "angle": 0,
+      "N": 11
+    },
+    {
+      "rpm": 5000,
+      "angle": 15,
+      "N": 11
+    },
+    {
+      "rpm": 5000,
+      "angle": 30,
+      "N": 11
+    },
+    {
+      "rpm": 5000,
+      "angle": 45,
+      "N": 11
+    },
+    {
+      "rpm": 5000,
+      "angle": 60,
+      "N": 11
+    },
+    {
+      "rpm": 5000,
+      "angle": 75,
+      "N": 11
+    },
+    {
+      "rpm": 5000,
+      "angle": 90,
+      "N": 11
+    }
+  ],
+  "duplicate_condition_keys": 0,
+  "duplicate_source_records": 0,
+  "missing_condition_keys": [],
+  "N_source_records": 877,
+  "source_count_per_bin": {
+    "2": 22,
+    "3": 4,
+    "4": 204,
+    "5": 1
+  },
+  "source_sequence_shortfalls": [
+    {
+      "rpm_nom": 4000,
+      "alpha_deg": 75,
+      "run": 1,
+      "sweep": "down",
+      "available": 9,
+      "expected_if_full": 10
+    },
+    {
+      "rpm_nom": 5000,
+      "alpha_deg": 45,
+      "run": 1,
+      "sweep": "down",
+      "available": 9,
+      "expected_if_full": 10
+    },
+    {
+      "rpm_nom": 5000,
+      "alpha_deg": 45,
+      "run": 2,
+      "sweep": "down",
+      "available": 9,
+      "expected_if_full": 10
+    },
+    {
+      "rpm_nom": 5000,
+      "alpha_deg": 75,
+      "run": 2,
+      "sweep": "down",
+      "available": 9,
+      "expected_if_full": 10
+    },
+    {
+      "rpm_nom": 5000,
+      "alpha_deg": 90,
+      "run": 1,
+      "sweep": "down",
+      "available": 9,
+      "expected_if_full": 10
+    }
+  ],
+  "lineage": {
+    "rule": "rint(10*J/max(J) within rpm_nom,alpha_deg); metadata only",
+    "max_cached_mean_deviation": {
+      "J": 7.499999999938112e-07,
+      "C_T_exp": 7.500000000007501e-07,
+      "C_T_theory": 7.500000000007501e-07
+    },
+    "exact_n_reconciliation": true
+  },
+  "n_nonpositive_CT": 0,
+  "min_CT_exp": 0.002383,
+  "min_CT_condition": {
+    "condition_id": "3000_15_10",
+    "rpm_nom": 3000,
+    "alpha_deg": 15,
+    "J": 0.407323,
+    "C_T_exp": 0.002383,
+    "C_T_exp_std": 0.000218
+  },
+  "noise_assessment": "NOT VERIFIED: sensor noise/resolution absent. Branch spread is not an independent noise estimate.",
+  "raw_dimensionless_audit": {
+    "experiment_calibration_constants": {
+      "标定斜率": 0.915708,
+      "标定截距": 28.7687,
+      "空气密度 ρ (kg/m³)": 1.205,
+      "桨直径 D (m)": 0.4572,
+      "重力加速度 g (m/s²)": 9.8,
+      "克→千克换算": 1000,
+      "C_T换算因子": 0.1292025386748419
+    },
+    "theory_rho_implied_min": 1.2249999999999928,
+    "theory_rho_implied_max": 1.2250000000000136,
+    "theory_rows_checked": 231,
+    "diameter_m": 0.4572,
+    "radius_m": 0.2286,
+    "theory_radius_assumption": "rho back-calculation assumes the same 0.2286 m rotor radius; upstream theory setup script is unavailable",
+    "status": "UNRESOLVED upstream density mismatch; no rescaling/model rerun performed"
+  },
+  "CT_convention": "rotor tip-speed CT=T/(rho*pi*R^2*(Omega*R)^2); prop CT multiplier 4/pi^3, not interchangeable",
+  "actual_rpm_J_max_abs_reconstruction_deviation": 5.179857091031081e-07,
+  "prop_to_rotor_CT_max_abs_deviation": 5.584548727574114e-07,
+  "primary_CT_pairs": "unchanged six-decimal workbook C_T_exp / C_T_theory. Existing rpmcorr column not substituted.",
+  "legacy_mape_denominator_N": 869,
+  "legacy_mape_excluded_N": 8,
+  "legacy_extrapolated_flags_true_N": 8,
+  "environment": {
+    "python": "3.13.4",
+    "numpy": "2.2.6",
+    "pandas": "2.3.0",
+    "matplotlib": "3.10.3"
+  }
+}
