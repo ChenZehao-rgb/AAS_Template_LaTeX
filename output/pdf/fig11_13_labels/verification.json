@@ -1,0 +1,130 @@
+{
+  "logs": 28,
+  "changed_functions": [
+    "plot_representative",
+    "plot_representative_ramp_times"
+  ],
+  "protected_sha256": {
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\1-15-10s加速-静态.ulg": "8808a52580c2bb7305c0c5b4abd4bca6aeff1b3e605f7294c1767aca7633de6a",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\2-20-10s加速-静态.ulg": "0bf4b884bc87bcd4b17547cc84c8082f7bae1b62f09ed8edeacf4c736ce3af4b",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\3-25-10s加速-静态.ulg": "dc0d2a1a80d3554fa289b1a77e25daee26f10b3145ee9ba0b3d2af5e7d9bd98e",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\4-15-5s加速-静态.ulg": "da27056d73dae41c1c13b3f086e3e2bfc67e3f1b9af71f447b42820d446f7961",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\5-20-5s加速-静态.ulg": "f0b360d0272170e9868d3a748dc77e7af046d5c1214d31e20a38a561bd9348ed",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\6-25-5s加速-静态.ulg": "9c2fd0315411aa6442b10503ce415135ed72ce9587d0af2f76e3ce3062fee6b1",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\7-15-1s加速-静态.ulg": "80c3743d123490d67c1bce25ffc5e6d8e0648a64f1167c34b07ed6ea6cefb87e",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\8-15N-1s加速-前馈+反馈-轴向.ulg": "f0e6fe7411dc2d93cbfdc61a442a7af6ff9eff50c7a4844aac54a87fe53728ca",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\8-20-1s加速-静态.ulg": "685b64e41801d56e092162d36fc18240057f873c49ec2005577ad471b0229cc5",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\9-15N-1s加速-前馈+反馈-轴向.ulg": "35bd908b25e6559ca2b074f2c3b993ffa2cf7fb4fc9bac6250fe775653e8558c",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\9-25-1s加速-静态.ulg": "e646e83fa2e233cb2d66fb5dee17556b6ea8c4470cc979e5b2808b67bb3bd2cc",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\10-15N-1s加速-纯反馈-轴向.ulg": "ed97d61d88ed94ae8c17908b5de429d4c17ec2d1be6b03d4ddd173ee859d2c60",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\11-20N-1s加速-前馈+反馈-轴向.ulg": "4f93034a671685f7efa04722620a65c471f9351857aac50ddbfccfa6062f8fb1",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\12-20N-1s加速-反馈-轴向.ulg": "66ccc2506269a62c26ca8531715595bb65de291c76cce155ee797083a8b8c30b",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\13-25N-1s加速-前馈+反馈-轴向.ulg": "07a09b512670967291e77c75e030f30c9359b1ccf745133763989767087795c7",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\14-25N-1s加速-反馈-轴向.ulg": "1b7c79fb589995cf4cbd5bc2cfcab59952c895b48b7c4cf6d9f3ab76bf6769ca",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\15-15N-5s加速-前馈+反馈-轴向.ulg": "bdbe2faf4d42e784ada7c6f365d8bcd2a8b4b153adc50d3e276c3b237a662bed",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\16-15N-5s加速-反馈-轴向.ulg": "cd62cec7f3d3e30314fa2a6775292921908ce9e6fa15afc001ef7a632dc09daf",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\17-20N-5s加速-前馈+反馈-轴向.ulg": "e3bcc0d7cc70fce9f831eada87348f09eecf0eb9a3499de9c3f96cd2dc88eed2",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\18-20N-5s加速-反馈-轴向.ulg": "3e6f845aefe5954734e8c80b6e003c27ef7f8533442cf0e5f85076df3ad69f23",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\19-25N-5s加速-前馈+反馈-轴向.ulg": "64f0cefb9082a14b33f1f7e64ce0ce14dc9f298937705ab297b345178e527981",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\20-25N-5s加速-反馈-轴向.ulg": "0535cff5d63dea756737afb062f22bc74a4de6129ad8e2de5c911738f26b9200",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\21-15N-10s加速-前馈+反馈-轴向.ulg": "29097eed61c1933e2a9f7c9bbb3001c5394a075b8e68410f52c6956b65562e07",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\22-15N-10s加速-反馈-轴向.ulg": "7f3becfb80b02fb235643a0e5d73fae58665ed4d415dd4069704401d97bbddb4",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\23-20N-10s加速-前馈+反馈-轴向.ulg": "16b090f1ccbaf4b9afb64277afc1163d897557ef2d069c75812c368209463334",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\24-20N-10s加速-反馈-轴向.ulg": "e4d57da9fff2bf86f815d5416e97bcef6a8e2c9013cd50ca709658777e84f049",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\25-25N-10s加速-前馈+反馈-轴向.ulg": "3928284dc4a96c6150ed5c5d06f5f616bd0ab3ca0365e28a7b2957a8a5867e37",
+    "data\\升力闭环测试\\90度攻角-纯轴向来流\\26-25N-10s加速-反馈-轴向.ulg": "11fae3175c43ce6464385896e93080c35541cffc0766bb335724ee6db7ec2cf9",
+    "data\\升力闭环测试\\analysis_current_90deg\\condition_metrics.csv": "84de51caca68266ab400bd54c6c2e13bd84426ecc49b5a584b8ec398c4d0873d",
+    "data\\升力闭环测试\\analysis_current_90deg\\fig12_rpm_events.csv": "4ac1af50c54ab71a46a0a663f1ca96100dbce4fbbb29b2be289c83e4170c9db9",
+    "data\\升力闭环测试\\analysis_current_90deg\\paired_method_comparison.csv": "488e2472c96d49755b96f832ee03c056a9759bf25db5250d5e280d5d8cf4e78b",
+    "data\\升力闭环测试\\analysis_current_90deg\\three_method_comparison.csv": "0a7881c7b5772e9100601a97d26a99f9aa38a73c5f069e000e2e8def7b48d80e",
+    "data\\升力闭环测试\\analysis_current_90deg\\trial_metrics.csv": "e0ae8f8933bbe132bee8d15031f5dede0d3227f4e80839ecf131413522262565",
+    "data\\升力闭环测试\\analysis_current_90deg\\analysis_metrics.sqlite": "3a2da4a7d45b283fdc4cbb2510eff13b39806cf55a8d9b63d7e18ac5d7a87559",
+    "template.tex": "05916cd5c7f63ccc2a1fd9f00ca410c1eae04087fa2586080a7a019b25cedde1",
+    "template.pdf": "50500d5c5cef8e9fd49c5821b6f18cad9197f36de9117c5b2e76ad0e029cf3f4",
+    "Image\\fig1.pdf": "3472f64e310be2ec2628fce2af5dfb3d6d43d64c28b6712e8693250006fdafeb",
+    "Image\\fig11_condition_summary.pdf": "fc4c005713e58956ead17176607b5d379c8a2a0e9c0b34e8efe8da3118bbb6e6",
+    "Image\\fig13_feedforward_mechanism.pdf": "a0522ecafc3153297c1bfa7da40114b34d222fe10a4604905c9802324c6a6509",
+    "Image\\fig1_CT_vs_J.png": "511bd0759282258850e7ca75c220633e2bf12ac2811c1e77a38ed6e73b55cae4",
+    "Image\\fig2.pdf": "9570e6191eda5f07995998bc10c6c5c4f4c17b25a89279d1e677b00a46d7d0cf",
+    "Image\\fig2.png": "45623517d39a2c027d30a6971ca9a06e7a456a04c73ba14dfba98a02072fa592",
+    "Image\\fig2_error_breakdown.png": "4d0a18de659bb4c2a5557e0d4482dade83defa730d8af5f15a2de7e395c1c64e",
+    "Image\\fig3.pdf": "796ee0e7b19dad530fde97cc7d289203dc51bb85f3ef7e88fc357764566072f0",
+    "Image\\fig4a.pdf": "95c77a76349f9bc4a8cfef4fbe8e1db8bd473f987e02c6730f48e1de7b700016",
+    "Image\\fig4b.pdf": "0718c17a99ed281e033d96c7c6cceb21ad0c477bc268a81ea290bb30f0ad3c5e",
+    "Image\\fig5_chord_pitch_comparison.pdf": "c1465ca69d2bcc1af949c4cc51f9a324099230e5e42f01137c047f18642ca908",
+    "Image\\fig6a_rotating_test_rig.png": "6adf728afc79a64e67e03c7a22bb5ec33a495d512343cbd7dd309e3b4680db00",
+    "Image\\fig6b.pdf": "239a46cc94908418849b4068f162edc70dddc1cb8ef88c2c874ad207d0e296b5",
+    "Image\\fig6b.png": "7409101d282e59af26071b6369326f764aef238958554b9aadf8ad9f03fade55",
+    "Image\\fig9_freestream_ramp.pdf": "7430683067a40af716a7386b9b89c2d7090e4b874e4faa973f7879a5ea1682ad",
+    "Image\\fig9_rotor_model_diagnostics.pdf": "470c71c8a017a04969156fb6e67674ea4a7a7522f1c363c29a3bddfafb6c4134",
+    "Image\\fig9_rotor_model_diagnostics.png": "a2d96feca616e4b1ec71245eca521528fa526904554d8d4b1020dd2fa90c2377",
+    "Image\\motor_off_force_sensor_compensation.pdf": "0253bdbe6de58fb61e8a727eb1a37300097e3c2eddcdb43bbd793c6aa9245474",
+    "Image\\motor_off_force_sensor_compensation.png": "1ea22861fd47a58dbe38f5bdf9bfd90de7eaa14fbe809f7c4c3d7509b5871958",
+    "Image\\static_rpm_mapping_dynamic_inflow.pdf": "279dbe4e9a9f056df1498d2a0c742d8b81bfe91f1fc094a4a0a951a02ad54cf7",
+    "Image\\static_rpm_mapping_dynamic_inflow.png": "852349f3708c2c3b2e85d9f5818ef90804d7e585497b7e1b8cf007815bc2817c",
+    "Image\\图1-四旋翼无人机坐标系定义.png": "d1361c851b7c2c9a2d884c2b0c6eeddc6af2f1f584ddf46789445579d165b2cd",
+    "Image\\图4a-桨叶气动参数提取步骤.png": "6ed657fb4197755abe8a36899307115f0f9b03eb930ff4367e48b66647e5f05c",
+    "Image\\图4b.png": "4dd0204ae4298952ec74b9d54117adbbfa46baa46bf79128b1ef88fc89fce518",
+    "Image\\图6a-旋转测试台.png": "2836444321d0a9de4f474de35704d72dab07697d1b5f6396366e1092450a8e16",
+    "Image\\图6b-旋转测试台.png": "a69ce32cbb907b82522e5eee6b7d783ea39d75c1ffac26daf22300fa02870446"
+  },
+  "figures": {
+    "11": {
+      "source_function": "plot_representative",
+      "manuscript_image": "fig10_representative_response",
+      "curve_data_style_limits_layout_unchanged": true,
+      "vector_pdf": true,
+      "legend_font_sizes": [
+        7.5,
+        7.5,
+        7.5,
+        7.5,
+        7.5,
+        7.5
+      ],
+      "pdf_size_pt": [
+        0.0,
+        0.0,
+        496.8656005859375,
+        337.15087890625
+      ]
+    },
+    "12": {
+      "source_function": "plot_representative_ramp_times",
+      "manuscript_image": "fig10_ramp_time_response_20N",
+      "curve_data_style_limits_layout_unchanged": true,
+      "vector_pdf": true,
+      "legend_font_sizes": [
+        7.5,
+        7.5,
+        7.5,
+        7.5,
+        7.5,
+        7.5
+      ],
+      "pdf_size_pt": [
+        0.0,
+        0.0,
+        496.8656005859375,
+        337.15087890625
+      ]
+    },
+    "13": {
+      "source_function": "plot_speed_error",
+      "manuscript_image": "fig12_speed_error",
+      "curve_data_style_limits_layout_unchanged": true,
+      "vector_pdf": true,
+      "legend_font_sizes": [
+        7.0,
+        7.0,
+        7.0
+      ],
+      "pdf_size_pt": [
+        0.0,
+        0.0,
+        217.35049438476562,
+        168.84500122070312
+      ]
+    }
+  }
+}

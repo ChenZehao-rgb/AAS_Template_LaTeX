@@ -44,7 +44,7 @@ METHOD_LABEL = {
 METHOD_LABEL_ZH = {
     "ff_fb": "前馈+反馈(FF+FB)",
     "fb": "纯反馈(FB)",
-    "static": "固定控制量(Static)",
+    "static": "固定控制量(Fixed input)",
 }
 
 # Same triplet and marker convention used for the three-level groupings in
@@ -680,10 +680,11 @@ def plot_representative(runs: list[Run]) -> None:
             axis.axvline(0.0, color=COLORS["neutral"], linestyle=":", linewidth=0.7, zorder=1)
             style_grid(axis)
         ax_e.set_xlabel("时间 (s)")
-        panel_label(ax_t, f"({chr(ord('a') + col)}) $T_c$ = {target_n} N", x=0.06, y=0.95)
+        panel_label(ax_t, f"({chr(ord('a') + col)}) $T_d = {target_n}$ N", x=0.06, y=0.95)
     set_closed_loop_error_limits(error_axes)
-    thrust_axes[0].set_ylabel("升力 Tm (N)")
-    error_axes[0].set_ylabel("误差 eT = Tc − Tm (N)")
+    # Mathtext needs an explicit CJK text font; math variables keep the configured Times font.
+    thrust_axes[0].set_ylabel(r"升力 $T_m$ (N)", fontfamily="SimSun")
+    error_axes[0].set_ylabel(r"误差 $T_e = T_d - T_m$ (N)", fontfamily="SimSun")
     for axis in thrust_axes + error_axes:
         axis.set_xlim(-2.0, xmax)
     for axis in thrust_axes:
@@ -767,10 +768,11 @@ def plot_representative_ramp_times(
             style_grid(axis)
             axis.set_xlim(*xlim)
         ax_e.set_xlabel("时间 (s)")
-        panel_label(ax_t, f"({chr(ord('a') + col)}) $t_{{\\mathrm{{ramp}}}}$ = {ramp_s} s", x=0.06, y=0.95)
+        panel_label(ax_t, f"({chr(ord('a') + col)}) $t_{{\\mathrm{{ramp}}}}$ = {ramp_s} s", x=0.48, y=0.65)
     set_closed_loop_error_limits(error_axes)
-    thrust_axes[0].set_ylabel("升力 Tm (N)")
-    error_axes[0].set_ylabel("误差 eT = Tc − Tm (N)")
+    # Mathtext needs an explicit CJK text font; math variables keep the configured Times font.
+    thrust_axes[0].set_ylabel(r"升力 $T_m$ (N)", fontfamily="SimSun")
+    error_axes[0].set_ylabel(r"误差 $T_e = T_d - T_m$ (N)", fontfamily="SimSun")
     for axis in thrust_axes:
         plt.setp(axis.get_xticklabels(), visible=False)
 

@@ -528,6 +528,10 @@ Table\,2 \quad Experimental settings for the rotor test bench} \vskip2mm
 
 \textcolor{blue}{设置3组转速档位、7种不同攻角、11个来流速度,共231个分档工况点,每个工况点以式~(\ref{eq:mu_lambda})定义的螺旋桨前进比表示.以式~(\ref{eq:glauert})定义的升力系数$C_{T}$作为精度衡量指标.实验测量得到的升力系数为$C_{T,\mathrm{exp}}$,模型计算的理论升力系数为$C_{T,\mathrm{theory}}$.定义相对误差$\delta C_T=C_{T,\mathrm{exp}}-C_{T,\mathrm{theory}}$,正值对应模型低估,负值对应模型高估.分攻角进行统计,采用归一化均方根误差(NRMSE)、归一化最大误差(MaxErr)和平均绝对百分比误差(MAPE)评价模型精度.前两项指标分别将升力系数的均方根误差和最大绝对误差除以对应统计组的实测升力系数均值;MAPE则为各工况相对误差绝对值的算术平均.}
 
+图9(a)给出了理论与实测升力系数的对比.三个转速档位的散点总体沿1:1参考线分布,85.28$\%$的工况位于±10$\%$相对误差带内,表明模型在所测转速和来流范围内具有较好的升力预测能力.较高理论升力系数区域的部分散点偏离参考线并位于其下方,说明模型在部分工况下仍存在高估,预测精度在整个试验包线内非均匀分布.
+
+\textcolor{blue}{图9(b)进一步展示了不同桨盘攻角下的相对误差分布.0°和45°组的误差中位数为正,模型总体偏向低估;75°和90°组则为负,模型总体偏向高估,其中90°组的负偏差更为明显.相比之下30°和60°组的误差分布更接近零值.上述结果表明,$\delta C_T$随来流方向发生变化,具有工况依赖性;需要结合全部工况的总体误差与分攻角误差结果,才能完整反映模型的适用范围.}
+
 \begin{center}
 \vbox{\centering
 \includegraphics[width=7.5cm]{Image/fig9_rotor_model_diagnostics.pdf}\\[1mm]
@@ -535,10 +539,6 @@ Table\,2 \quad Experimental settings for the rotor test bench} \vskip2mm
 \\ Fig.\,9 \quad Comparison of predicted and measured thrust coefficients and relative error distributions at different rotor disk angles of attack}
 }
 \end{center}
-
-图9(a)给出了理论与实测升力系数的对比.三个转速档位的散点总体沿1:1参考线分布,85.28$\%$的工况位于±10$\%$相对误差带内,表明模型在所测转速和来流范围内具有较好的升力预测能力.较高理论升力系数区域的部分散点偏离参考线并位于其下方,说明模型在部分工况下仍存在高估,预测精度在整个试验包线内非均匀分布.
-
-\textcolor{blue}{图9(b)进一步展示了不同桨盘攻角下的相对误差分布.0°和45°组的误差中位数为正,模型总体偏向低估;75°和90°组则为负,模型总体偏向高估,其中90°组的负偏差更为明显.相比之下30°和60°组的误差分布更接近零值.上述结果表明,$\delta C_T$随来流方向发生变化,具有工况依赖性;需要结合全部工况的总体误差与分攻角误差结果,才能完整反映模型的适用范围.}
 
 \begin{center}
 \vbox{\centering{\small 表3\quad 不同桨盘攻角下的旋翼升力模型误差统计
@@ -572,17 +572,6 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxErr$_{\mathrm{norm}}$/\% & MAPE/\% \\
 \\ Fig.\,10 \quad Freestream speed profiles for acceleration times of 1, 5, and 10 s}}
 \end{center}
 
-\subsection{升力闭环控制效果验证}
-\label{subsec:control_verif}
-
-\textcolor{green}{本节以0$^{\circ}$攻角下的强轴向来流作为控制验证工况}:该工况下来流方向垂直于桨盘平面、轴向分量最大,对旋翼升力的扰动最直接,因此适合用于检验控制器对显著气动扰动的抑制能力.进行三级对照实验:
-
-1. 固定控制量方案按式~(\ref{eq:static_map})根据零来流静态标定关系给定与期望升力对应的控制量,并在来流变化期间保持不变;
-
-2. 反馈控制方案关闭第2.2节所述的旋翼升力模型前馈,仅由升力误差生成反馈修正量$u_{\mathrm{fb}}$;
-
-3. 模型前馈与反馈复合控制依据转台角速度$\Omega_a$与桨盘攻角$\alpha_p$估计的来流状态,通过旋翼升力逆模型及转速--控制量映射生成前馈控制量$u_{\mathrm{ff}}$,叠加反馈修正量$u_{\mathrm{fb}}$得到总输出$u_{\mathrm{c}}$;$u_{\mathrm{ff}}$和$u_{\mathrm{fb}}$直接相加,系数均为1,其实际贡献随工况和跟踪误差变化.
-
 \end{multicols}
 \begin{center}
 \vbox{\centering
@@ -591,12 +580,24 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxErr$_{\mathrm{norm}}$/\% & MAPE/\% \\
 \\ Fig.\,11 \quad Dynamic responses at desired thrusts of 15, 20, and 25 N with a freestream acceleration time of 1 s. The upper row shows the measured thrust for all three methods, and the lower row shows the tracking errors for the two closed-loop methods (FB and FF+FB). Columns (a)–(c) correspond to desired thrusts of 15, 20, and 25 N, respectively.}}
 \end{center}
 \begin{multicols}{2}
+    
+\subsection{升力闭环控制效果验证}
+\label{subsec:control_verif}
+
+\textcolor{green}{本节以0$^{\circ}$攻角下的强轴向来流作为控制验证工况}:该工况下来流方向垂直于桨盘平面、轴向分量最大,对旋翼升力的扰动最直接,因此适合用于检验控制器对显著气动扰动的抑制能力.进行三级对照实验:
+
+1. 固定控制量方案(Fixed input)按式~(\ref{eq:static_map})根据零来流静态标定关系给定与期望升力对应的控制量,并在来流变化期间保持不变;
+
+2. 反馈控制方案关闭第2.2节所述的旋翼升力模型前馈,仅由升力误差生成反馈修正量$u_{\mathrm{fb}}$;
+
+3. 模型前馈与反馈复合控制依据转台角速度$\Omega_a$与桨盘攻角$\alpha_p$估计的来流状态,通过旋翼升力逆模型及转速--控制量映射生成前馈控制量$u_{\mathrm{ff}}$,叠加反馈修正量$u_{\mathrm{fb}}$得到总输出$u_{\mathrm{c}}$;$u_{\mathrm{ff}}$和$u_{\mathrm{fb}}$直接相加,系数均为1,其实际贡献随工况和跟踪误差变化.
 
 其中,反馈控制方案与复合控制方案采用相同的PID参数.试验覆盖15、20、25 N三中期望升力与1、5、10 s三种来流加速时间,共9个工况;同一工况下三种方法采用相同的目标升力阶跃指令、限幅及数据处理流程.
 
 \textcolor{green}{来流速度由转台角速度计算,即$V_\infty=\Omega_a R_0$.图10给出三种加速过程及时间对齐方式,根据中值滤波后的$V_\infty$,将其达到低、高平台速度增量10\%和90\%的时刻分别记为$t_{10}$和$t_{90}$,按各自的$t_{10}$对齐,同色小圆点标示各自的$t_{90}$;评价窗口统一取$[t_{10},t_{90}+3,\mathrm{s}]$,包含主要加速过程及其后的恢复阶段.图11和图12沿用这一对齐规则,图中的纵向阴影标示10\%—90\%加速段,水平阴影标示期望升力的±5\%误差带.以$T_e=T_d-T_m$定义升力跟踪误差.并采用对期望升力的归一化均方根误差评价控制效果.}
 
 图11比较1 s快速来流条件下不同期望升力的动态响应.三种期望升力下,固定控制量方案均随来流增强出现明显的升力下降,且来流稳定后仍不能恢复至目标值,表明零来流下的静态映射难以适应轴向来流变化.反馈控制能够恢复升力,但加速阶段存在较大的瞬态跌落,体现出依赖升力偏差建立补偿的响应局限.复合控制则减小了这一跌落,但在随后恢复过程中仍有一定超调.因此,前馈的作用主要体现为减轻来流变化过程中的升力偏离,而非完全消除瞬态误差.
+
 \end{multicols}
 \begin{center}
 \vbox{\centering
@@ -613,7 +614,7 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxErr$_{\mathrm{norm}}$/\% & MAPE/\% \\
 \setlength{\tabcolsep}{1.8pt}%
 \begin{tabular}{@{}ccccccc@{}}
 \toprule
-$T_d$/N & $t_{\mathrm{ramp}}$/s & Static/\% & FB/\% & FF+FB/\% & FB降幅/\% & FF+FB降幅/\% \\
+$T_d$/N & $t_{\mathrm{ramp}}$/s & Fixed input/\% & FB/\% & FF+FB/\% & FB降幅/\% & FF+FB降幅/\% \\
 \midrule
 15 & 1  & 54.13 & 10.39 & 5.64 & 80.8 & 45.7 \\
 15 & 5  & 44.62 & 4.61  & 2.42 & 89.7 & 47.5 \\
@@ -631,7 +632,7 @@ $T_d$/N & $t_{\mathrm{ramp}}$/s & Static/\% & FB/\% & FF+FB/\% & FB降幅/\% & F
 
 \textcolor{red}{图12进一步比较20 N期望升力下不同来流加速时间的响应.}随着加速时间延长,反馈控制的瞬态偏差减小,说明较缓的来流变化为反馈调节提供了更充分的响应时间;相比之下,固定控制量方案在来流稳定后仍保留较大的升力亏损,表明减缓来流变化不能消除静态映射失配.复合控制在三种加速时间下均保持最小的跟踪偏差,其中1 s工况更清楚地呈现了对瞬态跌落的抑制效果.
 
-表4汇总全部9个工况的误差指标.反馈控制相对固定控制量的NRMSE降低80.2\%—92.9\%;加入模型前馈后.相对反馈控制进一步降低45.7\%—74.3\%.复合控制的NRMSE为0.60\%—5.64\%.全部所测工况均呈现相同的误差排序$E_{\mathrm{FF+FB}}<E_{\mathrm{FB}}<E_{\mathrm{static}}$.说明升力反馈能够补偿静态映射失配.模型前馈则在此基础上进一步改善跟踪性能.
+表4汇总全部9个工况的误差指标.反馈控制相对固定控制量的NRMSE降低80.2\%—92.9\%;加入模型前馈后.相对反馈控制进一步降低45.7\%—74.3\%.复合控制的NRMSE为0.60\%—5.64\%.全部所测工况均呈现相同的误差排序$E_{\mathrm{FF+FB}}<E_{\mathrm{FB}}<E_{\mathrm{fixed}}$.说明升力反馈能够补偿静态映射失配.模型前馈则在此基础上进一步改善跟踪性能.
 \begin{center}
 \vbox{
 \centerline{\includegraphics[width=8cm,height=5.5cm]{Image/fig12_speed_error.pdf}}
