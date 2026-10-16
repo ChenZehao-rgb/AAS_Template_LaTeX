@@ -145,6 +145,7 @@ def metrics(frame: pd.DataFrame) -> pd.DataFrame:
                      "N": len(g), "mean_CT_exp": mean, "RMSE_CT": rmse,
                      "NRMSE_pct": 100 * rmse / mean,
                      "normalized_max_abs_error_pct": 100 * g.abs_residual_CT.max() / mean,
+                     "MaxAPE_pct": float(rel.abs().max()) if complete else np.nan,
                      "MAPE_pct": float(rel.abs().mean()) if complete else np.nan,
                      "median_signed_relative_error_pct": float(rel.median()) if complete else np.nan,
                      "relative_error_unusable_count": int((~g.relative_error_usable).sum())})
@@ -334,14 +335,14 @@ def write_table(new: pd.DataFrame, old: pd.DataFrame) -> pd.DataFrame:
     for col in ["NRMSE_pct","normalized_max_abs_error_pct","MAPE_pct"]:
         compare[f"delta_{col}_percentage_points"] = compare[col] - compare[f"old_{col}"]
     csv(compare,"table3_old_new_comparison.csv")
-    rows = [f"{r.group} & {r.NRMSE_pct:.2f} & {r.normalized_max_abs_error_pct:.2f} & {r.MAPE_pct:.2f} \\\\" for r in new.itertuples()]
+    rows = [f"{r.group} & {r.NRMSE_pct:.2f} & {r.MaxAPE_pct:.2f} & {r.MAPE_pct:.2f} \\\\" for r in new.itertuples()]
     tex = "\n".join([
         r"\begin{center}", r"\vbox{\centering{\small 表3\quad 不同桨盘攻角下的旋翼升力模型误差统计",
         r"\\ Table\,3 \quad Error statistics of the rotor lift model at different disk angles of attack}\vskip2mm",
         r"{\scriptsize\centering", r"\setlength{\tabcolsep}{3.5pt}", r"\begin{tabular}{@{}crrr@{}}", r"\toprule",
-        r"$\alpha_p/(^\circ)$ & NRMSE/\% & MaxErr$_{\mathrm{norm}}$/\% & MAPE/\% \\", r"\midrule", *rows,
+        r"$\alpha_p/(^\circ)$ & NRMSE/\% & MaxAPE/\% & MAPE/\% \\", r"\midrule", *rows,
         r"\bottomrule",r"\end{tabular}}",r"\vskip1mm",
-        r"\parbox{0.98\columnwidth}{\scriptsize 注：每个攻角33个工况，全部231个工况，各工况等权。NRMSE与归一化最大绝对误差的分母均为对应统计组实测$C_T$均值；MAPE先以各工况实测$C_T$归一化再取算术平均。保留现有$C_T$配对；上游密度与转速修正一致性尚待核实。}",
+        r"\parbox{0.98\columnwidth}{\scriptsize 注：每个攻角33个工况，全部231个工况，各工况等权。NRMSE以对应统计组实测$C_T$均值归一化；MaxAPE和MAPE分别为逐工况绝对百分比误差的最大值和算术平均值，逐工况分母为实测$C_T$。}",
         r"}",r"\end{center}",""])
     (OUT/"table3_revised.tex").write_text(tex,encoding="utf-8")
     shutil.copy2(OUT/"table3_revised.tex", ROOT/"data_process"/"model_validation_table.tex")
@@ -552,14 +553,14 @@ def main() -> None:
         if sha256(ROOT/path)!=hash_before:
             raise AssertionError(f"Protected input changed: {path}")
     save_json(OUT/"protected_inputs_sha256.json",protected_hashes)
-    print(new[["group","N","NRMSE_pct","normalized_max_abs_error_pct","MAPE_pct"]].to_string(index=False))
+    print(new[["group","N","NRMSE_pct","MaxAPE_pct","MAPE_pct"]].to_string(index=False))
     print(json.dumps(within,ensure_ascii=False))
     print(f"Outputs: {OUT}")
 
 
 def write_notes(new,old,compare,f,audit,sensitivity,within,special,max_abs):
     table = markdown_table(new,[("group","攻角/°"),("N","N"),("NRMSE_pct","NRMSE/%"),
-                               ("normalized_max_abs_error_pct","归一化最大绝对误差/%"),("MAPE_pct","MAPE/%")])
+                               ("MaxAPE_pct","MaxAPE/%"),("MAPE_pct","MAPE/%")])
     comparison = markdown_table(compare,[("group","攻角/°"),("old_N","旧N"),("N","新N"),
         ("old_NRMSE_pct","旧NRMSE/%"),("NRMSE_pct","新NRMSE/%"),
         ("old_normalized_max_abs_error_pct","旧最大/%"),("normalized_max_abs_error_pct","新最大/%"),
@@ -575,7 +576,7 @@ def write_notes(new,old,compare,f,audit,sensitivity,within,special,max_abs):
 
 - 实际工况数231，每个攻角33；无缺失工况、无重复工况。底层处理后记录877条，各工况汇总2—5条记录，但新统计每工况等权。
 - 绝对相对误差≤5%：{within['5']['count']}/231（{within['5']['percentage']:.2f}%）；≤10%：{within['10']['count']}/231（{within['10']['percentage']:.2f}%）。
-- 总体RMSE={overall.RMSE_CT:.10f}；总体NRMSE={overall.NRMSE_pct:.2f}%；MAPE={overall.MAPE_pct:.2f}%；归一化最大绝对误差={overall.normalized_max_abs_error_pct:.2f}%。
+- 总体RMSE={overall.RMSE_CT:.10f}；总体NRMSE={overall.NRMSE_pct:.2f}%；MaxAPE={overall.MaxAPE_pct:.2f}%；MAPE={overall.MAPE_pct:.2f}%。
 - 15°—75°各组NRMSE最小为{lo.NRMSE_pct:.2f}%（{int(lo.alpha_deg)}°），最大为{hi.NRMSE_pct:.2f}%（{int(hi.alpha_deg)}°）。0°为{end0.NRMSE_pct:.2f}%，90°为{end90.NRMSE_pct:.2f}%，均高于全部15°—75°组。
 - 各攻角有符号相对误差中位数：{medians}。
 - 最大绝对相对误差：{int(special.rpm_nom)} rpm档，实际转速均值{special.rpm_actual_mean:.2f} rpm，{int(special.alpha_deg)}°，来流速度均值{special.V_actual_mean_m_s:.6f} m/s，J={special.J:.6f}；理论CT={special.C_T_theory:.6f}，实测CT={special.C_T_exp:.6f}，残差={special.residual_CT:+.6f}，有符号相对误差={special.signed_relative_error_pct:+.2f}%。
@@ -583,7 +584,7 @@ def write_notes(new,old,compare,f,audit,sensitivity,within,special,max_abs):
 - 按组中位数方向，支持0°、45°总体偏低估，75°、90°总体偏高估；不意味着这些组中每个工况均为同一偏差方向。不据此归因于失速、变形或尾迹。
 """
     (OUT/"chat_summary_zh.md").write_text(summary,encoding="utf-8")
-    paragraph="本统计以每个分档工况的实测与理论升力系数差值为基础。NRMSE的分母为对应统计组的实测升力系数算术均值；归一化最大绝对误差使用同一个分母。MAPE先用各工况的实测升力系数作为分母计算绝对相对误差，再取算术平均。分攻角统计各包含33个工况，总体统计直接使用全部231个工况，各工况等权，不按底层记录数量加权，也不对分组NRMSE作简单平均。有符号相对误差为实测减理论后除以该工况实测值，正值表示模型低估，负值表示模型高估。"
+    paragraph="本统计以每个分档工况的实测与理论升力系数差值为基础。NRMSE的分母为对应统计组的实测升力系数算术均值；MaxAPE和MAPE先用各工况的实测升力系数作为分母计算绝对百分比误差，再分别取最大值和算术平均值。分攻角统计各包含33个工况，总体统计直接使用全部231个工况，各工况等权，不按底层记录数量加权，也不对分组NRMSE作简单平均。有符号相对误差为实测减理论后除以该工况实测值，正值表示模型低估，负值表示模型高估。"
     caption="图7 旋翼升力模型在231个分档工况点上的误差。（a）理论CT与实测CT一致性散点图，颜色及点形区分转速档位；虚线为1∶1参考线，点划线及淡色点线分别为相对实测值的±10%及±5%误差边界。（b）各桨盘攻角下有符号相对误差箱线图，正值表示模型低估，负值表示模型高估。每个攻角合并三个转速档位、各11个来流档位，共33个不同工况；箱体为第一至第三四分位数，横线为中位数，须线延伸至1.5倍四分位距范围内的最远观测值，叠加散点包含全部工况及离群值。箱体反映工况间分布，不表示均值置信区间，也不代表33次重复试验。"
     (OUT/"paper_text_and_caption_zh.md").write_text("适用性说明：当前数字保留原工作簿CT配对；必须先解决audit_report_zh.md中的上游一致性问题，才能将其表述为已核实的统一无量纲化结果。\n\n"+paragraph+"\n\n"+caption+"\n",encoding="utf-8")
     report=f"""# 图7及表3统计核查记录

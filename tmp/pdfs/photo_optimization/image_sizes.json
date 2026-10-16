@@ -1,0 +1,32 @@
+[
+  {
+    "source": "Image\\图6a-旋转测试台.png",
+    "original_pixels": [
+      4382,
+      2191
+    ],
+    "original_bytes": 11912067,
+    "output": "Image\\fig6a_test_rig_compact.jpg",
+    "pixels": [
+      1200,
+      600
+    ],
+    "bytes": 170471,
+    "original_sha256": "2836444321d0a9de4f474de35704d72dab07697d1b5f6396366e1092450a8e16"
+  },
+  {
+    "source": "Image\\图6b-旋转测试台.png",
+    "original_pixels": [
+      3310,
+      2511
+    ],
+    "original_bytes": 13996453,
+    "output": "Image\\fig6b_rotor_unit_compact.jpg",
+    "pixels": [
+      1200,
+      910
+    ],
+    "bytes": 215329,
+    "original_sha256": "a69ce32cbb907b82522e5eee6b7d783ea39d75c1ffac26daf22300fa02870446"
+  }
+]

@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "source": "data\\理论-实验对比结果.xlsx",
+  "source_sha256": "9adb6c09f403ec92e2845b77c789380b927fa8c6c6d9632424b154fbb7372708",
+  "N": 231,
+  "rows": [
+    {
+      "group": "0",
+      "N": 33,
+      "NRMSE_pct": 9.429263784228736,
+      "MaxAPE_pct": 16.963466128143924,
+      "MAPE_pct": 8.510152082815896
+    },
+    {
+      "group": "15",
+      "N": 33,
+      "NRMSE_pct": 4.915396992993266,
+      "MaxAPE_pct": 17.373059169114555,
+      "MAPE_pct": 4.826286283202803
+    },
+    {
+      "group": "30",
+      "N": 33,
+      "NRMSE_pct": 3.4338914989598712,
+      "MaxAPE_pct": 19.55546056849754,
+      "MAPE_pct": 2.9793905087186103
+    },
+    {
+      "group": "45",
+      "N": 33,
+      "NRMSE_pct": 5.771063168785299,
+      "MaxAPE_pct": 10.508849557522119,
+      "MAPE_pct": 5.119533525456154
+    },
+    {
+      "group": "60",
+      "N": 33,
+      "NRMSE_pct": 2.654868033808294,
+      "MaxAPE_pct": 8.106068772232414,
+      "MAPE_pct": 2.147033533408474
+    },
+    {
+      "group": "75",
+      "N": 33,
+      "NRMSE_pct": 4.163232736335457,
+      "MaxAPE_pct": 7.178757705073485,
+      "MAPE_pct": 3.6661268632620554
+    },
+    {
+      "group": "90",
+      "N": 33,
+      "NRMSE_pct": 10.12854193713514,
+      "MaxAPE_pct": 17.304286220332987,
+      "MAPE_pct": 8.027224740663653
+    },
+    {
+      "group": "全部",
+      "N": 231,
+      "NRMSE_pct": 6.559568058897321,
+      "MaxAPE_pct": 19.55546056849754,
+      "MAPE_pct": 5.039392505361092
+    }
+  ],
+  "source_pairs_unchanged": true,
+  "independent_stdlib_recalculation": true,
+  "NRMSE_and_MAPE_unchanged": true,
+  "manuscript_scope": "Table 3, metric definitions, and explicit MaxAPE wording of existing maximum-error claim",
+  "manuscript_sha256": "a6546be71ed955bbe82a3ddb61bed3c340865a9fb0f7dd667b0c52d867a055b4",
+  "limitation": "Frozen workbook-pair arithmetic; does not resolve upstream density/rpm consistency.",
+  "pdf_verification": {
+    "compiled_with": "XeLaTeX, two passes; xdvipdfmx",
+    "pages": 14,
+    "table3_page_1based": 10,
+    "visually_checked_pages_1based": [
+      9,
+      10
+    ],
+    "table3_layout": "PASS: header and all eight rows readable; no clipping or overlap",
+    "pdf_sha256": "18a10d1e2f84048b8d844819681c24abe367029f338d4e1e485d22612df2217d"
+  }
+}

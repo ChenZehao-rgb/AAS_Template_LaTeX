@@ -7,6 +7,7 @@
     "RMSE_CT": 0.0006150699675118798,
     "NRMSE_pct": 6.559568058897323,
     "normalized_max_abs_error_pct": 22.182682106394516,
+    "MaxAPE_pct": 19.55546056849754,
     "MAPE_pct": 5.039392505361092,
     "median_signed_relative_error_pct": 0.45109895383434273,
     "relative_error_unusable_count": 0
@@ -105,5 +106,16 @@
     "60": 1.574233239844391,
     "75": -3.9443155452436165,
     "90": -7.2847084311247565
+  },
+  "table3_display_metrics": [
+    "NRMSE_pct",
+    "MaxAPE_pct",
+    "MAPE_pct"
+  ],
+  "metric_definitions": {
+    "NRMSE": "100 * RMSE(CT_exp - CT_theory) / mean(CT_exp) within group",
+    "MaxAPE": "max(100 * abs(CT_exp - CT_theory) / abs(CT_exp)) within group",
+    "MAPE": "mean(100 * abs(CT_exp - CT_theory) / abs(CT_exp)) within group",
+    "normalized_max_abs_error_pct": "retained historical diagnostic; not displayed in Table 3"
   }
 }
