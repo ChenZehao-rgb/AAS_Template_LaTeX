@@ -15,11 +15,12 @@
 \usepackage{algpseudocode} % 算法伪代码
 \usepackage{cite}
 \usepackage[numbers, sort&compress]{natbib}
-\usepackage{xcolor}
+\usepackage[dvipsnames]{xcolor}
 
 \setcounter{page}{1}
 
 \begin{document}
+\definecolor{mygreen}{HTML}{069406}
 
 \cntitle{{\hei\qquad 面向高机动飞行的旋翼升力建模与控制方法}
 
@@ -90,7 +91,7 @@ Month Date, Year}
 
 针对上述问题,本文的主要贡献如下:
 1) 以变桨盘攻角的叶素理论模型为基础,建立考虑无人机机动飞行状态的单旋翼升力机理模型,并将影响轴向升力的变量归约为由轴向与面内来流、来流方位角、桨盘面内角速度与转速所构成的低维集合;
-2) 提出以\textcolor{green}{无需升力试验数据修正升力预测值的机理模型}为前馈、以直接升力测量值为反馈的旋翼升力复合控制架构,并将其部署于实际飞控;
+2) 提出以\textcolor{mygreen}{无需升力试验数据修正升力预测值的机理模型}为前馈、以直接升力测量值为反馈的旋翼升力复合控制架构,并将其部署于实际飞控;
 3) 搭建桨盘攻角与来流速度可调的旋转式单旋翼测试台,复现高机动飞行中的来流工况,并在其上验证所提模型与控制架构的有效性.
 
 全文结构如下:第1节对无人机机动飞行时的旋翼运动状态进行建模;第2节分析传统控制架构的局限并建立旋翼升力闭环控制架构;第3节介绍桨叶几何与翼型气动数据获取、旋转测试台搭建及飞控部署等实现细节;第4节在旋转测试台上验证旋翼模型精度与升力闭环控制效果;第5节总结全文.
@@ -108,7 +109,7 @@ Month Date, Year}
 
 简化的四旋翼无人机模型如图1所示. 定义机体坐标系
 $\mathcal{B}=\{O_b;\bm{x}_b,\bm{y}_b,\bm{z}_b\}$ 为前--右--下坐标系, 原点位于机体质心;
-\textcolor{green}{定义惯性坐标系 $\mathcal{I}=\{O_e;\bm{x}_e,\bm{y}_e,\bm{z}_e\}$ 为北--东--地坐标系.}
+\textcolor{mygreen}{定义惯性坐标系 $\mathcal{I}=\{O_e;\bm{x}_e,\bm{y}_e,\bm{z}_e\}$ 为北--东--地坐标系.}
 记 $\bm{R}=\bm{R}(\bm{q})\in SO(3)$ 为由 $\mathcal{B}$ 至 $\mathcal{I}$ 的旋转矩阵,
 无人机的运动状态由位置 $\bm{p}\in\mathbb{R}^3$、速度 $\bm{v}\in\mathbb{R}^3$、
 姿态四元数 $\bm{q}$ 与机体角速度 $\bm{\omega}=[\omega_x,\ \omega_y,\ \omega_z]^{\mathrm{T}}$ 描述, 满足
@@ -242,7 +243,7 @@ U_P(\rho,\psi)&=V_{a,i}+v_{\mathrm{ind}}(\rho,\psi) \label{eq:UP}
 
 \begin{equation}
 \begin{aligned}
-v_{\mathrm{ind}}(\rho,\psi)&=\lambda_{\mathrm{ind}}(\rho,\psi)\,\textcolor{green}{\Omega_{i}}R_p,\\
+v_{\mathrm{ind}}(\rho,\psi)&=\lambda_{\mathrm{ind}}(\rho,\psi)\,\textcolor{mygreen}{\Omega_{i}}R_p,\\
 \lambda_{\mathrm{ind}}(\rho,\psi)&=\lambda_{\mathrm{ind},i}\left[1+k_x\frac{\rho}{R_p}\sin\!\left(\psi-\psi_{w,i}\right)\right]
 \end{aligned}
 \label{eq:ind_vel}
@@ -348,7 +349,7 @@ Fig.\,4\quad Propeller photogrammetry;(a)3D reconstruction,(b)spanwise range for
 \end{center}
 
 \section{实施}
-本节介绍上述理论方法从理论到实现的完整工程链条.\textcolor{green}{本文所称无需升力试验数据修正,是指不利用实测升力数据拟合旋翼气动模型参数或修正模型预测残差.模型输入仍需通过摄影测量和尺度校准获取桨叶几何,并利用XFOIL计算翼型极线;控制部署与升力测量分别需要进行转速–-控制量映射标定和力传感器校准及动态载荷补偿.}
+本节介绍上述理论方法从理论到实现的完整工程链条.\textcolor{mygreen}{本文所称无需升力试验数据修正,是指不利用实测升力数据拟合旋翼气动模型参数或修正模型预测残差.模型输入仍需通过摄影测量和尺度校准获取桨叶几何,并利用XFOIL计算翼型极线;控制部署与升力测量分别需要进行转速–-控制量映射标定和力传感器校准及动态载荷补偿.}
 \subsection{桨叶几何与翼型气动数据获取}
 \label{subsec:geo}
 叶素模型需要两类输入:一类是弦长$c(\rho)$、安装角$\theta(\rho)$及翼型轮廓随径向位置的变化,另一类是各截面在有效迎角$\alpha_{\mathrm{eff}}$和雷诺数$Re$下的二维气动系数$C_l$、$C_d$.UIUC等公开数据库能够提供部分通用翼型坐标[14],但商业螺旋桨通常只标注直径和标称桨距,缺少上述径向几何及截面数据[15].为此,本文按照摄影测量重建、径向截面提取、二维极线计算的流程获取T-Motor P18$\times$6.1\,CF螺旋桨的模型输入.
@@ -367,7 +368,7 @@ Fig.\,4\quad Propeller photogrammetry;(a)3D reconstruction,(b)spanwise range for
 \vbox{
 \centerline{\includegraphics[width=9cm]{Image/fig5_chord_pitch_comparison.pdf}}
 \vskip2mm
-{\small \textcolor{green}{图5}\quad 桨叶弦长比与安装角的径向分布($0.25\le r/R\le0.90$)
+{\small \textcolor{mygreen}{图5}\quad 桨叶弦长比与安装角的径向分布($0.25\le r/R\le0.90$)
 \\
 Fig.\,5\quad Radial distributions of blade chord ratio and pitch angle ($0.25\le r/R\le0.90$)}}
 \end{center}
@@ -389,7 +390,7 @@ V_{t,i}=\Omega_a R_0\sin\alpha_p
 \begin{equation}
 \begin{aligned}
 U_P(\rho,\psi)&=\Omega_a(R_0-\rho\cos\psi)\cos\alpha_p+v_{\mathrm{ind}}(\rho,\psi)\\
-U_T(\rho,\psi)&=\textcolor{green}{\Omega_i}\rho-\Omega_a(R_0-\rho\cos\psi)\sin\alpha_p\cos\psi
+U_T(\rho,\psi)&=\textcolor{mygreen}{\Omega_i}\rho-\Omega_a(R_0-\rho\cos\psi)\sin\alpha_p\cos\psi
 \end{aligned}
 \label{eq:bench_vel}
 \end{equation}
@@ -463,7 +464,7 @@ Algorithm\,1\quad Offline generation of the thrust lookup table}
 
 2. 在线阶段依据期望升力与实时工况量$(\alpha_p,V_\infty)$反查所需转速$\Omega$;
 
-3. 在线查表给出期望升力到转速的前馈逆映射,而转速还需进一步转换为归一化电机控制量.\textcolor{blue}{图7(a)给出了固定台架上测得的转速--控制量关系及其拟合曲线.在0--100\%油门范围内选取13个固定点位,重复进行4组测试.图7(b)给出了动态来流下的旋翼转速变化;选取零来流条件下分别对应15、20和25 N升力的三种固定控制量,使转台在1 s内由静止加速至最大角速度,并记录各控制量下的旋翼转速响应.结果表明,静态测试中四组数据的拟合曲线在所测转速范围内基本重合,具有较好的重复性;动态测试中,三种固定控制量下来流变化前后稳态平均转速的相对变化均不超过5\%.这表明,在所测工况范围内,转速–控制量映射对来流变化的敏感性较低,来流对升力的影响主要体现为升力--转速关系的变化.因此,采用静态标定的转速--控制量映射,将旋翼逆模型输出的前馈参考转速转换为电机控制量.利用图7(a)中的实测数据},拟合得到:
+3. 在线查表给出期望升力到转速的前馈逆映射,而转速还需进一步转换为归一化电机控制量.\textcolor{blue}{图7(a)给出了固定台架上测得的转速--控制量关系及其拟合曲线.在0--100\%油门范围内选取13个固定点位,重复进行4组测试.图7(b)给出了动态来流下的旋翼转速变化;选取零来流条件下分别对应15、20和25 N升力的三种固定控制量,使转台在1 s内由静止加速至最大角速度,并记录各控制量下的旋翼转速响应.结果表明,在所测控制量范围内,以相同控制量下四组转速结果的均值为基准,最大相对转速误差为4.2\%，说明四组静态测试结果基本一致，支持采用同一转速–控制量映射;动态测试中,三种固定控制量下来流变化前后稳态平均转速的相对变化均不超过5\%.这表明,在所测工况范围内,转速–控制量映射对来流变化的敏感性较低,来流对升力的影响主要体现为升力--转速关系的变化.因此,采用静态标定的转速--控制量映射,将旋翼逆模型输出的前馈参考转速转换为电机控制量.利用图7(a)中的实测数据},拟合得到:
 \begin{equation}
 u_{\mathrm{ff}}=a\,\Omega^2+b\,\Omega+c
 \label{eq:rpm_calib}
@@ -488,7 +489,7 @@ u_{\mathrm{ff}}=a\,\Omega^2+b\,\Omega+c
 \hat{T}_{m,i}=T_{m,i}-b_0-A\,a_z-B\,a_x
 \label{eq:sensor_calib}
 \end{equation}
-其中$\hat{T}_{m,i}$为补偿后的传感器测量值,单位为N;$b_0$为系统上电后传感器20个测量周期的均值,用于消除基础零偏;$A$=0.361、$B$=0.033,分别为传感器轴向和径向载荷的补偿系数,与传感器安装载荷质量、安装误差与横向交叉灵敏度有关,单位为kg;$a_z$和$a_x$分别为沿传感器轴向和径向的加速度值,通过测试台悬臂末端安装的飞控加速度计获取,并投影到传感器轴向和径向,单位为m/s².补偿前后的传感器测量数据如图8所示.}
+其中$\hat{T}_{m,i}$为补偿后的传感器测量值,单位为N;$b_0$为系统上电后传感器20个测量周期的均值,用于消除基础零偏;$A$=0.361kg、$B$=0.033kg,分别为传感器轴向和径向载荷的补偿系数,与传感器安装载荷质量、安装误差与横向交叉灵敏度有关;$a_z$和$a_x$分别为沿传感器轴向和径向的加速度值,通过测试台悬臂末端安装的飞控加速度计获取,并投影到传感器轴向和径向,单位为m/s².补偿前后的传感器测量数据如图8所示.}
 
 \end{multicols}
 \begin{center}
@@ -566,7 +567,7 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxAPE/\% & MAPE/\% \\
 \begin{center}
 \vbox{\centering
 \includegraphics[width=8cm,height=3.8cm]{Image/fig9_freestream_ramp.pdf}\\[1mm]
-{\small \textcolor{green}{图10}\quad \textcolor{red}{1、5、10 s来流加速时间曲线.}
+{\small \textcolor{mygreen}{图10}\quad \textcolor{red}{1、5、10 s来流加速时间曲线.}
 \\ Fig.\,10 \quad Freestream speed profiles for acceleration times of 1, 5, and 10 s}}
 \end{center}
 
@@ -574,7 +575,7 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxAPE/\% & MAPE/\% \\
 \begin{center}
 \vbox{\centering
 \includegraphics[width=15.5cm]{Image/fig10_representative_response.pdf}\\[1mm]
-{\small \textcolor{green}{图11}\quad 15、20、25 N期望升力和1 s来流加速工况下的动态响应.上排为三种方法的实测升力,下排为两种闭环方法(FB、FF+FB)的跟踪误差.(a)--(c)分别对应15、20、25 N期望升力.
+{\small \textcolor{mygreen}{图11}\quad 15、20、25 N期望升力和1 s来流加速工况下的动态响应.上排为三种方法的实测升力,下排为两种闭环方法(FB、FF+FB)的跟踪误差.(a)--(c)分别对应15、20、25 N期望升力.
 \\ Fig.\,11 \quad Dynamic responses at desired thrusts of 15, 20, and 25 N with a freestream acceleration time of 1 s. The upper row shows the measured thrust for all three methods, and the lower row shows the tracking errors for the two closed-loop methods (FB and FF+FB). Columns (a)–(c) correspond to desired thrusts of 15, 20, and 25 N, respectively.}}
 \end{center}
 \begin{multicols}{2}
@@ -582,9 +583,9 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxAPE/\% & MAPE/\% \\
 \subsection{升力闭环控制效果验证}
 \label{subsec:control_verif}
 
-\textcolor{green}{本节以0$^{\circ}$攻角下的强轴向来流作为控制验证工况}:该工况下来流方向垂直于桨盘平面、轴向分量最大,对旋翼升力的扰动最直接,因此适合用于检验控制器对显著气动扰动的抑制能力.进行三级对照实验:
+\textcolor{mygreen}{本节以0$^{\circ}$攻角下的强轴向来流作为控制验证工况}:该工况下来流方向垂直于桨盘平面、轴向分量最大,对旋翼升力的扰动最直接,因此适合用于检验控制器对显著气动扰动的抑制能力.进行三级对照实验:
 
-1. 固定控制量方案(\textcolor{green}{Fixed input,FI})按式~(\ref{eq:static_map})根据零来流静态标定关系给定与期望升力对应的控制量,并在来流变化期间保持不变;
+1. 固定控制量方案(\textcolor{mygreen}{Fixed input,FI})按式~(\ref{eq:static_map})根据零来流静态标定关系给定与期望升力对应的控制量,并在来流变化期间保持不变;
 
 2. 反馈控制方案(Feedback,FB)关闭第2.2节所述的旋翼升力模型前馈,仅由升力误差生成反馈修正量$u_{\mathrm{fb}}$;
 
@@ -592,7 +593,7 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxAPE/\% & MAPE/\% \\
 
 其中,反馈控制方案与复合控制方案采用相同的PID参数.试验覆盖15、20、25 N三中期望升力与1、5、10 s三种来流加速时间,共9个工况;同一工况下三种方法采用相同的目标升力阶跃指令、限幅及数据处理流程.
 
-\textcolor{green}{来流速度由转台角速度计算,即$V_\infty=\Omega_a R_0$.图10给出三种加速过程及时间对齐方式,根据中值滤波后的$V_\infty$,将其达到低、高平台速度增量10\%和90\%的时刻分别记为$t_{10}$和$t_{90}$,按各自的$t_{10}$对齐,同色小圆点标示各自的$t_{90}$;评价窗口统一取$[t_{10},t_{90}+3,\mathrm{s}]$,包含主要加速过程及其后的恢复阶段.图11和图12沿用这一对齐规则,图中的纵向阴影标示10\%—90\%加速段,水平阴影标示期望升力的±5\%误差带.以$T_e=T_d-T_m$定义升力跟踪误差.并采用对期望升力的归一化均方根误差评价控制效果.}
+\textcolor{mygreen}{来流速度由转台角速度计算,即$V_\infty=\Omega_a R_0$.图10给出三种加速过程及时间对齐方式,根据中值滤波后的$V_\infty$,将其达到低、高平台速度增量10\%和90\%的时刻分别记为$t_{10}$和$t_{90}$,按各自的$t_{10}$对齐,同色小圆点标示各自的$t_{90}$;评价窗口统一取$[t_{10},t_{90}+3,\mathrm{s}]$,包含主要加速过程及其后的恢复阶段.图11和图12沿用这一对齐规则,图中的纵向阴影标示10\%—90\%加速段,水平阴影标示期望升力的±5\%误差带.以$T_e=T_d-T_m$定义升力跟踪误差.并采用对期望升力的归一化均方根误差评价控制效果.}
 
 图11比较1 s快速来流条件下不同期望升力的动态响应.三种期望升力下,固定控制量方案均随来流增强出现明显的升力下降,且来流稳定后仍不能恢复至目标值,表明零来流下的静态映射难以适应轴向来流变化.反馈控制能够恢复升力,但加速阶段存在较大的瞬态跌落,体现出依赖升力偏差建立补偿的响应局限.复合控制则减小了这一跌落,但在随后恢复过程中仍有一定超调.因此,前馈的作用主要体现为减轻来流变化过程中的升力偏离,而非完全消除瞬态误差.
 
@@ -600,13 +601,13 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxAPE/\% & MAPE/\% \\
 \begin{center}
 \vbox{\centering
 \includegraphics[width=14cm]{Image/fig10_ramp_time_response_20N.pdf}\\[1mm]
-{\small \textcolor{green}{图12}\quad 20 N期望升力和1、5、10 s来流加速工况下的动态响应.上排为三种方法的实测升力,下排为两种闭环方法(FB、FF+FB)的跟踪误差.(a)--(c)分别对应1、5、10 s加速时间.
+{\small \textcolor{mygreen}{图12}\quad 20 N期望升力和1、5、10 s来流加速工况下的动态响应.上排为三种方法的实测升力,下排为两种闭环方法(FB、FF+FB)的跟踪误差.(a)--(c)分别对应1、5、10 s加速时间.
 \\ Fig.\,12 \quad Dynamic responses at a desired thrust of 20 N with freestream acceleration times of 1, 5, and 10 s. The upper row shows the measured thrust for all three methods, and the lower row shows the tracking errors for the two closed-loop methods (FB and FF+FB). Columns (a)–(c) correspond to acceleration times of 1, 5, and 10 s, respectively.}}
 \end{center}
 \begin{multicols}{2}
 
 \begin{center}
-\vbox{\centering{\small \textcolor{green}{表4}\quad 统一扰动窗口下9种期望升力--加速时间组合的归一化RMSE及降幅
+\vbox{\centering{\small \textcolor{mygreen}{表4}\quad 统一扰动窗口下9种期望升力--加速时间组合的归一化RMSE及降幅
 \\ Table\,4 \quad Normalized RMSE and relative reductions for nine combinations of desired thrust and acceleration time}\vskip2mm
 {\scriptsize\centering
 \setlength{\tabcolsep}{1.8pt}%
@@ -635,7 +636,7 @@ $T_d$/N & $t_{\mathrm{ramp}}$/s & FI/\% & FB/\% & FF+FB/\% & FB降幅/\% & FF+FB
 \vbox{
 \centerline{\includegraphics[width=8cm,height=5.5cm]{Image/fig12_speed_error.pdf}}
 \vskip2mm
-{\small \textcolor{green}{图13}\quad 三种控制方法归一化绝对误差随来流速度的变化
+{\small \textcolor{mygreen}{图13}\quad 三种控制方法归一化绝对误差随来流速度的变化
 \\ Fig.\,13 \quad Normalized absolute tracking errors of the three control methods as a function of freestream speed}}
 \end{center}
 
@@ -659,7 +660,7 @@ $T_d$/N & $t_{\mathrm{ramp}}$/s & FI/\% & FB/\% & FF+FB/\% & FB降幅/\% & FF+FB
 
 本文面向低空经济应用中多旋翼无人机在复杂气流和快速机动条件下的推进系统升力失配问题,建立了从整机运动状态到单旋翼轴向升力的机理模型,并提出模型前馈与升力反馈相结合的复合控制方法.通过摄影测量获取桨叶几何,结合XFOIL翼型极线与非均匀诱导入流叶素模型计算旋翼升力;采用离线生成查找表、在线反查期望转速的方式,并结合静态标定的转速–控制量映射,将控制方法部署于实际飞控.同时,搭建桨盘攻角与来流速度可调的旋转悬臂式单旋翼测试台,完成动态载荷下的测力补偿、模型精度验证及控制对照试验.
 
-模型精度验证实验表明,\textcolor{red}{在所测0°—90°桨盘攻角及0—10.2 m/s来流速度范围内,模型能够较好地描述旋翼升力随工况的变化,总体NRMSE为6.56\%}.\textcolor{green}{$\alpha_p=0^{\circ}$的轴向强来流升力闭环实验表明},\textcolor{blue}{复合控制的归一化均方根误差为0.60\%—5.64\%,相较于采用相同PID参数的纯反馈控制降低45.7\%—74.3\%.控制输出分解与实测转速响应表明,模型前馈利用当前来流信息建立补偿,升力反馈进一步修正模型失配与动态偏差,两者共同减轻来流变化过程中的瞬态升力损失,提高了执行器层单旋翼的升力跟踪精度.}
+模型精度验证实验表明,\textcolor{red}{在所测0°-90°桨盘攻角及0-10.2 m/s来流速度范围内,模型能够较好地描述旋翼升力随工况的变化,总体NRMSE为6.56\%}.\textcolor{mygreen}{$\alpha_p=0^{\circ}$的轴向强来流升力闭环实验表明},\textcolor{blue}{复合控制的归一化均方根误差为0.60\%—5.64\%,相较于采用相同PID参数的纯反馈控制降低45.7\%—74.3\%.控制输出分解与实测转速响应表明,模型前馈利用当前来流信息建立补偿,升力反馈进一步修正模型失配与动态偏差,两者共同减轻来流变化过程中的瞬态升力损失,提高了执行器层单旋翼的升力跟踪精度.}
 
 \textcolor{red}{未来将进一步考虑桨叶弹性变形对升力预测的影响},完善动态载荷下的测力补偿方法,并推进旋翼测量单元的轻量化与机载集成.在此基础上,开展斜来流条件下的升力闭环试验,利用具有姿态控制能力的双旋翼或四旋翼平台,进一步验证所提方法在机动过程中的作用,评估其对整机姿态控制与轨迹跟踪性能的改善效果.
 

@@ -132,7 +132,7 @@ def draw(ax,r,row,limits,ticks,standalone=False,compact=False):
         P.S.panel_label(ax, f'({chr(97+[1,5,10].index(r["nominal"]))}) {r["nominal"]} s',x=.035,y=.97)
         ax.tick_params(labelbottom=False)
     else:
-        ax.set_xlabel(r'$\tau=t-t_{10}$ (s)',labelpad=2)
+        ax.set_xlabel('时间 (s)' if compact else r'$\tau=t-t_{10}$ (s)',labelpad=2)
 
 
 def compensated_limits(runs):

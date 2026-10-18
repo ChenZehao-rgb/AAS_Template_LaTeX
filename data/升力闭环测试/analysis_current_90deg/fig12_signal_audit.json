@@ -145,7 +145,7 @@
       "limitation": "Firmware source unavailable here: exact internal limiter ordering is not asserted. Window sum equality is not a general post-limit identity. Logged PWM fields are zero and are not used as applied outputs."
     }
   ],
-  "source_script_sha256": "c93ee31aee8bbb77b95ff5a09eb150dbcf2b1225b9ef22a8e04e612c9fa8c923",
+  "source_script_sha256": "b5e373e95f44b1c4b98d37a68083e9d9cfdca45ab8ebfaf4d2e064771054df11",
   "alignment": "Each trial tau=t-own_inflow_t10; inherited 0.35 s median detector only for alignment. Displayed RPM is unfiltered; no event alignment or time scaling. Inflow is not displayed.",
   "event_rule": "First native sample at/after own inflow t10 crossing 20/50/80% of own median RPM increment: baseline tau [-2,-0.5] s; plateau [t90+2,t90+3] s. Reference uses the identical rule.",
   "quality_rule": "No finite native RPM samples removed. Large steps recorded, not diagnosed as faults.",
@@ -184,7 +184,7 @@
     ],
     "transformation": {
       "script": "D:\\1-phd_data\\latex\\AAS_Template_LaTeX\\data\\升力闭环测试\\analyze_closed_loop.py",
-      "hash": "c93ee31aee8bbb77b95ff5a09eb150dbcf2b1225b9ef22a8e04e612c9fa8c923"
+      "hash": "b5e373e95f44b1c4b98d37a68083e9d9cfdca45ab8ebfaf4d2e064771054df11"
     },
     "caption_claim": "Controller summation-node outputs and components, measured and feedforward-reference RPM for the two 20 N/1 s trials.",
     "supported_manuscript_claims": [

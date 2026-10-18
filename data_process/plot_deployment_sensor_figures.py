@@ -249,8 +249,8 @@ def _plot_A(groups,spread,selected,width,fonts):
         pt=g['points'];n=np.linspace(pt.n.min(),pt.n.max(),300)
         a.plot(n,np.polyval(g['coeff'],n*2*np.pi/60),color=COLORS[k],ls=LINES[k],lw=1.1,zorder=2)
         a.plot(pt.n,pt.u,ls='none',marker=MARKERS[k],ms=3.5,mfc='white',mec=COLORS[k],mew=.8,color=COLORS[k],label=g['label'],zorder=3)
-    a.set_xlabel(r'电机机械转速 $n$ (rpm)',labelpad=2)
-    a.set_ylabel(r'归一化控制量 $u_{\mathrm{cal}}$')
+    a.set_xlabel(r'电机转速 $\Omega$ (rpm)',labelpad=2)
+    a.set_ylabel(r'归一化控制量 $u_c$')
     a.set_xlim(800,5900);a.set_ylim(.07,.96)
     a.xaxis.set_major_locator(MultipleLocator(1000));a.yaxis.set_major_locator(MultipleLocator(.2))
     a.text(.035,.965,'(a)',transform=a.transAxes,ha='left',va='top',fontsize=fonts['panel'],fontweight='bold')
@@ -275,8 +275,8 @@ def _plot_A(groups,spread,selected,width,fonts):
     lo=min(ys);hi=max(ys);padding=(hi-lo)*.10
     b.set_ylim(lo-padding,hi+padding);b.set_xlim(-3,xmax)
     b.yaxis.set_major_locator(MultipleLocator(5));b.xaxis.set_major_locator(MultipleLocator(2))
-    b.set_xlabel(r'$\tau=t-t_{10}$ (s)',labelpad=2)
-    b.set_ylabel(r'转速相对变化 $\delta n$ (%)')
+    b.set_xlabel('时间 (s)',labelpad=2)
+    b.set_ylabel(r'转速相对变化率 $\delta\Omega$ (%)')
     b.text(.035,.99,'(b)',transform=b.transAxes,ha='left',va='top',fontsize=fonts['panel'],fontweight='bold')
     b.legend(loc='upper left',bbox_to_anchor=(.035,.915),frameon=False,ncol=1,
              handlelength=1.1,handletextpad=.4,labelspacing=0,borderpad=0,borderaxespad=0)

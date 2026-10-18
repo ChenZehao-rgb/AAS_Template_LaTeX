@@ -622,7 +622,7 @@ def plot_freestream_ramp(runs: list[Run]) -> None:
     ax.axvline(0.0, color=COLORS["neutral"], linestyle=":", linewidth=0.8, zorder=1)
     style_grid(ax)
     ax.set_xlim(*xlim)
-    ax.set_xlabel(r"$\tau=t-t_{10}$ (s)")
+    ax.set_xlabel("时间 (s)")
     ax.set_ylabel("来流速度 V∞ (m/s)")
     ymin, ymax = ax.get_ylim()
     ax.set_ylim(ymin, ymax + 0.12 * (ymax - ymin))
@@ -1130,8 +1130,8 @@ def plot_mechanism(runs: list[Run]) -> None:
     ax_control.yaxis.set_major_locator(MultipleLocator(0.2))
     ax_control.tick_params(labelbottom=False)
     ax_rpm.set_ylim(3900, 6100)
-    ax_rpm.set_ylabel("转速 (rpm)")
-    ax_rpm.set_xlabel(r"$\tau=t-t_{10}$ (s)", labelpad=3)
+    ax_rpm.set_ylabel(r"电机转速 $\Omega$ (rpm)", fontfamily="SimSun")
+    ax_rpm.set_xlabel("时间 (s)", labelpad=3)
     ax_rpm.yaxis.set_major_locator(MultipleLocator(500))
     # The middle band is empty in panel (a); the upper right is empty in (b),
     # clear of the retained isolated FB speed drop near tau=2.8 s.
