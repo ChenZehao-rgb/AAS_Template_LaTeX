@@ -1,0 +1,823 @@
+{
+  "pages": 13,
+  "bookmarks": 16,
+  "bookmarks_and_pages_unchanged": true,
+  "equation_numbers_unchanged": true,
+  "figures": 14,
+  "panels": 22,
+  "figure_references": 27,
+  "citation_commands": 23,
+  "bibliography_entries": 20,
+  "link_counts": {
+    "cite": 28,
+    "figure": 13,
+    "equation": 29,
+    "subfigure": 14,
+    "subsection": 1,
+    "external": 2
+  },
+  "all_internal_targets_resolve": true,
+  "reference_warnings": [],
+  "class_images_math_bibliography_unchanged": true,
+  "viewer_clicks_tested": false,
+  "unresolved_references": [],
+  "labels": {
+    "sec:rotor_state": {
+      "number": "1",
+      "page": 2,
+      "destination": "section.1"
+    },
+    "subsec:frame": {
+      "number": "1.1",
+      "page": 2,
+      "destination": "subsection.1.1"
+    },
+    "eq:body_kinematics": {
+      "number": "1",
+      "page": 2,
+      "destination": "equation.1"
+    },
+    "fig:quadrotor_frames": {
+      "number": "1",
+      "page": 2,
+      "destination": "figure.1"
+    },
+    "subsec:hub_kinematics": {
+      "number": "1.2",
+      "page": 2,
+      "destination": "subsection.1.2"
+    },
+    "eq:hub_p": {
+      "number": "2",
+      "page": 2,
+      "destination": "equation.2"
+    },
+    "eq:hub_v": {
+      "number": "3",
+      "page": 2,
+      "destination": "equation.3"
+    },
+    "eq:hub_a": {
+      "number": "4",
+      "page": 2,
+      "destination": "equation.4"
+    },
+    "eq:u_hub": {
+      "number": "5",
+      "page": 3,
+      "destination": "equation.5"
+    },
+    "eq:decompose": {
+      "number": "6",
+      "page": 3,
+      "destination": "equation.6"
+    },
+    "eq:alpha_psiw": {
+      "number": "7",
+      "page": 3,
+      "destination": "equation.7"
+    },
+    "eq:mu_lambda": {
+      "number": "8",
+      "page": 3,
+      "destination": "equation.8"
+    },
+    "eq:glauert": {
+      "number": "9",
+      "page": 3,
+      "destination": "equation.9"
+    },
+    "fig:blade_element_frames": {
+      "number": "2",
+      "page": 3,
+      "destination": "figure.2"
+    },
+    "subsec:rotation": {
+      "number": "1.3",
+      "page": 3,
+      "destination": "subsection.1.3"
+    },
+    "subsec:blade_element": {
+      "number": "1.3",
+      "page": 3,
+      "destination": "subsection.1.3"
+    },
+    "eq:UT": {
+      "number": "10",
+      "page": 3,
+      "destination": "equation.10"
+    },
+    "eq:UP": {
+      "number": "11",
+      "page": 3,
+      "destination": "equation.11"
+    },
+    "eq:aoa": {
+      "number": "12",
+      "page": 3,
+      "destination": "equation.12"
+    },
+    "subsec:induced": {
+      "number": "1.3",
+      "page": 4,
+      "destination": "equation.12"
+    },
+    "eq:ind_vel": {
+      "number": "13",
+      "page": 4,
+      "destination": "equation.13"
+    },
+    "subsec:lift": {
+      "number": "1.3",
+      "page": 4,
+      "destination": "equation.13"
+    },
+    "eq:Re": {
+      "number": "14",
+      "page": 4,
+      "destination": "equation.14"
+    },
+    "eq:dLdD": {
+      "number": "15",
+      "page": 4,
+      "destination": "equation.15"
+    },
+    "eq:dT": {
+      "number": "16",
+      "page": 4,
+      "destination": "equation.16"
+    },
+    "eq:thrust": {
+      "number": "17",
+      "page": 4,
+      "destination": "equation.17"
+    },
+    "eq:state_aero": {
+      "number": "18",
+      "page": 4,
+      "destination": "equation.18"
+    },
+    "sec:control": {
+      "number": "2",
+      "page": 4,
+      "destination": "section.2"
+    },
+    "subsec:conventional": {
+      "number": "2.1",
+      "page": 4,
+      "destination": "subsection.2.1"
+    },
+    "eq:static_map": {
+      "number": "19",
+      "page": 4,
+      "destination": "equation.19"
+    },
+    "subsec:closed_loop": {
+      "number": "2.2",
+      "page": 4,
+      "destination": "subsection.2.2"
+    },
+    "fig:control_architecture:a": {
+      "number": "3(a)",
+      "page": 5,
+      "destination": "subfigure.3.1"
+    },
+    "fig:control_architecture:b": {
+      "number": "3(b)",
+      "page": 5,
+      "destination": "subfigure.3.2"
+    },
+    "fig:control_architecture:c": {
+      "number": "3(c)",
+      "page": 5,
+      "destination": "subfigure.3.3"
+    },
+    "fig:control_architecture": {
+      "number": "3",
+      "page": 5,
+      "destination": "figure.3"
+    },
+    "fig:photogrammetry:a": {
+      "number": "4(a)",
+      "page": 5,
+      "destination": "subfigure.4.1"
+    },
+    "fig:photogrammetry:b": {
+      "number": "4(b)",
+      "page": 5,
+      "destination": "subfigure.4.2"
+    },
+    "fig:photogrammetry": {
+      "number": "4",
+      "page": 5,
+      "destination": "figure.4"
+    },
+    "subsec:geo": {
+      "number": "3.1",
+      "page": 5,
+      "destination": "subsection.3.1"
+    },
+    "fig:blade_geometry": {
+      "number": "5",
+      "page": 6,
+      "destination": "figure.5"
+    },
+    "subsec:bench": {
+      "number": "3.2",
+      "page": 6,
+      "destination": "subsection.3.2"
+    },
+    "eq:bench_map": {
+      "number": "20",
+      "page": 6,
+      "destination": "equation.20"
+    },
+    "eq:bench_vel": {
+      "number": "21",
+      "page": 6,
+      "destination": "equation.21"
+    },
+    "fig:test_bench:a": {
+      "number": "6(a)",
+      "page": 7,
+      "destination": "subfigure.6.1"
+    },
+    "fig:test_bench:b": {
+      "number": "6(b)",
+      "page": 7,
+      "destination": "subfigure.6.2"
+    },
+    "fig:test_bench": {
+      "number": "6",
+      "page": 7,
+      "destination": "figure.6"
+    },
+    "eq:rpm_calib": {
+      "number": "22",
+      "page": 7,
+      "destination": "equation.22"
+    },
+    "fig:rpm_mapping:a": {
+      "number": "7(a)",
+      "page": 8,
+      "destination": "subfigure.7.1"
+    },
+    "fig:rpm_mapping:b": {
+      "number": "7(b)",
+      "page": 8,
+      "destination": "subfigure.7.2"
+    },
+    "fig:rpm_mapping": {
+      "number": "7",
+      "page": 8,
+      "destination": "figure.7"
+    },
+    "eq:sensor_calib": {
+      "number": "23",
+      "page": 8,
+      "destination": "equation.23"
+    },
+    "fig:sensor_compensation:a": {
+      "number": "8(a)",
+      "page": 8,
+      "destination": "subfigure.8.1"
+    },
+    "fig:sensor_compensation:b": {
+      "number": "8(b)",
+      "page": 8,
+      "destination": "subfigure.8.2"
+    },
+    "fig:sensor_compensation:c": {
+      "number": "8(c)",
+      "page": 8,
+      "destination": "subfigure.8.3"
+    },
+    "fig:sensor_compensation": {
+      "number": "8",
+      "page": 8,
+      "destination": "figure.8"
+    },
+    "sec:experiment": {
+      "number": "4",
+      "page": 9,
+      "destination": "section.4"
+    },
+    "subsec:model_verif": {
+      "number": "4.1",
+      "page": 9,
+      "destination": "subsection.4.1"
+    },
+    "fig:model_diagnostics:a": {
+      "number": "9(a)",
+      "page": 9,
+      "destination": "subfigure.9.1"
+    },
+    "fig:model_diagnostics:b": {
+      "number": "9(b)",
+      "page": 9,
+      "destination": "subfigure.9.2"
+    },
+    "fig:model_diagnostics": {
+      "number": "9",
+      "page": 9,
+      "destination": "figure.9"
+    },
+    "fig:freestream_ramp": {
+      "number": "10",
+      "page": 10,
+      "destination": "figure.10"
+    },
+    "fig:thrust_responses:a": {
+      "number": "11(a)",
+      "page": 10,
+      "destination": "subfigure.11.1"
+    },
+    "fig:thrust_responses:b": {
+      "number": "11(b)",
+      "page": 10,
+      "destination": "subfigure.11.2"
+    },
+    "fig:thrust_responses:c": {
+      "number": "11(c)",
+      "page": 10,
+      "destination": "subfigure.11.3"
+    },
+    "fig:thrust_responses": {
+      "number": "11",
+      "page": 10,
+      "destination": "figure.11"
+    },
+    "subsec:control_verif": {
+      "number": "4.2",
+      "page": 11,
+      "destination": "subsection.4.2"
+    },
+    "fig:ramp_responses:a": {
+      "number": "12(a)",
+      "page": 11,
+      "destination": "subfigure.12.1"
+    },
+    "fig:ramp_responses:b": {
+      "number": "12(b)",
+      "page": 11,
+      "destination": "subfigure.12.2"
+    },
+    "fig:ramp_responses:c": {
+      "number": "12(c)",
+      "page": 11,
+      "destination": "subfigure.12.3"
+    },
+    "fig:ramp_responses": {
+      "number": "12",
+      "page": 11,
+      "destination": "figure.12"
+    },
+    "fig:speed_error": {
+      "number": "13",
+      "page": 12,
+      "destination": "figure.13"
+    },
+    "fig:feedforward_mechanism:a": {
+      "number": "14(a)",
+      "page": 12,
+      "destination": "subfigure.14.1"
+    },
+    "fig:feedforward_mechanism:b": {
+      "number": "14(b)",
+      "page": 12,
+      "destination": "subfigure.14.2"
+    },
+    "fig:feedforward_mechanism": {
+      "number": "14",
+      "page": 12,
+      "destination": "figure.14"
+    }
+  },
+  "links": [
+    {
+      "page": 1,
+      "destination": "cite.1",
+      "target_page": 13
+    },
+    {
+      "page": 1,
+      "destination": "cite.2",
+      "target_page": 13
+    },
+    {
+      "page": 1,
+      "destination": "cite.3",
+      "target_page": 13
+    },
+    {
+      "page": 1,
+      "destination": "cite.4",
+      "target_page": 13
+    },
+    {
+      "page": 2,
+      "destination": "cite.5",
+      "target_page": 13
+    },
+    {
+      "page": 2,
+      "destination": "cite.6",
+      "target_page": 13
+    },
+    {
+      "page": 2,
+      "destination": "cite.7",
+      "target_page": 13
+    },
+    {
+      "page": 2,
+      "destination": "cite.8",
+      "target_page": 13
+    },
+    {
+      "page": 2,
+      "destination": "cite.9",
+      "target_page": 13
+    },
+    {
+      "page": 2,
+      "destination": "cite.10",
+      "target_page": 13
+    },
+    {
+      "page": 2,
+      "destination": "figure.1",
+      "target_page": 2
+    },
+    {
+      "page": 2,
+      "destination": "equation.4",
+      "target_page": 2
+    },
+    {
+      "page": 3,
+      "destination": "cite.11",
+      "target_page": 13
+    },
+    {
+      "page": 3,
+      "destination": "equation.13",
+      "target_page": 4
+    },
+    {
+      "page": 3,
+      "destination": "equation.17",
+      "target_page": 4
+    },
+    {
+      "page": 3,
+      "destination": "figure.2",
+      "target_page": 3
+    },
+    {
+      "page": 3,
+      "destination": "equation.5",
+      "target_page": 3
+    },
+    {
+      "page": 3,
+      "destination": "equation.9",
+      "target_page": 3
+    },
+    {
+      "page": 3,
+      "destination": "equation.10",
+      "target_page": 3
+    },
+    {
+      "page": 3,
+      "destination": "equation.10",
+      "target_page": 3
+    },
+    {
+      "page": 3,
+      "destination": "equation.11",
+      "target_page": 3
+    },
+    {
+      "page": 4,
+      "destination": "equation.11",
+      "target_page": 3
+    },
+    {
+      "page": 4,
+      "destination": "cite.9",
+      "target_page": 13
+    },
+    {
+      "page": 4,
+      "destination": "equation.9",
+      "target_page": 3
+    },
+    {
+      "page": 4,
+      "destination": "equation.13",
+      "target_page": 4
+    },
+    {
+      "page": 4,
+      "destination": "equation.9",
+      "target_page": 3
+    },
+    {
+      "page": 4,
+      "destination": "equation.17",
+      "target_page": 4
+    },
+    {
+      "page": 4,
+      "destination": "cite.12",
+      "target_page": 13
+    },
+    {
+      "page": 4,
+      "destination": "subfigure.3.1",
+      "target_page": 5
+    },
+    {
+      "page": 4,
+      "destination": "subfigure.3.2",
+      "target_page": 5
+    },
+    {
+      "page": 4,
+      "destination": "cite.13",
+      "target_page": 13
+    },
+    {
+      "page": 4,
+      "destination": "equation.19",
+      "target_page": 4
+    },
+    {
+      "page": 4,
+      "destination": "subfigure.3.3",
+      "target_page": 5
+    },
+    {
+      "page": 5,
+      "destination": "cite.14",
+      "target_page": 13
+    },
+    {
+      "page": 5,
+      "destination": "cite.15",
+      "target_page": 13
+    },
+    {
+      "page": 5,
+      "destination": "cite.16",
+      "target_page": 13
+    },
+    {
+      "page": 5,
+      "destination": "cite.17",
+      "target_page": 13
+    },
+    {
+      "page": 6,
+      "destination": "subfigure.4.1",
+      "target_page": 5
+    },
+    {
+      "page": 6,
+      "destination": "subfigure.4.2",
+      "target_page": 5
+    },
+    {
+      "page": 6,
+      "destination": "cite.18",
+      "target_page": 13
+    },
+    {
+      "page": 6,
+      "destination": "figure.5",
+      "target_page": 6
+    },
+    {
+      "page": 6,
+      "destination": "cite.12",
+      "target_page": 13
+    },
+    {
+      "page": 6,
+      "destination": "equation.13",
+      "target_page": 4
+    },
+    {
+      "page": 6,
+      "destination": "subfigure.6.1",
+      "target_page": 7
+    },
+    {
+      "page": 6,
+      "destination": "subfigure.6.2",
+      "target_page": 7
+    },
+    {
+      "page": 6,
+      "destination": "equation.8",
+      "target_page": 3
+    },
+    {
+      "page": 6,
+      "destination": "equation.9",
+      "target_page": 3
+    },
+    {
+      "page": 6,
+      "destination": "figure.2",
+      "target_page": 3
+    },
+    {
+      "page": 6,
+      "destination": "equation.13",
+      "target_page": 4
+    },
+    {
+      "page": 6,
+      "destination": "equation.12",
+      "target_page": 3
+    },
+    {
+      "page": 7,
+      "destination": "cite.4",
+      "target_page": 13
+    },
+    {
+      "page": 7,
+      "destination": "cite.19",
+      "target_page": 13
+    },
+    {
+      "page": 7,
+      "destination": "cite.20",
+      "target_page": 13
+    },
+    {
+      "page": 7,
+      "destination": "equation.18",
+      "target_page": 4
+    },
+    {
+      "page": 7,
+      "destination": "equation.4",
+      "target_page": 2
+    },
+    {
+      "page": 7,
+      "destination": "equation.21",
+      "target_page": 6
+    },
+    {
+      "page": 7,
+      "destination": "equation.15",
+      "target_page": 4
+    },
+    {
+      "page": 7,
+      "destination": "equation.16",
+      "target_page": 4
+    },
+    {
+      "page": 7,
+      "destination": "equation.9",
+      "target_page": 3
+    },
+    {
+      "page": 7,
+      "destination": "subfigure.7.1",
+      "target_page": 8
+    },
+    {
+      "page": 7,
+      "destination": "subfigure.7.2",
+      "target_page": 8
+    },
+    {
+      "page": 7,
+      "destination": "subfigure.7.1",
+      "target_page": 8
+    },
+    {
+      "page": 8,
+      "destination": "cite.6",
+      "target_page": 13
+    },
+    {
+      "page": 8,
+      "destination": "cite.13",
+      "target_page": 13
+    },
+    {
+      "page": 8,
+      "destination": "subfigure.6.2",
+      "target_page": 7
+    },
+    {
+      "page": 8,
+      "destination": "figure.8",
+      "target_page": 8
+    },
+    {
+      "page": 9,
+      "destination": "equation.8",
+      "target_page": 3
+    },
+    {
+      "page": 9,
+      "destination": "equation.9",
+      "target_page": 3
+    },
+    {
+      "page": 9,
+      "destination": "subfigure.9.1",
+      "target_page": 9
+    },
+    {
+      "page": 9,
+      "destination": "subfigure.9.2",
+      "target_page": 9
+    },
+    {
+      "page": 10,
+      "destination": "figure.9",
+      "target_page": 9
+    },
+    {
+      "page": 10,
+      "destination": "cite.18",
+      "target_page": 13
+    },
+    {
+      "page": 10,
+      "destination": "cite.9",
+      "target_page": 13
+    },
+    {
+      "page": 10,
+      "destination": "cite.8",
+      "target_page": 13
+    },
+    {
+      "page": 10,
+      "destination": "subsection.3.1",
+      "target_page": 5
+    },
+    {
+      "page": 11,
+      "destination": "equation.19",
+      "target_page": 4
+    },
+    {
+      "page": 11,
+      "destination": "figure.10",
+      "target_page": 10
+    },
+    {
+      "page": 11,
+      "destination": "figure.11",
+      "target_page": 10
+    },
+    {
+      "page": 11,
+      "destination": "figure.12",
+      "target_page": 11
+    },
+    {
+      "page": 11,
+      "destination": "figure.11",
+      "target_page": 10
+    },
+    {
+      "page": 12,
+      "destination": "figure.12",
+      "target_page": 11
+    },
+    {
+      "page": 12,
+      "destination": "figure.13",
+      "target_page": 12
+    },
+    {
+      "page": 12,
+      "destination": "figure.14",
+      "target_page": 12
+    },
+    {
+      "page": 12,
+      "destination": "equation.22",
+      "target_page": 7
+    },
+    {
+      "page": 12,
+      "destination": "subfigure.11.2",
+      "target_page": 10
+    }
+  ]
+}
