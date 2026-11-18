@@ -24,6 +24,8 @@
 % Step the real figure counter at the image top; label after the caption.
 % This preserves the existing multicols layout and creates no list of figures.
 \newcommand{\aasfigurestart}{\refstepcounter{figure}}
+% Use the same non-floating numbering/anchor scheme for the bilingual tables.
+\newcommand{\aastablestart}{\refstepcounter{table}}
 \makeatletter
 % Reuse subfigure's counter and its figure+(letter) reference format.
 % Embedded panels share the composite image's top; separate images have
@@ -54,21 +56,21 @@ XXXX-XX-XX}
 Month Date, Year;
 accepted
 Month Date, Year}
-% \thanks{国家重点研发计划(2024YFB4710400),国家自然科学基金(62303448),辽宁省科技厅应用基础研究计划项目(2025JH2/101330172),机器人与智能系统全国重点实验室自主研究课题(2025-Z15)资助}
-\thanks{…………资助}
+\thanks{国家重点研发计划(2024YFB4710400),国家自然科学基金(62303448),辽宁省科技厅应用基础研究计划项目(2025JH2/101330172),机器人与智能系统全国重点实验室自主研究课题(2025-Z15)资助}
+% \thanks{…………资助}
 
-\thanks{Supported by ...}
+\thanks{Supported by the National Key R\&D Program of China (2024YFB4710400), the National Natural Science Foundation of China (62303448), the Applied Basic Research Program of Liaoning Province (2025JH2/101330172), and the Autonomous Research Project of the National Key Laboratory of Robotics and Intelligent Systems (2025-Z15)}
 
 \thanks{本文责任编委\ XXX}
 
 \thanks{Recommended by Associate Editor XXX}
 
-\thanks{1. }
+\thanks{1.中国科学院沈阳自动化研究所沈阳 110016 2.中国科学院大学北京 100049}
 
-\thanks{2. }}
+\thanks{1.Shenyang Institute of Automation, Chinese Academy of Sciences,Shenyang 110016 2.University of Chinese Academy of Sciences, Beijing 100049}}
 
-% \cnauthor{陈泽昊$^{\scriptscriptstyle1,2}$ 常彦春$^{\scriptscriptstyle1}$ 刘干$^{\scriptscriptstyle1,2}$ 杨丽英$^{\scriptscriptstyle1}$ 周浩$^{\scriptscriptstyle1}$ 张广玉$^{\scriptscriptstyle1}$ 何玉庆$^{\scriptscriptstyle1}$}
-\cnauthor{作者$^{\scriptscriptstyle1}$ }
+\cnauthor{陈泽昊$^{\scriptscriptstyle1,2}$ 常彦春$^{\scriptscriptstyle1}$ 刘干$^{\scriptscriptstyle1,2}$ 杨丽英$^{\scriptscriptstyle1}$ 周浩$^{\scriptscriptstyle1}$ 张广玉$^{\scriptscriptstyle1}$ 何玉庆$^{\scriptscriptstyle1}$}
+% \cnauthor{作者$^{\scriptscriptstyle1}$ }
 \cnabstract{高机动飞行中的动态来流会使静态升力映射失配,导致旋翼实际升力偏离指令值.为提高执行器层的升力预测与扰动抑制能力,本文建立由多旋翼无人机运动状态到单旋翼轴向升力的机理模型,并结合实测桨叶几何、翼型极线及非均匀诱导入流叶素模型计算升力.在此基础上,提出以旋翼逆模型为前馈、以直接升力测量为反馈的复合控制方法,并搭建桨盘攻角和转台角速度可调的旋转试验台.结果表明,所建模型能够准确描述测试包线内的升力变化规律,所提出的复合控制方法可有效抑制单旋翼台架上的强来流扰动.}
 
 \cnkeyword{多旋翼无人机,高机动飞行,升力反馈控制,叶素动量理论}
@@ -78,8 +80,8 @@ Month Date, Year}
 \entitle{Rotor Thrust Modeling and Control for Aggressive Flight}
 
 % TODO: 英文作者信息请作者补充
-% \enauthor{Chen Ze-hao$^{\scriptscriptstyle1,2}$ Chang Yan-chun$^{\scriptscriptstyle1}$ Liu Gan$^{\scriptscriptstyle1,2}$ Yang Li-ying$^{\scriptscriptstyle1}$ Zhou Hao$^{\scriptscriptstyle1}$ Zhang Guang-yu$^{\scriptscriptstyle1}$ He Yu-qing$^{\scriptscriptstyle1}$}
-\enauthor{author$^{1}$}
+\enauthor{Chen Ze-hao$^{\scriptscriptstyle1,2}$ Chang Yan-chun$^{\scriptscriptstyle1}$ Liu Gan$^{\scriptscriptstyle1,2}$ Yang Li-ying$^{\scriptscriptstyle1}$ Zhou Hao$^{\scriptscriptstyle1}$ Zhang Guang-yu$^{\scriptscriptstyle1}$ He Yu-qing$^{\scriptscriptstyle1}$}
+% \enauthor{author$^{1}$}
 
 \enabstract{Dynamic inflow during high-maneuverability flight can cause a mismatch in the static thrust mapping, resulting in the actual thrust of the rotor deviating from the commanded value. To improve thrust prediction and disturbance suppression capabilities at the actuator level, this paper establishes a mechanistic model that maps the motion state of a multirotor UAV to the axial thrust of a single rotor, and calculates thrust by combining measured blade geometry, airfoil polar curves, and a non-uniform induced inflow element model. Based on this, a composite control method is proposed that uses a rotor inverse model as feedforward and direct thrust measurements as feedback. A rotating test bench with adjustable blade disk angle of attack and turntable angular velocity was constructed. The results show that the developed model can accurately describe the thrust variation patterns within the test envelope, and the composite control method can effectively suppress strong on-flow disturbances on the single-rotor test bench.}
 
@@ -434,14 +436,14 @@ U_T(\rho,\psi)&=\textcolor{mygreen}{\Omega_i}\rho-\Omega_a(R_0-\rho\cos\psi)\sin
 Fig.\,\thefigure{}\quad Rotating cantilevered single-rotor test bench: (a) overall structure; (b) rotor unit}\label{fig:test_bench}}
 \end{center}
 
-旋翼测试台基本参数如表1所示,测试台能构造的最大来流速度为10.2m/s,根据$\tau=J\dot{\omega}$,带负载能达到的最大角加速度$\dot{\omega}$为7.38\,rad/s$^{2}$,旋翼单元受到指向旋转轴的向心过载最大为7.1g,受到的面向来流的过载最大为1.1g.
+旋翼测试台基本参数如表 \ref{tab:test_bench_parameters} 所示,测试台能构造的最大来流速度为10.2m/s,根据$\tau=J\dot{\omega}$,带负载能达到的最大角加速度$\dot{\omega}$为7.38\,rad/s$^{2}$,旋翼单元受到指向旋转轴的向心过载最大为7.1g,受到的面向来流的过载最大为1.1g.
 
 现有关于高机动飞行的研究中\cite{4,19,20}最大速度的量级在5--12.9m/s,沿总升力方向的过载量级在1.63--2.2g.本文搭建的测试台能基本涵盖上述指标,因此能在式~(\ref{eq:state_aero})的变量层面和式~(\ref{eq:hub_a})的加速度层面构造高机动飞行下的动态来流.
 
 \begin{center}
-\vbox{\centering{\small 表1\quad 旋翼测试台参数
+\vbox{\aastablestart\centering{\small 表\thetable\quad 旋翼测试台参数
 \\
-Table\,1 \quad Rotor test bench parameters} \vskip2mm
+Table\,\thetable{} \quad Rotor test bench parameters}\label{tab:test_bench_parameters} \vskip2mm
 {\footnotesize\centering
 \begin{tabular}{cc}
 \toprule
@@ -536,16 +538,16 @@ u_{\mathrm{ff}}=a\,\Omega^2+b\,\Omega+c
 \section{结果}
 \label{sec:experiment}
 
-为验证所提出的旋翼升力模型与升力闭环控制器,本文在旋转测试台上开展两类实验:其一,执行如表2所示的工况测试,将第1节叶素动量模型的预测升力与实测升力对比,验证模型精度;其二,按传统升力开环控制、升力反馈、模型前馈与升力反馈复合控制三级对照方案,验证所提出的升力反馈和前馈-反馈复合控制方案的控制效果.
+为验证所提出的旋翼升力模型与升力闭环控制器,本文在旋转测试台上开展两类实验:其一,执行如表 \ref{tab:experimental_settings} 所示的工况测试,将第1节叶素动量模型的预测升力与实测升力对比,验证模型精度;其二,按传统升力开环控制、升力反馈、模型前馈与升力反馈复合控制三级对照方案,验证所提出的升力反馈和前馈-反馈复合控制方案的控制效果.
 
 \subsection{旋翼升力模型精度验证}
 \label{subsec:model_verif}
-测试对象为T-Motor MN5008 KV340电机与P18$\times$6.1\,CF螺旋桨,旋翼轴向升力由同轴力传感器测量,转台角速度由安装在悬臂末端的飞控惯性测量单元(IMU)记录,电机转速由AS5600磁编码器获取.试验选取约3000、4000和5000\,rpm的典型转速,在每个工况点停留3s,记录对应的旋翼转速和升力,具体实验设置如表2所示.
+测试对象为T-Motor MN5008 KV340电机与P18$\times$6.1\,CF螺旋桨,旋翼轴向升力由同轴力传感器测量,转台角速度由安装在悬臂末端的飞控惯性测量单元(IMU)记录,电机转速由AS5600磁编码器获取.试验选取约3000、4000和5000\,rpm的典型转速,在每个工况点停留3s,记录对应的旋翼转速和升力,具体实验设置如表 \ref{tab:experimental_settings} 所示.
 
 \begin{center}
-\vbox{\centering{\small 表2\quad 旋翼测试台测试设置
+\vbox{\aastablestart\centering{\small 表\thetable\quad 旋翼测试台测试设置
 \\
-Table\,2 \quad Experimental settings for the rotor test bench} \vskip2mm
+Table\,\thetable{} \quad Experimental settings for the rotor test bench}\label{tab:experimental_settings} \vskip2mm
 {\footnotesize\centering
 \begin{tabular}{ccc}
 \toprule
@@ -576,8 +578,8 @@ Table\,2 \quad Experimental settings for the rotor test bench} \vskip2mm
 \end{center}
 
 \begin{center}
-\vbox{\centering{\small 表3\quad 不同桨盘攻角下的旋翼升力模型误差统计
-\\ Table\,3 \quad Error statistics of the rotor thrust model at different rotor disk angles of attack}\vskip2mm
+\vbox{\aastablestart\centering{\small 表\thetable\quad 不同桨盘攻角下的旋翼升力模型误差统计
+\\ Table\,\thetable{} \quad Error statistics of the rotor thrust model at different rotor disk angles of attack}\label{tab:model_errors}\vskip2mm
 {\scriptsize\centering
 \setlength{\tabcolsep}{3.5pt}
 \begin{tabular}{@{}crrr@{}}
@@ -597,7 +599,7 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxAPE/\% & MAPE/\% \\
 }
 \end{center}
 
-表3汇总了总体及分攻角误差.全部工况的NRMSE为6.56$\%$.MAPE为5.04$\%$.说明模型整体的预测精度较高.在15°—75°斜来流范围内.分攻角NRMSE为2.65$\%$—5.77$\%$;0°和90°工况的NRMSE分别为9.43$\%$和10.13$\%$.均高于中间攻角组.结合图 \ref{fig:model_diagnostics} 可知.模型在所测斜来流范围内保持了较好的预测精度.而在轴向和侧向来流两个端点工况下仍存在较明显的偏差.
+表 \ref{tab:model_errors} 汇总了总体及分攻角误差.全部工况的NRMSE为6.56$\%$.MAPE为5.04$\%$.说明模型整体的预测精度较高.在15°—75°斜来流范围内.分攻角NRMSE为2.65$\%$—5.77$\%$;0°和90°工况的NRMSE分别为9.43$\%$和10.13$\%$.均高于中间攻角组.结合图 \ref{fig:model_diagnostics} 可知.模型在所测斜来流范围内保持了较好的预测精度.而在轴向和侧向来流两个端点工况下仍存在较明显的偏差.
 
 其他关于叶素动量理论(BEMT)旋翼建模的研究中,误差量级为:Carroll\cite{18}等使用激光扫描提取桨叶翼型和气动参数,建立了与本文一致的TmotorP18$\times$6.1螺旋桨的变攻角BEMT模型,其理论与试验结果的误差范围为$5\%-15\%$;Serrano等\cite{9}表明,引入Glauert或Coleman非均匀入流模型后,非零攻角下的最大偏差可控制在$15\%$以内;Theys等\cite{8}则指出,传统BEMT和涡格法虽能预测斜流下的总体趋势,但精度会随来流倾斜显著下降,在小角度下误差量级约为$10\%$,在大角度斜流下误差量级约$10\%-30\%$.相比之下,本文模型在各攻角下的RMSE小于$10.5\%$,在所有工况点下的最大绝对百分比误差为$19.56\%$,与现有研究中的旋翼模型精度处于同一量级,进一步验证了\ref{subsec:geo}节中摄影测量的精度和旋翼叶素模型的准确性.该精度能够为后续模型前馈提供有效基准,其余模型失配则由升力反馈进一步补偿.
 \begin{center}
@@ -652,8 +654,8 @@ $\alpha_p/(^\circ)$ & NRMSE/\% & MaxAPE/\% & MAPE/\% \\
 \begin{multicols}{2}
 
 \begin{center}
-\vbox{\centering{\small \textcolor{mygreen}{表4}\quad 统一扰动窗口下9种期望升力--加速时间组合的归一化RMSE及降幅
-\\ Table\,4 \quad Normalized RMSE and relative reductions for nine combinations of desired thrust and acceleration time}\vskip2mm
+\vbox{\aastablestart\centering{\small \textcolor{mygreen}{表\thetable}\quad 统一扰动窗口下9种期望升力--加速时间组合的归一化RMSE及降幅
+\\ Table\,\thetable{} \quad Normalized RMSE and relative reductions for nine combinations of desired thrust and acceleration time}\label{tab:control_errors}\vskip2mm
 {\scriptsize\centering
 \setlength{\tabcolsep}{1.8pt}%
 \begin{tabular}{@{}ccccccc@{}}
@@ -676,7 +678,7 @@ $T_d$/N & $t_{\mathrm{ramp}}$/s & FI/\% & FB/\% & FF+FB/\% & FB降幅/\% & FF+FB
 
 \textcolor{red}{图 \ref{fig:ramp_responses} 进一步比较20 N期望升力下不同来流加速时间的响应.}随着加速时间延长,反馈控制的瞬态偏差减小,说明较缓的来流变化为反馈调节提供了更充分的响应时间;相比之下,固定控制量方案在来流稳定后仍保留较大的升力亏损,表明减缓来流变化不能消除静态映射失配.复合控制在三种加速时间下均保持最小的跟踪偏差,其中1 s工况更清楚地呈现了对瞬态跌落的抑制效果.
 
-表4汇总全部9个工况的误差指标.反馈控制相对固定控制量的NRMSE降低80.2\%—92.9\%;加入模型前馈后.相对反馈控制进一步降低45.7\%—74.3\%.复合控制的NRMSE为0.60\%—5.64\%.全部所测工况均呈现相同的误差排序$E_{\mathrm{FF+FB}}<E_{\mathrm{FB}}<E_{\mathrm{fixed}}$.说明升力反馈能够补偿静态映射失配.模型前馈则在此基础上进一步改善跟踪性能.
+表 \ref{tab:control_errors} 汇总全部9个工况的误差指标.反馈控制相对固定控制量的NRMSE降低80.2\%—92.9\%;加入模型前馈后.相对反馈控制进一步降低45.7\%—74.3\%.复合控制的NRMSE为0.60\%—5.64\%.全部所测工况均呈现相同的误差排序$E_{\mathrm{FF+FB}}<E_{\mathrm{FB}}<E_{\mathrm{fixed}}$.说明升力反馈能够补偿静态映射失配.模型前馈则在此基础上进一步改善跟踪性能.
 \begin{center}
 \vbox{\aasfigurestart%
 \centerline{\includegraphics[width=8cm,height=5.5cm]{Image/fig12_speed_error.pdf}}
@@ -690,7 +692,7 @@ $T_d$/N & $t_{\mathrm{ramp}}$/s & FI/\% & FB/\% & FF+FB/\% & FB降幅/\% & FF+FB
 
 为解释前馈的补偿过程,图 \ref{fig:feedforward_mechanism} 以20 N/1 s工况为例,选取反馈控制试验和复合控制试验,依次给出控制输出及转速响应.两次试验分别以自身来流的$t_{10}$对齐.随着来流增大,旋翼模型给出的前馈参考转速上升,并经式~(\ref{eq:rpm_calib})静态映射直接提高前馈控制量.复合控制的反馈项在加速阶段提供正向修正,随后随升力超调转为负向修正,体现了反馈对剩余偏差的补偿作用.反馈控制则由PID根据已产生的升力偏差建立全部控制输出.
 
-图 \ref{fig:thrust_responses:b} 和表4显示该工况的升力NRMSE由9.06\%降至3.87\%.降低57.3\%.控制量分解、实测转速和升力误差共同支持以下解释:模型前馈利用当前来流信息直接建立补偿,升力反馈进一步修正模型失配与动态偏差,从而减轻反馈补偿建立过程中产生的瞬态升力损失.
+图 \ref{fig:thrust_responses:b} 和表 \ref{tab:control_errors} 显示该工况的升力NRMSE由9.06\%降至3.87\%.降低57.3\%.控制量分解、实测转速和升力误差共同支持以下解释:模型前馈利用当前来流信息直接建立补偿,升力反馈进一步修正模型失配与动态偏差,从而减轻反馈补偿建立过程中产生的瞬态升力损失.
 
 \begin{center}
 \vbox{\aasfigurestart%
@@ -761,9 +763,45 @@ $T_d$/N & $t_{\mathrm{ramp}}$/s & FI/\% & FB/\% & FF+FB/\% & FB降幅/\% & FF+FB
 
 % TODO: 请作者填写作者简介(姓名、职称、学习工作经历、研究方向)与照片
 \begin{biographynophoto}
-\noindent{\hei 【待填写作者姓名】}\quad 【待填写作者简介】.\\E-mail: 【待填写邮箱】
+\noindent{\hei 陈泽昊}\quad 中国科学院沈阳自动化研究所博士研究生.2023年获得武汉理工大学机械设计制造及其自动化专业学士学位.主要研究方向为多旋翼无人机控制与规划.\\E-mail:chenzehao@sia.cn
 
-\noindent({\bf 【待填写英文作者姓名】}\quad 【待填写英文作者简介】.)
+\noindent({\bf CHEN Ze-Hao}\quad Ph.D. candidate at Shenyang Institute of Automation, Chinese Academy of Sciences.He received his bachelor degree in Mechanical Design, Manufacturing and Automation from Wuhan University of Technology in 2023. His research interests include control and planning of multirotor UAVs.)
+\end{biographynophoto}
+
+\begin{biographynophoto}
+\noindent{\hei 常彦春}\quad 中国科学院沈阳自动化研究所副研究员.2016年获得北京理工大学控制科学与工程专业硕士学位.主要研究方向为无人机导航与控制.\\E-mail:changyanchun@sia.cn
+
+\noindent({\bf CHANG Yan-Chun}\quad Associate Researcher at Shenyang Institute of Automation, Chinese Academy of Sciences. He received his master degree in Control Science and Engineering from Beijing Institute of Technology in 2016. His research interests include control and planning of multirotor UAVs.)
+\end{biographynophoto}
+
+\begin{biographynophoto}
+\noindent{\hei 刘干}\quad 中国科学院沈阳自动化研究所硕士研究生.2024年获得武汉理工大学物流工程专业学士学位.主要研究方向为旋翼飞行机械臂.\\E-mail:liugan@sia.cn
+
+\noindent({\bf LIU Gan}\quad Master student at Shenyang Institute of Automation, Chinese Academy of Sciences. He received his bachelor degree in Logistics Engineering from Wuhan University of Technology in 2024. His research interests include navigation and control of UAVs.)
+\end{biographynophoto}
+
+\begin{biographynophoto}
+\noindent{\hei 杨丽英}\quad 中国科学院沈阳自动化研究所研究员.2011年获得中国科学院沈阳自动化研究所博士学位.主要研究方向为移动机器人技术.\\E-mail:yangliying@sia.cn
+
+\noindent({\bf YANG Li-Ying}\quad Researcher at Shenyang Institute of Automation, Chinese Academy of Sciences. She received her Ph.D. degree in Automation from Shenyang Institute of Automation, Chinese Academy of Sciences in 2011. Her research interests include mobile robot technologies.)
+\end{biographynophoto}
+
+\begin{biographynophoto}
+\noindent{\hei 周浩}\quad 中国科学院沈阳自动化研究所副研究员.2010年获得东北大学控制理论与控制工程专业硕士学位.主要研究方向为无人机导航与控制.\\E-mail:zhouhao@sia.cn
+
+\noindent({\bf ZHOU Hao}\quad Associate Researcher at Shenyang Institute of Automation, Chinese Academy of Sciences. He received his master degree in Control Theory and Control Engineering from Northeastern University in 2010. His research interests include navigation and control of UAVs.)
+\end{biographynophoto}
+
+\begin{biographynophoto}
+\noindent{\hei 张广玉}\quad 中国科学院沈阳自动化研究所副研究员.2019年获得中国科学院沈阳自动化研究所博士学位.主要研究方向为旋翼飞行机械臂.\\E-mail:zhangguangyu@sia.cn
+
+\noindent({\bf ZHANG Guang-Yu}\quad Associate Researcher at Shenyang Institute of Automation, Chinese Academy of Sciences. He received his Ph.D. degree in Automation from Shenyang Institute of Automation, Chinese Academy of Sciences in 2019. His research interests include control and planning of multirotor UAVs.)
+\end{biographynophoto}
+
+\begin{biographynophoto}
+\noindent{\hei 何玉庆}\quad 中国科学院沈阳自动化研究所研究员.2008年获得中国科学院沈阳自动化研究所博士学位.主要研究方向为行为智能、跨域协同、特种机器人系统.\\E-mail:heyuqing@sia.cn
+
+\noindent({\bf HE Yu-Qing}\quad Researcher at Shenyang Institute of Automation, Chinese Academy of Sciences. He received his Ph.D. degree in Automation from Shenyang Institute of Automation, Chinese Academy of Sciences in 2008. His research interests include behavioral intelligence, cross-domain collaboration, and special robot systems.)
 \end{biographynophoto}
 
 \end{multicols}

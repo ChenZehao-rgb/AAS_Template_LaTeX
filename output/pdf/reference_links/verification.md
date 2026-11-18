@@ -54,3 +54,18 @@ latexmk -xelatex -synctex=1 -interaction=nonstopmode -file-line-error -halt-on-e
 无。现有手写图片编号和文献编号均能明确匹配；数学区间 `$[0,1]$` 及算法行号选项 `[1]` 保持不变。
 
 机器可读核验记录：本目录 `verification.json`。修改前快照、编译日志和兼容性样例保存在 `_build_check/reference_links_revision`。
+
+## 表 1 至表 4 的补充修复
+
+沿用原有手排表题和表格内容，新增 `\aastablestart`，以 `\refstepcounter{table}` 建立表格编号和锚点；中英文表题共用 `\thetable`，标签放在表题之后。
+
+| 表号 | 标签 | 正文引用次数 |
+| --- | --- | --- |
+| 1 | `tab:test_bench_parameters` | 1 |
+| 2 | `tab:experimental_settings` | 2 |
+| 3 | `tab:model_errors` | 1 |
+| 4 | `tab:control_errors` | 2 |
+
+正文写法例如 `表 \ref{tab:test_bench_parameters}`。6 处原手写表号均已替换，表格数值、文字、列宽及表线保持不变。
+
+XeLaTeX 多轮编译及 PDF 链接注释核验通过：新增 6 个表格链接，分别指向 `table.1` 至 `table.4`，无相关引用警告。全文仍为 13 页，16 个书签及原有标签的编号、页码和目标保持一致。已渲染并查看四张表格；未在阅读器中进行鼠标实点测试。补充核验记录见 `table_verification.json`，修改前快照与编译日志位于 `_build_check/table_links_revision`。

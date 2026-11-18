@@ -1,0 +1,51 @@
+{
+  "tables": 4,
+  "table_references": 6,
+  "table_links": [
+    {
+      "page": 7,
+      "destination": "table.1",
+      "target_page": 7
+    },
+    {
+      "page": 9,
+      "destination": "table.2",
+      "target_page": 9
+    },
+    {
+      "page": 9,
+      "destination": "table.2",
+      "target_page": 9
+    },
+    {
+      "page": 10,
+      "destination": "table.3",
+      "target_page": 9
+    },
+    {
+      "page": 12,
+      "destination": "table.4",
+      "target_page": 12
+    },
+    {
+      "page": 12,
+      "destination": "table.4",
+      "target_page": 12
+    }
+  ],
+  "all_internal_targets_resolve": true,
+  "page_count": 13,
+  "bookmarks": 16,
+  "previous_labels_numbers_pages_and_destinations_unchanged": true,
+  "table_contents_unchanged": true,
+  "reference_warnings": [],
+  "viewer_clicks_tested": false,
+  "link_counts": {
+    "cite": 28,
+    "figure": 13,
+    "equation": 29,
+    "subfigure": 14,
+    "table": 6,
+    "subsection": 1
+  }
+}
