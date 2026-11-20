@@ -2,3 +2,4 @@ data/**/*.ulg
 build/
 _build_check/
 ref_paper/
+tmp/

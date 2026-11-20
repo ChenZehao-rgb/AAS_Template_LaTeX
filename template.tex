@@ -14,11 +14,27 @@
 \usepackage{multirow}
 \usepackage{algpseudocode} % 算法伪代码
 \usepackage[numbers, sort&compress]{natbib}
+\usepackage{etoolbox}
 \usepackage[dvipsnames]{xcolor}
-% Keep numeric inline citations and the existing AAS bibliography labels.
-% natbib supplies sorting/compression; do not also load cite.
-\setcitestyle{numbers,square,comma}
+\setcitestyle{super,square,comma}
 \usepackage[bookmarksnumbered=true,hidelinks]{hyperref}
+
+\renewcommand{\refname}{\centering\normalsize\bfseries Reference}
+\renewcommand{\bibnumfmt}[1]{#1}
+\makeatletter
+% Narrative citations use baseline brackets with the same sorting and links.
+\DeclareRobustCommand{\citeinline}[1]{%
+  \begingroup\let\@cite\NAT@citenum\cite{#1}\endgroup}
+% The journal uses a hyphen for every consecutive run, including pairs.
+\patchcmd{\NAT@citexnum}
+  {\def@NAT@last@yr{\@citea}}
+  {\def@NAT@last@yr{-\NAT@penalty}}{}
+  {\PackageError{aas-citations}{Could not enable two-number ranges}{Check the natbib version.}}
+\patchcmd{\NAT@citexnum}
+  {\def@NAT@last@yr{--\NAT@penalty}}
+  {\def@NAT@last@yr{-\NAT@penalty}}{}
+  {\PackageError{aas-citations}{Could not set the range hyphen}{Check the natbib version.}}
+\makeatother
 
 % The manuscript uses non-floating, manually typeset bilingual captions.
 % Step the real figure counter at the image top; label after the caption.
@@ -97,10 +113,17 @@ November 16, 2026}
 
 %这一章为引言,无需写标题.
 
+% 微调首页正文行距，使右栏末行与左栏脚注末行平齐。
+\begingroup
+\addtolength{\baselineskip}{-0.05pt}
+
 近年来,低空经济加速向规模化、常态化运行发展,多旋翼无人机凭借垂直起降、定点悬停与机动灵活等优势,已成为应急救援、基础设施巡检和复杂环境作业的重要装备\cite{1,2}.随着任务空间由开阔、低速场景拓展至城市障碍物密集区域,无人机需要在其中敏捷穿梭,即在快速姿态变化条件下保持稳定飞行.在此类高机动工况下,旋翼承受显著的动态来流扰动,使控制指令对应的实际升力偏离期望值,进而影响机体姿态与位置控制的精度与稳定性.
 
 现有飞行控制器通常依据静态标定得到的升力-控制量映射,将控制分配器输出的期望升力转换为电机控制指令.该映射在近悬停与弱扰动条件下可近似表示为转速（或归一化控制量）的二次函数,但其参数隐含了特定来流、桨盘姿态与推进系统状态.当无人机快速前飞、转弯或翻转时,旋翼桨盘内来流的速度与方向同时改变,轴向与面内速度分量高速变化,从而改变叶素入流角、有效迎角及气动力分布.由此产生的升力偏差首先出现在执行器层,而传统控制架构通常需等待机体姿态或位置误差形成后才能间接修正,作用链路较长,难以及时抑制旋翼层面的扰动.
+
 为提升机动飞行下执行器的控制精度,现有研究可分为基于模型与基于测量两类.
+\par
+\endgroup
 \onecolumn\begin{multicols}{2}%这一行用于第一页末尾
 基于模型的方法致力于建立旋翼高保真模型:Bauersfeld等\cite{3}将叶素理论旋翼模型与神经网络相结合,以叶素理论刻画高速入流下的升力变化,以数据驱动的神经网络学习力与力矩残差;Liu等\cite{4}通过全包线
 风洞试验辨识旋翼模型,并使用增量非线性动态逆(INDI)控制,在机动飞行中直接计算局部升力变化所需的控制量,以提高大机动条件下的控制分配精度.此类方法精度较高,但依赖大量试验数据的训练或辨识.
@@ -717,48 +740,50 @@ $T_d$/N & $t_{\mathrm{ramp}}$/s & FI/\% & FB/\% & FF+FB/\% & FB降幅/\% & FF+FB
 \begin{thebibliography}{99}
 \zihao{6} \addtolength{\itemsep}{0.2em} \urlstyle{rm}
 
-\bibitem{1} 王姣娥, 杜德林, 陈卓, 黄洁, 张兵, 莫辉辉, 等. 中国低空经济发展指数报告(2026). 北京: 中国科学院地理科学与资源研究所, 2026
+\bibitem{1} Wang Jiao-E, Du De-Lin, Chen Zhuo, Huang Jie, Zhang Bing, Mo Hui-Hui, et al. \href{http://www.lrsd.org.cn/sylb/202604/P020260429604572875450.pdf}{China low-altitude economy development index report (2026)}, Research Report, Institute of Geographic Sciences and Natural Resources Research, Chinese Academy of Sciences, China, 2026.\\
+(王姣娥, 杜德林, 陈卓, 黄洁, 张兵, 莫辉辉, 等. 中国低空经济发展指数报告(2026), 研究报告, 中国科学院地理科学与资源研究所, 中国, 2026.)
 
-\bibitem{2} Chen Lin, Miao Zhi-Qiang, Wang Xiang-Ke, Chen Mou, Duan Hai-Bin, Wang Yao-Nan. Overview on autonomous aircraft technology and its application to low-altitude economy. {\sl Robot}, 2025, {\bf 47}(3): 470$-$496 \\
-(陈林, 缪志强, 王祥科, 陈谋, 段海滨, 王耀南. 自主飞行器技术及其在低空经济中的应用综述. 机器人, 2025, 47(3): 470$-$496)
+\bibitem{2} Chen Lin, Miao Zhi-Qiang, Wang Xiang-Ke, Chen Mou, Duan Hai-Bin, Wang Yao-Nan. Overview on autonomous aircraft technology and its application to low-altitude economy. \textit{Robot}, 2025, \textbf{47}(3): 470-496\\
+(陈林, 缪志强, 王祥科, 陈谋, 段海滨, 王耀南. 自主飞行器技术及其在低空经济中的应用综述. 机器人, 2025, \textbf{47}(3): 470-496)
 
-\bibitem{3} Bauersfeld L, Kaufmann E, Foehn P, Sun S, Scaramuzza D. NeuroBEM: Hybrid aerodynamic quadrotor model. In: Proceedings of Robotics: Science and Systems XVII (RSS). Virtual: RSS Foundation, 2021
+\bibitem{3} Bauersfeld L, Kaufmann E, Foehn P, Sun S, Scaramuzza D. \href{https://roboticsproceedings.org/rss17/p042.html}{NeuroBEM: Hybrid aerodynamic quadrotor model}. In: Proceedings of Robotics: Science and Systems XVII. Virtual Event: Robotics: Science and Systems Foundation, 2021.
 
-\bibitem{4} Liu H, Lin D, Ye J, Jiang T, Huang J S. Quadrotor aggressive control based on angular acceleration feedback and high-fidelity propulsion model. {\sl IEEE Transactions on Industrial Electronics}, DOI: 10.1109/TIE.2025.3572921
+\bibitem{4} Liu H, Lin D, Ye J, Jiang T, Huang J. Quadrotor aggressive control based on angular acceleration feedback and high-fidelity propulsion model. \textit{IEEE Transactions on Industrial Electronics}, 2025, \textbf{72}(12): 13584-13594
 
-\bibitem{5} Gonzalez-Morgado A, Sanchez-Cuevas P J, Heredia G, Ollero A. Rotor-force controller for multirotors under aerodynamic interferences. {\sl Aerospace Science and Technology}, 2025, {\bf 157}: 109861
+\bibitem{5} Gonzalez-Morgado A, Sanchez-Cuevas P J, Heredia G, Ollero A. Rotor-force controller for multirotors under aerodynamic interferences. \textit{Aerospace Science and Technology}, 2025, \textbf{157}: Article No. 109861
 
-\bibitem{6} Jiang Han, Chang Yan-Chun, Yang Li-Ying, He Yu-Qing. Thrust feedback-based control method for rotor UAV. {\sl Robot}, 2026, {\bf 48}(3): 518$-$530 \\
-(蒋涵, 常彦春, 杨丽英, 何玉庆. 基于升力反馈的旋翼无人机控制方法. 机器人, 2026, 48(3): 518$-$530)
+\bibitem{6} Jiang Han, Chang Yan-Chun, Yang Li-Ying, He Yu-Qing. Thrust feedback-based control method for rotor UAV. \textit{Robot}, 2026, \textbf{48}(3): 518-530\\
+(蒋涵, 常彦春, 杨丽英, 何玉庆. 基于升力反馈的旋翼无人机控制方法. 机器人, 2026, \textbf{48}(3): 518-530)
 
-\bibitem{7} Jiang Han, Chen Ze-Hao, Chang Yan-Chun, Yang Li-Ying, Liu Lian-Qing, He Yu-Qing. A wind disturbance suppression method for multirotor UAVs based on direct thrust control. {\sl SCIENTIA SINICA Technologica}, 2026, {\bf 56}, DOI: 10.1360/SST-2025-0274 \\
-(蒋涵, 陈泽昊, 常彦春, 杨丽英, 刘连庆, 何玉庆. 基于直接升力控制的旋翼无人机风扰抑制方法. 中国科学: 技术科学, 2026, 56, DOI: 10.1360/SST-2025-0274)
+\bibitem{7} Jiang Han, Chen Ze-Hao, Chang Yan-Chun, Yang Li-Ying, Liu Lian-Qing, He Yu-Qing. A wind disturbance suppression method for multirotor UAVs based on direct thrust control. \textit{Scientia Sinica Technologica}, 2026, \textbf{56}(10): 2496-2508\\
+(蒋涵, 陈泽昊, 常彦春, 杨丽英, 刘连庆, 何玉庆. 基于直接升力控制的旋翼无人机风扰抑制方法. 中国科学: 技术科学, 2026, \textbf{56}(10): 2496-2508)
 
-\bibitem{8} Theys B, Dimitriadis G, Hendrick P, De Schutter J. Experimental and numerical study of micro-aerial-vehicle propeller performance in oblique flow. {\sl Journal of Aircraft}, 2017, {\bf 54}(3): 1076$-$1084
+\bibitem{8} Theys B, Dimitriadis G, Hendrick P, De Schutter J. Experimental and numerical study of micro-aerial-vehicle propeller performance in oblique flow. \textit{Journal of Aircraft}, 2017, \textbf{54}(3): 1076-1084
 
-\bibitem{9} Serrano D, Ren M, Qureshi A J, Ghaemi S. Effect of disk angle-of-attack on aerodynamic performance of small propellers. {\sl Aerospace Science and Technology}, 2019, {\bf 92}: 901$-$914
+\bibitem{9} Serrano D, Ren M, Qureshi A J, Ghaemi S. Effect of disk angle-of-attack on aerodynamic performance of small propellers. \textit{Aerospace Science and Technology}, 2019, \textbf{92}: 901-914
 
-\bibitem{10} Simmons B M. System identification for propellers at high incidence angles. {\sl Journal of Aircraft}, 2021, {\bf 58}(6): 1336$-$1350
+\bibitem{10} Simmons B M. System identification for propellers at high incidence angles. \textit{Journal of Aircraft}, 2021, \textbf{58}(6): 1336-1350
 
-\bibitem{11} Glauert H. A general theory of the autogyro. R\&M No. 1111. London: British Aeronautical Research Committee, 1926
+\bibitem{11} Glauert H. \href{https://reports.aerade.cranfield.ac.uk/handle/1826.2/1434}{A General Theory of the Autogyro}, Reports and Memoranda No. 1111, Aeronautical Research Committee, United Kingdom, 1926.
 
-\bibitem{12} Drela M. XFOIL: An analysis and design system for low Reynolds number airfoils. In: {\sl Low Reynolds Number Aerodynamics}. Berlin: Springer, 1989. 1$-$12
+\bibitem{12} Drela M. XFOIL: An analysis and design system for low Reynolds number airfoils. In: Proceedings of the Conference on Low Reynolds Number Aerodynamics. Berlin, Heidelberg: Springer-Verlag, 1989. 1-12
 
-\bibitem{13} Meier L, Honegger D, Pollefeys M. PX4: A node-based multithreaded open source robotics framework for deeply embedded platforms. In: Proceedings of 2015 IEEE International Conference on Robotics and Automation (ICRA). Seattle, WA, USA: IEEE, 2015. 6235$-$6240
+\bibitem{13} PX4. Multicopter PID tuning guide (manual/advanced), version 1.15 [Online], available: \url{https://docs.px4.io/v1.15/en/config_mc/pid_tuning_guide_multicopter#thrust-curve}, November 20, 2026
 
-\bibitem{14} Selig M S. UIUC airfoil data site. Urbana-Champaign: University of Illinois at Urbana-Champaign. \url{https://m-selig.ae.illinois.edu/ads.html}
+\bibitem{14} Selig M S. UIUC Airfoil Data Site [Online], available: \url{https://m-selig.ae.illinois.edu/ads.html}, November 20, 2026
 
-\bibitem{15} Tang E, Chung S J. Rapid extraction of propeller geometry using photogrammetry. {\sl International Journal of Micro Air Vehicles}, 2022, {\bf 14}: 1$-$22. DOI: 10.1177/17568293221132044
+\bibitem{15} Tang E, Chung S J. Rapid extraction of propeller geometry using photogrammetry. \textit{International Journal of Micro Air Vehicles}, 2022, \textbf{14}: Article No. 17568293221132044
 
-\bibitem{16} Baltsavias E P. A comparison between photogrammetry and laser scanning. {\sl ISPRS Journal of Photogrammetry and Remote Sensing}, 1999, {\bf 54}(2$-$3): 83$-$94. DOI: 10.1016/S0924-2716(99)00014-3
+\bibitem{16} Baltsavias E P. A comparison between photogrammetry and laser scanning. \textit{ISPRS Journal of Photogrammetry and Remote Sensing}, 1999, \textbf{54}(2-3): 83-94
 
-\bibitem{17} Cheng Z, Li H, Asano Y, Zheng Y, Sato I. Multi-view 3D reconstruction of a texture-less smooth surface of unknown generic reflectance. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). Virtual: IEEE, 2021. 16226$-$16235
+% Pagination follows the IEEE version of record.
+\bibitem{17} Cheng Z, Li H, Asano Y, Zheng Y, Sato I. Multi-view 3D reconstruction of a texture-less smooth surface of unknown generic reflectance. In: Proceedings of the 2021 IEEE/CVF Conference on Computer Vision and Pattern Recognition. Virtual Event: IEEE, 2021. 16221-16230
 
-\bibitem{18} Carroll T B. A design methodology for rotors of small multirotor vehicles [Master thesis]. Toronto, Canada: Ryerson University, 2017
+\bibitem{18} Carroll T B. \href{https://hdl.handle.net/20.500.15003/8776}{A Design Methodology for Rotors of Small Multirotor Vehicles} [Master thesis], Ryerson University, Toronto, Ontario, Canada, 2017.
 
-\bibitem{19} Tal E, Karaman S. Accurate tracking of aggressive quadrotor trajectories using incremental nonlinear dynamic inversion and differential flatness. {\sl IEEE Transactions on Control Systems Technology}, 2021, {\bf 29}(3): 1203$-$1218
+\bibitem{19} Tal E, Karaman S. Accurate tracking of aggressive quadrotor trajectories using incremental nonlinear dynamic inversion and differential flatness. \textit{IEEE Transactions on Control Systems Technology}, 2021, \textbf{29}(3): 1203-1218
 
-\bibitem{20} Wang M, Wang Q, Wang Z, Gao Y, Wang J, Cui C, et al. Unlocking aerobatic potential of quadcopters: Autonomous freestyle flight generation and execution. {\sl Science Robotics}, 2025, {\bf 10}: eadp9905
+\bibitem{20} Wang M, Wang Q, Wang Z, Gao Y, Wang J, Cui C, et al. Unlocking aerobatic potential of quadcopters: Autonomous freestyle flight generation and execution. \textit{Science Robotics}, 2025, \textbf{10}(101): Article No. eadp9905
 
 \end{thebibliography}
 
@@ -769,41 +794,54 @@ $T_d$/N & $t_{\mathrm{ramp}}$/s & FI/\% & FB/\% & FF+FB/\% & FB降幅/\% & FF+FB
 \noindent({\bf CHEN Ze-Hao}\quad Ph.D. candidate at Shenyang Institute of Automation, Chinese Academy of Sciences.He received his bachelor degree in Mechanical Design, Manufacturing and Automation from Wuhan University of Technology in 2023. His research interests include control and planning of multirotor UAVs.)
 \end{biographynophoto}
 
-\begin{biographynophoto}
+\begin{biography}[Image/author/常彦春.jpg]
+\samepage
 \noindent{\hei 常彦春}\quad 中国科学院沈阳自动化研究所副研究员.2016年获得北京理工大学控制科学与工程专业硕士学位.主要研究方向为无人机导航与控制.\\E-mail:changyanchun@sia.cn
 
+\nopagebreak
 \noindent({\bf CHANG Yan-Chun}\quad Associate Researcher at Shenyang Institute of Automation, Chinese Academy of Sciences. He received his master degree in Control Science and Engineering from Beijing Institute of Technology in 2016. His research interests include control and planning of multirotor UAVs.)
-\end{biographynophoto}
+\end{biography}
 
-\begin{biographynophoto}
+\begin{biography}[Image/author/刘干.jpg]
+\samepage
 \noindent{\hei 刘干}\quad 中国科学院沈阳自动化研究所硕士研究生.2024年获得武汉理工大学物流工程专业学士学位.主要研究方向为旋翼飞行机械臂.\\E-mail:liugan@sia.cn
 
+\nopagebreak
 \noindent({\bf LIU Gan}\quad Master student at Shenyang Institute of Automation, Chinese Academy of Sciences. He received his bachelor degree in Logistics Engineering from Wuhan University of Technology in 2024. His research interests include navigation and control of UAVs.)
-\end{biographynophoto}
+\end{biography}
 
-\begin{biographynophoto}
+\begin{biography}[Image/author/杨丽英.jpg]
+\samepage
 \noindent{\hei 杨丽英}\quad 中国科学院沈阳自动化研究所研究员.2011年获得中国科学院沈阳自动化研究所博士学位.主要研究方向为移动机器人技术.\\E-mail:yangliying@sia.cn
 
+\nopagebreak
 \noindent({\bf YANG Li-Ying}\quad Researcher at Shenyang Institute of Automation, Chinese Academy of Sciences. She received her Ph.D. degree in Automation from Shenyang Institute of Automation, Chinese Academy of Sciences in 2011. Her research interests include mobile robot technologies.)
-\end{biographynophoto}
+\end{biography}
 
-\begin{biographynophoto}
+\begin{biography}[Image/author/周浩.jpg]
+\samepage
 \noindent{\hei 周浩}\quad 中国科学院沈阳自动化研究所副研究员.2010年获得东北大学控制理论与控制工程专业硕士学位.主要研究方向为无人机导航与控制.\\E-mail:zhouhao@sia.cn
 
+\nopagebreak
 \noindent({\bf ZHOU Hao}\quad Associate Researcher at Shenyang Institute of Automation, Chinese Academy of Sciences. He received his master degree in Control Theory and Control Engineering from Northeastern University in 2010. His research interests include navigation and control of UAVs.)
-\end{biographynophoto}
+\end{biography}
 
-\begin{biographynophoto}
+\begin{biography}[Image/author/张广玉.jpg]
+\samepage
 \noindent{\hei 张广玉}\quad 中国科学院沈阳自动化研究所副研究员.2019年获得中国科学院沈阳自动化研究所博士学位.主要研究方向为旋翼飞行机械臂.\\E-mail:zhangguangyu@sia.cn
 
+\nopagebreak
 \noindent({\bf ZHANG Guang-Yu}\quad Associate Researcher at Shenyang Institute of Automation, Chinese Academy of Sciences. He received his Ph.D. degree in Automation from Shenyang Institute of Automation, Chinese Academy of Sciences in 2019. His research interests include control and planning of multirotor UAVs.)
-\end{biographynophoto}
+\end{biography}
 
-\begin{biographynophoto}
+\begin{biography}[Image/author/何玉庆.jpg]
+\samepage
 \noindent{\hei 何玉庆}\quad 中国科学院沈阳自动化研究所研究员.2008年获得中国科学院沈阳自动化研究所博士学位.主要研究方向为行为智能、跨域协同、特种机器人系统.\\E-mail:heyuqing@sia.cn
 
+\nopagebreak
 \noindent({\bf HE Yu-Qing}\quad Researcher at Shenyang Institute of Automation, Chinese Academy of Sciences. He received his Ph.D. degree in Automation from Shenyang Institute of Automation, Chinese Academy of Sciences in 2008. His research interests include behavioral intelligence, cross-domain collaboration, and special robot systems.)
-\end{biographynophoto}
+\end{biography}
 
+\raggedcolumns
 \end{multicols}
 \end{document}
