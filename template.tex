@@ -47,49 +47,49 @@
 
 % TODO: 以下脚注信息(收稿日期/基金/单位/责任编委/作者)请作者补充替换
 \thanks{收稿日期\
-XXXX-XX-XX
+2026-08-28
 \quad
 录用日期\
-XXXX-XX-XX}
+2026-11-16}
 
 \thanks{Manuscript received
-Month Date, Year;
+August 28, 2026;
 accepted
-Month Date, Year}
-\thanks{国家重点研发计划(2024YFB4710400),国家自然科学基金(62303448),辽宁省科技厅应用基础研究计划项目(2025JH2/101330172),机器人与智能系统全国重点实验室自主研究课题(2025-Z15)资助}
+November 16, 2026}
+\thanks{国家重点研发计划(2024YFB4710400),国家自然科学基金(62303448),辽宁省科技厅应用基础研究计划(2025JH2/101330172),机器人与智能系统全国重点实验室自主研究课题(2025-Z15)资助}
 % \thanks{…………资助}
 
-\thanks{Supported by the National Key R\&D Program of China (2024YFB4710400), the National Natural Science Foundation of China (62303448), the Applied Basic Research Program of Liaoning Province (2025JH2/101330172), and the Autonomous Research Project of the National Key Laboratory of Robotics and Intelligent Systems (2025-Z15)}
+\thanks{Supported by National Key Research and Development Program of China (2024YFB4710400), National Natural Science Foundation of China (62303448), Applied Basic Research Program of Liaoning Province (2025JH2/101330172), Autonomous Research Project of State Key Laboratory of Robotics and Intelligent Systems (2025-Z15)}
 
 \thanks{本文责任编委\ XXX}
 
 \thanks{Recommended by Associate Editor XXX}
 
-\thanks{1.中国科学院沈阳自动化研究所沈阳 110016 2.中国科学院大学北京 100049}
+\thanks{1.中国科学院沈阳自动化研究所\quad 沈阳 110016 2.中国科学院大学\quad 北京 100049}
 
 \thanks{1.Shenyang Institute of Automation, Chinese Academy of Sciences,Shenyang 110016 2.University of Chinese Academy of Sciences, Beijing 100049}}
 
-\cnauthor{陈泽昊$^{\scriptscriptstyle1,2}$ 常彦春$^{\scriptscriptstyle1}$ 刘干$^{\scriptscriptstyle1,2}$ 杨丽英$^{\scriptscriptstyle1}$ 周浩$^{\scriptscriptstyle1}$ 张广玉$^{\scriptscriptstyle1}$ 何玉庆$^{\scriptscriptstyle1}$}
+\cnauthor{陈泽昊$^{\scriptscriptstyle1,2}$ 常彦春$^{\scriptscriptstyle1}$ 刘\quad 干$^{\scriptscriptstyle1,2}$ 杨丽英$^{\scriptscriptstyle1}$ 周\quad 浩$^{\scriptscriptstyle1}$ 张广玉$^{\scriptscriptstyle1}$ 何玉庆$^{\scriptscriptstyle1}$}
 % \cnauthor{作者$^{\scriptscriptstyle1}$ }
-\cnabstract{高机动飞行中的动态来流会使静态升力映射失配,导致旋翼实际升力偏离指令值.为提高执行器层的升力预测与扰动抑制能力,本文建立由多旋翼无人机运动状态到单旋翼轴向升力的机理模型,并结合实测桨叶几何、翼型极线及非均匀诱导入流叶素模型计算升力.在此基础上,提出以旋翼逆模型为前馈、以直接升力测量为反馈的复合控制方法,并搭建桨盘攻角和转台角速度可调的旋转试验台.结果表明,所建模型能够准确描述测试包线内的升力变化规律,所提出的复合控制方法可有效抑制单旋翼台架上的强来流扰动.}
+\cnabstract{高机动飞行中的动态来流会使静态升力映射失配,导致旋翼升力偏离指令、执行器层控制精度下降.为此,建立多旋翼运动状态到单旋翼轴向升力的机理模型,结合实测桨叶几何、翼型极线及非均匀诱导入流叶素模型计算升力,并提出以旋翼逆模型为前馈、以直接升力测量为反馈的复合控制方法;搭建桨盘攻角和转台角速度可调的旋转试验台模拟高机动来流.结果表明,模型能准确描述测试包线内的升力变化,复合控制可有效抑制强来流扰动并提高升力控制精度.}
 
 \cnkeyword{多旋翼无人机,高机动飞行,升力反馈控制,叶素动量理论}
 
-\doi{10.16383/j.aas.20xx.cxxxxxx}
+\doi{10.16383/j.aas.c260602}
 
 \entitle{Rotor Thrust Modeling and Control for Aggressive Flight}
 
 % TODO: 英文作者信息请作者补充
-\enauthor{Chen Ze-hao$^{\scriptscriptstyle1,2}$ Chang Yan-chun$^{\scriptscriptstyle1}$ Liu Gan$^{\scriptscriptstyle1,2}$ Yang Li-ying$^{\scriptscriptstyle1}$ Zhou Hao$^{\scriptscriptstyle1}$ Zhang Guang-yu$^{\scriptscriptstyle1}$ He Yu-qing$^{\scriptscriptstyle1}$}
+\enauthor{CHEN Ze-Hao$^{\scriptscriptstyle1,2}$ CHANG Yan-Chun$^{\scriptscriptstyle1}$ LIU Gan$^{\scriptscriptstyle1,2}$ YANG Li-Ying$^{\scriptscriptstyle1}$ ZHOU Hao$^{\scriptscriptstyle1}$ ZHANG Guang-Yu$^{\scriptscriptstyle1}$ HE Yu-Qing$^{\scriptscriptstyle1}$}
 % \enauthor{author$^{1}$}
 
-\enabstract{Dynamic inflow during high-maneuverability flight can cause a mismatch in the static thrust mapping, resulting in the actual thrust of the rotor deviating from the commanded value. To improve thrust prediction and disturbance suppression capabilities at the actuator level, this paper establishes a mechanistic model that maps the motion state of a multirotor UAV to the axial thrust of a single rotor, and calculates thrust by combining measured blade geometry, airfoil polar curves, and a non-uniform induced inflow element model. Based on this, a composite control method is proposed that uses a rotor inverse model as feedforward and direct thrust measurements as feedback. A rotating test bench with adjustable blade disk angle of attack and turntable angular velocity was constructed. The results show that the developed model can accurately describe the thrust variation patterns within the test envelope, and the composite control method can effectively suppress strong on-flow disturbances on the single-rotor test bench.}
+\enabstract{Variations in local inflow during aggressive flight maneuvers can invalidate static thrust mappings, causing deviations between the actual and commanded thrust and degrading actuator-level control accuracy. To address this issue, a physics-based model is developed to characterize the relationship between multirotor flight states and single-rotor axial thrust. The model incorporates measured blade geometry, airfoil aerodynamic polars, and blade element theory with nonuniform induced inflow to predict rotor thrust.Furthermore, a composite thrust control method is proposed, combining model-based inverse feedforward control with direct thrust feedback. A rotating test bench with adjustable rotor disk angle of attack and turntable angular velocity is constructed to reproduce representative inflow conditions encountered during aggressive maneuvers. Experimental results demonstrate that the proposed model accurately captures thrust variations within the tested operating envelope, while the composite controller effectively rejects strong inflow disturbances and improves thrust tracking accuracy.}
 
 \enkeyword{Multirotor unmanned aerial vehicle, High-maneuverability flight, Thrust feedback control, Blade element momentum theory}
     
-\cnaddress{【待填写作者与引用信息】}
+\cnaddress{陈泽昊,常彦春,刘干,杨丽英,周浩,张广玉,何玉庆.面向高机动飞行的旋翼升力建模与控制方法.自动化学报,2026,xx(x):xxx-xxx}
 
-\enaddress{【待填写英文作者与引用信息】}
+\enaddress{CHEN Ze-Hao, CHANG Yan-Chun, LIU Gan, YANG Li-Ying, ZHOU Hao, ZHANG Guang-Yu, HE Yu-Qing. Rotor Thrust Modeling and Control for Aggressive Flight. Acta Automatica Sinica, 2026, xx(x): xxx-xxx}
 
 \maketitle
 
@@ -100,10 +100,11 @@ Month Date, Year}
 近年来,低空经济加速向规模化、常态化运行发展,多旋翼无人机凭借垂直起降、定点悬停与机动灵活等优势,已成为应急救援、基础设施巡检和复杂环境作业的重要装备\cite{1,2}.随着任务空间由开阔、低速场景拓展至城市障碍物密集区域,无人机需要在其中敏捷穿梭,即在快速姿态变化条件下保持稳定飞行.在此类高机动工况下,旋翼承受显著的动态来流扰动,使控制指令对应的实际升力偏离期望值,进而影响机体姿态与位置控制的精度与稳定性.
 
 现有飞行控制器通常依据静态标定得到的升力-控制量映射,将控制分配器输出的期望升力转换为电机控制指令.该映射在近悬停与弱扰动条件下可近似表示为转速（或归一化控制量）的二次函数,但其参数隐含了特定来流、桨盘姿态与推进系统状态.当无人机快速前飞、转弯或翻转时,旋翼桨盘内来流的速度与方向同时改变,轴向与面内速度分量高速变化,从而改变叶素入流角、有效迎角及气动力分布.由此产生的升力偏差首先出现在执行器层,而传统控制架构通常需等待机体姿态或位置误差形成后才能间接修正,作用链路较长,难以及时抑制旋翼层面的扰动.
-
-为提升机动飞行下执行器的控制精度,现有研究可分为基于模型与基于测量两类.基于模型的方法致力于建立旋翼高保真模型:Bauersfeld等\cite{3}将叶素理论旋翼模型与神经网络相结合,以叶素理论刻画高速入流下的升力变化,以数据驱动的神经网络学习力与力矩残差;Liu等\cite{4}通过全包线
-风洞试验辨识旋翼模型,并使用增量非线性动态逆(INDI)控制,在机动飞行中直接计算局部升力变化所需的控制量,以提高大机动条件下的控制分配精度.此类方法精度较高,但依赖大量试验数据的训练或辨识.
+为提升机动飞行下执行器的控制精度,现有研究可分为基于模型与基于测量两类.
 \onecolumn\begin{multicols}{2}%这一行用于第一页末尾
+基于模型的方法致力于建立旋翼高保真模型:Bauersfeld等\cite{3}将叶素理论旋翼模型与神经网络相结合,以叶素理论刻画高速入流下的升力变化,以数据驱动的神经网络学习力与力矩残差;Liu等\cite{4}通过全包线
+风洞试验辨识旋翼模型,并使用增量非线性动态逆(INDI)控制,在机动飞行中直接计算局部升力变化所需的控制量,以提高大机动条件下的控制分配精度.此类方法精度较高,但依赖大量试验数据的训练或辨识.
+
 基于测量的方法通过在旋翼层施加力传感器测量升力并进行控制:Gonzalez-Morgado等\cite{5}采用应变片式测量方法检测机臂形变,间接测量旋翼升力并结合比例-积分-微分(PID)控制抑制地面效应与天花板效应,但应变片测量会引入高频噪声、信噪比较低;Jiang等\cite{6,7}在机臂与旋翼连接处加装力传感器直接测量升力,并针对旋翼动力系统的非线性设计升力反馈线性化控制器,通过单自由度台架实验验证了其在风扰环境下提高姿态控制精度的能力.上述工作证明了升力闭环控制的有效性,但均针对悬停或近悬停工况,尚未覆盖高机动飞行下的动态来流作用.
 
 在旋翼气动建模方面,叶素理论在高风速下能够较精确地刻画单个旋翼的升力特性,已形成较为成熟的建模方案.Theys等\cite{8}针对0$^{\circ}$-90$^{\circ}$桨盘攻角开展风洞实验,比较了叶素动量理论与涡格法的预测能力;Serrano等\cite{9}进一步评估了非零攻角条件下多种诱导入流模型的精度;Simmons等\cite{10}利用全攻角风洞数据辨识了包含电机静、动态特性与螺旋桨气动特性的推进系统模型.上述工作为建立旋翼动态入流模型奠定了理论基础,但均处于风洞稳态来流条件,难以复现旋翼运动与加速过程中的动态入流特征.

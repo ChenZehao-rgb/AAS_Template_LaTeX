@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.23)  18 NOV 2026 17:45
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.6.23)  20 NOV 2026 15:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -798,28 +798,10 @@ Package fontspec Info:
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 95--95
-[][]\TU/SimSun(0)/m/n/7.52812 国 家 重 点 研 发 计 划 \TU/lmr/m/n/7.52812 (2024YFB4710400), \TU/SimSun(0)/m/n/7.52812 国 家 自 然 科 学
+[][]\TU/SimSun(0)/m/n/7.52812 国 家 重 点 研 发 计 划 \TU/lmr/m/n/7.52812 (2024YFB4710400), \TU/SimSun(0)/m/n/7.52812 国 家 自 然 科 学 基 金
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 95--95
-\TU/SimSun(0)/m/n/7.52812 基 金 \TU/lmr/m/n/7.52812 (62303448), \TU/SimSun(0)/m/n/7.52812 辽 宁 省 科 技 厅 应 用 基 础 研 究 计 划 项 目
- []
-
-
-Underfull \hbox (badness 1838) in paragraph at lines 95--95
-\TU/lmr/m/n/7.52812 (2025JH2/101330172), \TU/SimSun(0)/m/n/7.52812 机 器 人 与 智 能 系 统 全 国 重 点 实 验 室 自 主 研
- []
-
-
-Underfull \hbox (badness 3690) in paragraph at lines 95--95
-[][]\TU/lmr/m/n/7.52812 Supported by the National Key R&D Program of China
- []
-
-
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
@@ -861,17 +843,16 @@ Overfull \vbox (13.2832pt too high) has occurred while \output is active []
 
 
 ]
-
-
-
+File: Image/fig1.pdf Graphic file (type pdf)
+<use Image/fig1.pdf>
 
 Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
  [2
 
 ]
-File: Image/fig1.pdf Graphic file (type pdf)
-<use Image/fig1.pdf>
+File: Image/fig2.png Graphic file (type bmp)
+<Image/fig2.png>
 
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 [] 
@@ -880,15 +861,24 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 
 Overfull \vbox (12.27754pt too high) has occurred while \output is active []
 
- [3
+ [3]
+Overfull \vbox (17.47119pt too high) has occurred while \output is active []
 
-]
-File: Image/fig2.png Graphic file (type bmp)
-<Image/fig2.png>
 
-Overfull \vbox (12.24226pt too high) has occurred while \output is active []
+Overfull \vbox (8.09259pt too high) has occurred while \output is active []
 
  [4]
+File: Image/fig3.pdf Graphic file (type pdf)
+<use Image/fig3.pdf>
+File: Image/fig4a.pdf Graphic file (type pdf)
+<use Image/fig4a.pdf>
+File: Image/fig4b.pdf Graphic file (type pdf)
+<use Image/fig4b.pdf>
+
+Overfull \vbox (28.41312pt too high) has occurred while \output is active []
+
+
+Overfull \vbox (28.41312pt too high) has occurred while \output is active []
 
 
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
@@ -899,22 +889,18 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.27754pt too high) has occurred while \output is active []
 
  [5]
-File: Image/fig3.pdf Graphic file (type pdf)
-<use Image/fig3.pdf>
-File: Image/fig4a.pdf Graphic file (type pdf)
-<use Image/fig4a.pdf>
-File: Image/fig4b.pdf Graphic file (type pdf)
-<use Image/fig4b.pdf>
-
-Overfull \vbox (12.24226pt too high) has occurred while \output is active []
-
- [6]
 File: Image/fig5_chord_pitch_comparison.pdf Graphic file (type pdf)
 <use Image/fig5_chord_pitch_comparison.pdf>
 File: Image/fig6a_test_rig_compact.jpg Graphic file (type bmp)
 <Image/fig6a_test_rig_compact.jpg>
 File: Image/fig6b_rotor_unit_compact.jpg Graphic file (type bmp)
 <Image/fig6b_rotor_unit_compact.jpg>
+
+Overfull \vbox (12.24226pt too high) has occurred while \output is active []
+
+ [6]
+File: Image/static_rpm_mapping_dynamic_inflow.pdf Graphic file (type pdf)
+<use Image/static_rpm_mapping_dynamic_inflow.pdf>
 
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 [] 
@@ -924,16 +910,16 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.27754pt too high) has occurred while \output is active []
 
  [7]
-File: Image/static_rpm_mapping_dynamic_inflow.pdf Graphic file (type pdf)
-<use Image/static_rpm_mapping_dynamic_inflow.pdf>
-
-Overfull \vbox (12.24226pt too high) has occurred while \output is active []
-
- [8]
 File: Image/motor_off_force_sensor_compensation.pdf Graphic file (type pdf)
 <use Image/motor_off_force_sensor_compensation.pdf>
 
 
+
+Overfull \vbox (12.24226pt too high) has occurred while \output is active []
+
+ [8]
+File: Image/fig9_rotor_model_diagnostics.pdf Graphic file (type pdf)
+<use Image/fig9_rotor_model_diagnostics.pdf>
 
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 [] 
@@ -943,16 +929,18 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.27754pt too high) has occurred while \output is active []
 
  [9]
-File: Image/fig9_rotor_model_diagnostics.pdf Graphic file (type pdf)
-<use Image/fig9_rotor_model_diagnostics.pdf>
-
-Overfull \vbox (12.24226pt too high) has occurred while \output is active []
-
- [10]
 File: Image/fig9_freestream_ramp.pdf Graphic file (type pdf)
 <use Image/fig9_freestream_ramp.pdf>
 File: Image/fig10_representative_response.pdf Graphic file (type pdf)
 <use Image/fig10_representative_response.pdf>
+
+
+
+Overfull \vbox (12.24226pt too high) has occurred while \output is active []
+
+ [10]
+File: Image/fig10_ramp_time_response_20N.pdf Graphic file (type pdf)
+<use Image/fig10_ramp_time_response_20N.pdf>
 
 
 
@@ -964,19 +952,14 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.27754pt too high) has occurred while \output is active []
 
  [11]
-File: Image/fig10_ramp_time_response_20N.pdf Graphic file (type pdf)
-<use Image/fig10_ramp_time_response_20N.pdf>
-
-
-
-Overfull \vbox (12.24226pt too high) has occurred while \output is active []
-
- [12]
 File: Image/fig12_speed_error.pdf Graphic file (type pdf)
 <use Image/fig12_speed_error.pdf>
 File: Image/fig13_feedforward_mechanism.pdf Graphic file (type pdf)
 <use Image/fig13_feedforward_mechanism.pdf>
 
+Overfull \vbox (12.24226pt too high) has occurred while \output is active []
+
+ [12]
 Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 [] 
  []
@@ -985,29 +968,21 @@ Overfull \hbox (2.33975pt too wide) has occurred while \output is active
 Overfull \vbox (12.27754pt too high) has occurred while \output is active []
 
  [13]
-Overfull \vbox (12.24226pt too high) has occurred while \output is active []
-
- [14]
-Underfull \hbox (badness 10000) in paragraph at lines 774--775
+Underfull \hbox (badness 10000) in paragraph at lines 775--776
 \TU/lmr/m/n/9.03374 (\TU/lmr/bx/n/9.03374 CHANG Yan-Chun \TU/lmr/m/n/9.03374 Associate Researcher at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 798--799
+Underfull \hbox (badness 10000) in paragraph at lines 799--800
 \TU/lmr/m/n/9.03374 (\TU/lmr/bx/n/9.03374 ZHANG Guang-Yu \TU/lmr/m/n/9.03374 Associate Researcher at
  []
 
 
 
 
-Overfull \hbox (2.33975pt too wide) has occurred while \output is active
-[] 
- []
+Overfull \vbox (12.24226pt too high) has occurred while \output is active []
 
-
-Overfull \vbox (12.27754pt too high) has occurred while \output is active []
-
- [15] (./template.aux)
+ [14] (./template.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2022/07/14>
@@ -1016,12 +991,12 @@ Package rerunfilecheck Info: File `template.out' has not changed.
 (rerunfilecheck)             Checksum: B4A7439C2675F297D21630D8852D8C8C;2156.
  ) 
 Here is how much of TeX's memory you used:
- 17675 strings out of 473832
- 364974 string characters out of 5733158
- 837597 words of memory out of 5000000
- 40395 multiletter control sequences out of 15000+600000
+ 17651 strings out of 473832
+ 363404 string characters out of 5733158
+ 851590 words of memory out of 5000000
+ 40371 multiletter control sequences out of 15000+600000
  581667 words of font info for 164 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 108i,11n,125p,1093b,603s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,11n,125p,1167b,603s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on template.pdf (15 pages).
+Output written on template.pdf (14 pages).
